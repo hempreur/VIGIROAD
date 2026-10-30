@@ -1,0 +1,18 @@
+name: vigiroad_traffic_aggregator
+description: VigiRoadTrafficAggregator — collecte, normalise et sert les perturbations routières officielles.
+publish_to: none
+version: 1.0.0
+
+environment:
+  sdk: ^3.13.0
+
+dependencies:
+  http: ^1.2.0
+  shelf: ^1.4.0
+  xml: ^6.5.0
+  vigiroad_traffic:
+    path: ../packages/vigiroad_traffic
+
+dev_dependencies:
+  lints: ^6.0.0
+  test: ^1.25.0

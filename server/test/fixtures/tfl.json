@@ -1,0 +1,3 @@
+[{"$type":"Tfl.Api.Presentation.Entities.RoadDisruption","id":"TIMS-12345","category":"Collisions","subCategory":"Collision","severity":"Serious","point":"[-0.1276,51.5072]","comments":"Collision on the A40","corridorIds":["A40"],"startDateTime":"2026-10-30T19:50:00Z","endDateTime":"2026-10-30T23:00:00Z","lastModifiedTime":"2026-10-30T20:05:00Z","hasClosures":false},
+ {"id":"TIMS-2","category":"Works","severity":"Minimal","point":"[-0.2,51.4]","corridorIds":[],"lastModifiedTime":"2026-10-30T10:00:00Z","hasClosures":true},
+ {"id":"TIMS-3","category":"Works","severity":"Moderate","lastModifiedTime":"2026-10-30T10:00:00Z"}]

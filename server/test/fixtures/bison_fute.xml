@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope"><soap:Body>
+<d2LogicalModel xmlns:ns2="http://datex2.eu/schema/2/2_0" modelBaseVersion="2">
+<ns2:exchange><ns2:supplierIdentification><ns2:country>fr</ns2:country><ns2:nationalIdentifier>Tipi</ns2:nationalIdentifier></ns2:supplierIdentification></ns2:exchange>
+<ns2:payloadPublication xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ns2:SituationPublication" lang="fr">
+<ns2:publicationTime>2026-10-30T21:57:44.584+01:00</ns2:publicationTime>
+<ns2:situation id="TEST-1" version="2">
+  <ns2:overallSeverity>high</ns2:overallSeverity>
+  <ns2:headerInformation><ns2:confidentiality>noRestriction</ns2:confidentiality><ns2:informationStatus>real</ns2:informationStatus></ns2:headerInformation>
+  <ns2:situationRecord xsi:type="ns2:Accident" id="TEST-1-1" version="2">
+    <ns2:situationRecordCreationTime>2026-10-30T20:10:00+01:00</ns2:situationRecordCreationTime>
+    <ns2:situationRecordVersionTime>2026-10-30T21:40:00+01:00</ns2:situationRecordVersionTime>
+    <ns2:probabilityOfOccurrence>certain</ns2:probabilityOfOccurrence>
+    <ns2:validity><ns2:validityStatus>active</ns2:validityStatus><ns2:validityTimeSpecification><ns2:overallStartTime>2026-10-30T20:05:00+01:00</ns2:overallStartTime></ns2:validityTimeSpecification></ns2:validity>
+    <ns2:generalPublicComment><ns2:comment><ns2:values><ns2:value lang="fr">Accident, voie de gauche neutralisée</ns2:value></ns2:values></ns2:comment><ns2:commentType>description</ns2:commentType></ns2:generalPublicComment>
+    <ns2:generalPublicComment><ns2:comment><ns2:values><ns2:value lang="fr">N20 à Arpajon</ns2:value></ns2:values></ns2:comment><ns2:commentType>locationDescriptor</ns2:commentType></ns2:generalPublicComment>
+    <ns2:groupOfLocations xsi:type="ns2:Point">
+      <ns2:tpegPointLocation xsi:type="ns2:TpegSimplePoint"><ns2:tpegDirection>positive</ns2:tpegDirection>
+        <ns2:point xsi:type="ns2:TpegNonJunctionPoint"><ns2:pointCoordinates><ns2:latitude>48.5869</ns2:latitude><ns2:longitude>2.2475</ns2:longitude></ns2:pointCoordinates></ns2:point>
+      </ns2:tpegPointLocation>
+      <ns2:pointAlongLinearElement><ns2:linearElement><ns2:roadNumber>N0020</ns2:roadNumber></ns2:linearElement></ns2:pointAlongLinearElement>
+    </ns2:groupOfLocations>
+  </ns2:situationRecord>
+</ns2:situation>
+<ns2:situation id="TEST-2" version="1">
+  <ns2:overallSeverity>medium</ns2:overallSeverity>
+  <ns2:headerInformation><ns2:informationStatus>real</ns2:informationStatus></ns2:headerInformation>
+  <ns2:situationRecord xsi:type="ns2:MaintenanceWorks" id="TEST-2-1" version="1">
+    <ns2:situationRecordVersionTime>2026-10-29T08:00:00+01:00</ns2:situationRecordVersionTime>
+    <ns2:validity><ns2:validityTimeSpecification><ns2:overallStartTime>2026-10-29T08:00:00+01:00</ns2:overallStartTime><ns2:overallEndTime>2026-11-05T18:00:00+01:00</ns2:overallEndTime></ns2:validityTimeSpecification></ns2:validity>
+    <ns2:groupOfLocations xsi:type="ns2:Linear">
+      <ns2:tpegLinearLocation><ns2:tpegDirection>bothWays</ns2:tpegDirection>
+        <ns2:to xsi:type="ns2:TpegNonJunctionPoint"><ns2:pointCoordinates><ns2:latitude>45.7700</ns2:latitude><ns2:longitude>4.8400</ns2:longitude></ns2:pointCoordinates></ns2:to>
+        <ns2:from xsi:type="ns2:TpegNonJunctionPoint"><ns2:pointCoordinates><ns2:latitude>45.7600</ns2:latitude><ns2:longitude>4.8300</ns2:longitude></ns2:pointCoordinates></ns2:from>
+      </ns2:tpegLinearLocation>
+      <ns2:linearWithinLinearElement><ns2:linearElement><ns2:roadNumber>A0006</ns2:roadNumber></ns2:linearElement></ns2:linearWithinLinearElement>
+    </ns2:groupOfLocations>
+  </ns2:situationRecord>
+</ns2:situation>
+<ns2:situation id="TEST-3" version="1">
+  <ns2:headerInformation><ns2:informationStatus>test</ns2:informationStatus></ns2:headerInformation>
+  <ns2:situationRecord xsi:type="ns2:Accident" id="TEST-3-1" version="1">
+    <ns2:situationRecordVersionTime>2026-10-30T21:00:00+01:00</ns2:situationRecordVersionTime>
+    <ns2:groupOfLocations xsi:type="ns2:Point"><ns2:locationForDisplay><ns2:latitude>47.0</ns2:latitude><ns2:longitude>1.0</ns2:longitude></ns2:locationForDisplay></ns2:groupOfLocations>
+  </ns2:situationRecord>
+</ns2:situation>
+<ns2:situation id="TEST-4" version="1">
+  <ns2:headerInformation><ns2:informationStatus>real</ns2:informationStatus></ns2:headerInformation>
+  <ns2:situationRecord xsi:type="ns2:RoadOrCarriagewayOrLaneManagement" id="TEST-4-1" version="1">
+    <ns2:situationRecordVersionTime>2026-10-30T19:00:00+01:00</ns2:situationRecordVersionTime>
+    <ns2:groupOfLocations xsi:type="ns2:Point"><ns2:alertCPoint><ns2:alertCLocationCountryCode>F</ns2:alertCLocationCountryCode></ns2:alertCPoint></ns2:groupOfLocations>
+    <ns2:roadOrCarriagewayOrLaneManagementType>roadClosed</ns2:roadOrCarriagewayOrLaneManagementType>
+  </ns2:situationRecord>
+</ns2:situation>
+</ns2:payloadPublication>
+</d2LogicalModel></soap:Body></soap:Envelope>

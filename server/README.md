@@ -1,0 +1,69 @@
+# VigiRoadTrafficAggregator
+
+Service qui collecte les perturbations routières des sources officielles, les convertit vers un
+modèle unique, fusionne les doublons, écarte les données obsolètes et les sert à l'application
+VIGIROAD par une API sécurisée. Aucune circulation n'est simulée.
+
+## Lancer en local
+
+```bash
+cd server
+dart pub get
+VR_API_KEYS="une-cle-dau-moins-16-caracteres" dart run bin/server.dart
+curl -H "X-Api-Key: une-cle-dau-moins-16-caracteres" "http://localhost:8080/v1/events?bbox=1.5,48.3,3.2,49.2"
+```
+
+## Image Docker (tout hébergeur)
+
+```bash
+# depuis la racine du dépôt
+docker build -f server/Dockerfile -t vigiroad-traffic .
+docker run -p 8080:8080 -e VR_API_KEYS="…" vigiroad-traffic
+```
+
+L'image est autonome (binaire compilé, ~15 Mo) et fonctionne sur Cloud Run, un VPS, Fly.io,
+Render… Le HTTPS est assuré par l'hébergeur ou un proxy (Caddy, nginx).
+
+## Configuration
+
+| Variable | Obligatoire | Rôle |
+|---|---|---|
+| `VR_API_KEYS` | oui | Clés autorisées (≥ 16 caractères), séparées par des virgules |
+| `PORT` | non | Port d'écoute (8080) |
+| `VR_TFL_APP_KEY` | non | Active Transport for London |
+| `VR_511_SFBAY_KEY` | non | Active 511 SF Bay (WZDx) |
+| `VR_AZ511_KEY` | non | Active AZ511 |
+| `VR_WAZE_FEED_URL` | non | Active Waze for Cities (accès partenaire obtenu uniquement) |
+| `VR_DATEX2_FEEDS` | non | Flux DATEX II 2.x supplémentaires : `id\|PAYS\|url\|mention\|licence;…` |
+| `VR_DISABLE_SOURCES` | non | Identifiants de sources à désactiver |
+
+## API
+
+Toutes les routes `/v1/*` exigent l'en-tête `X-Api-Key`. Limite : 120 requêtes/minute par clé.
+
+| Route | Description |
+|---|---|
+| `GET /health` | État, nombre de sources, couverture (sans clé) |
+| `GET /v1/sources` | Sources, licences, mentions, santé, basculement |
+| `GET /v1/events?bbox=minLng,minLat,maxLng,maxLat` | Événements d'une zone (≤ 250 000 km²) |
+| `POST /v1/events/route` | `{"route": [[lng,lat],…], "bufferMeters": 150}` → événements sur l'itinéraire, avec distance depuis le départ |
+
+Réponse type :
+
+```json
+{
+  "generatedAt": "2026-10-30T21:00:00Z",
+  "coverage": ["FR"],
+  "attributions": [{"source": "fr-bison-fute", "text": "Information fournie par Bison Futé", "url": "…"}],
+  "events": [{
+    "id": "fr-bison-fute:…", "type": "accident", "position": [2.2475, 48.5869],
+    "road": "N20", "direction": "positive", "severity": "high",
+    "startTime": "…", "updatedAt": "…", "fetchedAt": "…",
+    "sources": ["fr-bison-fute"], "description": "…", "country": "FR"
+  }]
+}
+```
+
+`coverage` liste les pays disposant de données fraîches : ailleurs, l'état est **inconnu**.
+
+Sources, licences et fréquences : [`SOURCES.md`](SOURCES.md).

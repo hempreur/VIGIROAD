@@ -1,0 +1,6 @@
+# Contexte Docker : uniquement le serveur et le paquet partagé.
+*
+!server/
+!packages/vigiroad_traffic/
+**/.dart_tool/
+**/build/

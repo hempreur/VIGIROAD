@@ -36,7 +36,7 @@ abstract final class VrColors {
   // Texte
   static const Color textPrimary = Color(0xFFF2F7FA);
   static const Color textSecondary = Color(0xFFA9B8C4);
-  static const Color textMuted = Color(0xFF5E6C73);
+  static const Color textMuted = Color(0xFF7B8A93);
 
   // Bordures lumineuses
   static Color border([double opacity = 0.35]) => cyan.withValues(alpha: opacity);

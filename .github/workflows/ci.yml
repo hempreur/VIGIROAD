@@ -33,6 +33,7 @@ jobs:
           mkdir -p ci-out
           set -o pipefail
           flutter pub get 2>&1 | tee ci-out/pub_get.log
+          cp pubspec.lock ci-out/pubspec.lock
       - name: Formatage (informatif)
         run: dart format --output=none --set-exit-if-changed lib test > ci-out/format.log 2>&1 || echo "::warning::fichiers non formatés, voir format.log"
       - name: Analyse statique

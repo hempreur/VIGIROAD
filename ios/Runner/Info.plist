@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Vigiroad</string>
+	<string>VIGIROAD</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -47,6 +47,16 @@
 			</array>
 		</dict>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>VIGIROAD utilise la caméra arrière pour lire les plaques d'immatriculation. Les images sont analysées sur le téléphone et ne sont pas envoyées.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>VIGIROAD utilise votre position pour afficher la carte et vous guider jusqu'à destination.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>SENTRIX utilise le microphone lorsque vous appuyez sur le bouton d'écoute pour comprendre vos commandes vocales.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>SENTRIX transforme vos commandes vocales en texte pour les exécuter.</string>
+	<key>UIStatusBarStyle</key>
+	<string>UIStatusBarStyleLightContent</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>

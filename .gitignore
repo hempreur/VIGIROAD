@@ -46,3 +46,11 @@ app.*.map.json
 
 # Widget Preview related
 .widget_preview/
+
+# Secrets / configuration locale
+.env
+*.local.env
+config/*.local.env
+*.jks
+*.keystore
+key.properties

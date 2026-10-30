@@ -52,14 +52,14 @@ void main() {
 
     test('persiste les modifications', () async {
       await c.read(settingsControllerProvider.future);
-      await c.read(settingsControllerProvider.notifier).update((s) => s.copyWith(minVotes: 5));
+      await c.read(settingsControllerProvider.notifier).change((s) => s.copyWith(minVotes: 5));
       expect(store.value.minVotes, 5);
       expect(c.read(appSettingsProvider).minVotes, 5);
     });
 
     test('les réglages pilotent les modules', () async {
       await c.read(settingsControllerProvider.future);
-      await c.read(settingsControllerProvider.notifier).update(
+      await c.read(settingsControllerProvider.notifier).change(
         (s) => s.copyWith(minVotes: 4, minConfidence: 0.9, alertSound: false, retention: Retention.days7, voiceGuidance: false),
       );
       expect(c.read(voterSettingsProvider).minVotes, 4);
@@ -72,7 +72,7 @@ void main() {
 
     test('réinitialisation', () async {
       await c.read(settingsControllerProvider.future);
-      await c.read(settingsControllerProvider.notifier).update((s) => s.copyWith(drive3d: false));
+      await c.read(settingsControllerProvider.notifier).change((s) => s.copyWith(drive3d: false));
       await c.read(settingsControllerProvider.notifier).reset();
       expect(store.value.drive3d, isTrue);
     });

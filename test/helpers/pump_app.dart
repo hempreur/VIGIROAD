@@ -20,10 +20,11 @@ import 'package:vigiroad/features/sentrix/data/speech_input.dart';
 import 'package:vigiroad/features/settings/application/settings_controller.dart';
 import 'package:vigiroad/features/settings/presentation/settings_screen.dart';
 
-/// Fichiers « enregistrés » par l'application pendant les tests.
-final savedFiles = <String, String>{};
 
 import 'fakes.dart';
+
+/// Fichiers « enregistrés » par l'application pendant les tests.
+final savedFiles = <String, String>{};
 
 /// Monte l'application complète avec des services simulés.
 Future<void> pumpVigiroad(

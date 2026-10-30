@@ -42,7 +42,7 @@ class SettingsScreen extends ConsumerWidget {
     final permCtrl = ref.read(permissionsProvider.notifier);
     final s = ref.watch(appSettingsProvider);
     final ctrl = ref.read(settingsControllerProvider.notifier);
-    void set(AppSettings Function(AppSettings) f) => ctrl.update(f).ignore();
+    void set(AppSettings Function(AppSettings) f) => ctrl.change(f).ignore();
 
     final messenger = ScaffoldMessenger.of(context);
     void snack(String t) => messenger.showSnackBar(SnackBar(content: Text(t)));

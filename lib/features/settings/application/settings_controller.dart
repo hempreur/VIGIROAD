@@ -43,11 +43,11 @@ class SettingsController extends AsyncNotifier<AppSettings> {
   @override
   Future<AppSettings> build() => ref.watch(settingsStoreProvider).load();
 
-  Future<void> update(AppSettings Function(AppSettings s) change) async {
-    final next = change(state.value ?? const AppSettings());
+  Future<void> change(AppSettings Function(AppSettings s) edit) async {
+    final next = edit(state.value ?? const AppSettings());
     state = AsyncData(next);
     await ref.read(settingsStoreProvider).save(next);
   }
 
-  Future<void> reset() => update((_) => const AppSettings());
+  Future<void> reset() => change((_) => const AppSettings());
 }

@@ -136,7 +136,7 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
                     ),
                     const SizedBox(height: _gap),
                     SquareIconButton(
-                      icon: Icons.warning_amber_rounded,
+                      icon: Icons.warning_rounded,
                       tooltip: 'Historique des alertes',
                       alert: true,
                       size: _button,

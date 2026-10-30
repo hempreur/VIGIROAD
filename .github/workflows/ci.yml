@@ -108,7 +108,7 @@ jobs:
             --title "APK de test (développement)" \
             --notes "Compilation debug, environnement dev. Branche ${GITHUB_REF_NAME}, commit ${GITHUB_SHA::8}. Ne pas distribuer."
       - name: Compilation APK release (branche main et étiquettes v*)
-        if: success() && github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v') || startsWith(github.ref, 'refs/heads/release/') || github.ref == 'refs/heads/feature/phase9-quality')
+        if: success() && github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v') || startsWith(github.ref, 'refs/heads/release/'))
         env:
           KEYSTORE_B64: ${{ secrets.VR_KEYSTORE_BASE64 }}
           VR_KEYSTORE_PASSWORD: ${{ secrets.VR_KEYSTORE_PASSWORD }}
@@ -132,15 +132,17 @@ jobs:
           cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk ci-out/vigiroad-1.0.0-arm64.apk
           cp build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk ci-out/vigiroad-1.0.0-arm32.apk
           ls -la ci-out/*.apk
-      - name: Publier l'APK release (étiquette v*)
-        if: success() && startsWith(github.ref, 'refs/tags/v')
+      - name: Publier la release (étiquette v* ou branche release/v*)
+        if: success() && github.event_name == 'push' && (startsWith(github.ref, 'refs/tags/v') || startsWith(github.ref, 'refs/heads/release/v'))
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Crée la release à partir de l'étiquette si elle n'existe pas encore.
-          if ! gh release view "$GITHUB_REF_NAME" > /dev/null 2>&1; then
+          # Étiquette : celle poussée, ou dérivée de la branche release/vX.Y.Z.
+          TAG="${GITHUB_REF_NAME#release/}"
+          # Crée la release (et l'étiquette sur ce commit) si elle n'existe pas encore.
+          if ! gh release view "$TAG" > /dev/null 2>&1; then
             {
-              echo "**VIGIROAD ${GITHUB_REF_NAME#v}** — GPS intelligent, lecture de plaques sur l'appareil, alertes et assistant vocal SENTRIX."
+              echo "**VIGIROAD ${TAG#v}** — GPS intelligent, lecture de plaques sur l'appareil, alertes et assistant vocal SENTRIX."
               echo
               echo "- \`vigiroad-1.0.0-arm64.apk\` : téléphones Android 64 bits (recommandé)"
               echo "- \`vigiroad-1.0.0-arm32.apk\` : anciens téléphones 32 bits"
@@ -149,9 +151,9 @@ jobs:
               echo
               tail -n +2 docs/RELEASE_NOTES_1.0.md
             } > "$RUNNER_TEMP/notes.md"
-            gh release create "$GITHUB_REF_NAME" --title "VIGIROAD ${GITHUB_REF_NAME#v}" --notes-file "$RUNNER_TEMP/notes.md" --verify-tag
+            gh release create "$TAG" --title "VIGIROAD ${TAG#v}" --notes-file "$RUNNER_TEMP/notes.md" --target "$GITHUB_SHA"
           fi
-          gh release upload "$GITHUB_REF_NAME" ci-out/vigiroad-1.0.0-arm64.apk ci-out/vigiroad-1.0.0-arm32.apk --clobber
+          gh release upload "$TAG" ci-out/vigiroad-1.0.0-arm64.apk ci-out/vigiroad-1.0.0-arm32.apk --clobber
       - name: Publier les journaux
         if: always() && github.event_name == 'push'
         env:

@@ -22,7 +22,9 @@
 2. Dans GitHub, *Settings > Secrets and variables > Actions*, créer :
    `VR_KEYSTORE_BASE64` (`base64 -w0 vigiroad.jks`), `VR_KEYSTORE_PASSWORD`, `VR_KEY_ALIAS`, `VR_KEY_PASSWORD`.
 3. Les compilations de `main` et des étiquettes `v*` sont alors signées pour la distribution.
-4. Pour le Play Store, produire un bundle : `flutter build appbundle --release --dart-define-from-file=config/prod.env`.
+4. Publier une nouvelle version : pousser une branche `release/vX.Y.Z` (ou une étiquette `vX.Y.Z`) ;
+   la CI compile, crée la release GitHub et y joint les APK.
+5. Pour le Play Store, produire un bundle : `flutter build appbundle --release --dart-define-from-file=config/prod.env`.
 
 Conservez la clé en lieu sûr : sans elle, aucune mise à jour de l'application publiée n'est possible.
 

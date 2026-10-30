@@ -9,10 +9,7 @@ import '../../../app/router.dart';
 import '../../../core/permissions/permission_service.dart';
 import '../../../core/theme/vr_colors.dart';
 import '../../../core/theme/vr_typography.dart';
-import '../../../core/widgets/brand_wordmark.dart';
 import '../../../core/widgets/vr_backdrop.dart';
-import '../../sentrix/domain/sentrix_state.dart';
-import '../../sentrix/presentation/sentrix_head.dart';
 
 /// Écran de démarrage : identité VIGIROAD pendant le chargement des états
 /// d'autorisation, puis redirection vers l'accueil ou l'écran d'autorisations.
@@ -69,10 +66,15 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const SentrixHead(size: 150, state: SentrixState.idle),
-                  const SizedBox(height: 28),
-                  const BrandWordmark(size: 44),
-                  const SizedBox(height: 8),
+                  // Logo officiel VIGIROAD (le nom y figure déjà).
+                  Image.asset(
+                    'assets/branding/vigiroad_logo.webp',
+                    width: 240,
+                    height: 240,
+                    semanticLabel: 'VIGIROAD',
+                    filterQuality: FilterQuality.medium,
+                  ),
+                  const SizedBox(height: 18),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 24),
                     child: FittedBox(

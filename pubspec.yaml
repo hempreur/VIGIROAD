@@ -60,6 +60,8 @@ flutter:
   assets:
     # Son d'alerte de correspondance (généré pour VIGIROAD, libre de droits).
     - assets/sounds/alert.wav
+    # Logo officiel VIGIROAD (écran de démarrage).
+    - assets/branding/vigiroad_logo.webp
 
   fonts:
     # Rajdhani (SIL OFL 1.1) : titres, chiffres de navigation, plaques.

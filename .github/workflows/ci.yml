@@ -177,6 +177,12 @@ jobs:
           VER="$(sed -n 's/^version: *\([^+]*\).*/\1/p' pubspec.yaml)"
           cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk "ci-out/vigiroad-$VER-arm64.apk"
           cp build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk "ci-out/vigiroad-$VER-arm32.apk"
+          # Certificat de signature : celui de VIGIROAD INC si la clé est fournie.
+          APKSIGNER=$(ls "$ANDROID_HOME"/build-tools/*/apksigner | sort -V | tail -1)
+          "$APKSIGNER" verify --print-certs "ci-out/vigiroad-$VER-arm64.apk" | tee ci-out/signature.txt
+          if [ -n "$KEYSTORE_B64" ] && ! grep -q "O=VIGIROAD INC" ci-out/signature.txt; then
+            echo "::error::L'APK n'est pas signé par le certificat VIGIROAD INC"; exit 1
+          fi
           ls -la ci-out/*.apk
       - name: Publier la release (étiquette v* ou branche release/v*)
         if: success() && github.event_name == 'push' && (startsWith(github.ref, 'refs/tags/v') || startsWith(github.ref, 'refs/heads/release/v'))

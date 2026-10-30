@@ -19,8 +19,17 @@ Future<MemorySettingsStore> openSettings(WidgetTester tester, {MemoryWatchlist? 
 }
 
 Future<void> tapText(WidgetTester tester, String text) async {
-  await tester.scrollUntilVisible(find.text(text), 300, scrollable: find.byType(Scrollable).first);
-  await tester.tap(find.text(text));
+  final f = find.text(text);
+  await tester.scrollUntilVisible(f, 200, scrollable: find.byType(Scrollable).first);
+  // Amène l'élément au milieu de l'écran : un élément tout juste visible
+  // en bas de liste peut ne pas recevoir le tap.
+  await tester.drag(find.byType(Scrollable).first, const Offset(0, -250));
+  await tester.pump();
+  if (!tester.any(f.hitTestable())) {
+    await tester.drag(find.byType(Scrollable).first, const Offset(0, 250));
+    await tester.pump();
+  }
+  await tester.tap(f);
   await tester.pump(const Duration(milliseconds: 300));
 }
 

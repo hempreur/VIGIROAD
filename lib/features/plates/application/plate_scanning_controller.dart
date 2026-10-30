@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app/providers.dart';
 import '../../../core/permissions/permission_service.dart';
+import '../../settings/application/settings_controller.dart';
 import '../data/plate_scanner.dart';
 import '../domain/plate_models.dart';
 import '../domain/plate_voter.dart';
@@ -40,12 +41,15 @@ class ScanState {
 }
 
 final plateScannerProvider = Provider<PlateScanner>((ref) {
-  final scanner = MlKitPlateScanner();
+  final mode = ref.watch(appSettingsProvider.select((s) => s.performance));
+  final scanner = MlKitPlateScanner(minInterval: mode.minInterval);
   ref.onDispose(() => unawaited(scanner.dispose()));
   return scanner;
 });
 
-final voterSettingsProvider = Provider<VoterSettings>((ref) => const VoterSettings());
+final voterSettingsProvider = Provider<VoterSettings>(
+  (ref) => VoterSettings(minVotes: ref.watch(appSettingsProvider.select((s) => s.minVotes))),
+);
 
 /// Horloge du module plaques (tests).
 final scanClockProvider = Provider<DateTime Function()>((ref) => DateTime.now);

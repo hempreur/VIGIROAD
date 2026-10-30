@@ -17,6 +17,11 @@ import 'package:vigiroad/features/plates/data/plate_scanner.dart';
 import 'package:vigiroad/features/plates/data/repositories.dart';
 import 'package:vigiroad/features/sentrix/application/sentrix_controller.dart';
 import 'package:vigiroad/features/sentrix/data/speech_input.dart';
+import 'package:vigiroad/features/settings/application/settings_controller.dart';
+import 'package:vigiroad/features/settings/presentation/settings_screen.dart';
+
+/// Fichiers « enregistrés » par l'application pendant les tests.
+final savedFiles = <String, String>{};
 
 import 'fakes.dart';
 
@@ -31,6 +36,7 @@ Future<void> pumpVigiroad(
   WatchlistRepository? watchlist,
   DetectionLog? detections,
   SpeechInput? speech,
+  SettingsStore? settings,
   List<Override> extraOverrides = const [],
 }) async {
   await tester.pumpWidget(
@@ -48,6 +54,11 @@ Future<void> pumpVigiroad(
         alertSoundProvider.overrideWithValue(FakeAlertSound()),
         speechInputProvider.overrideWithValue(speech ?? FakeSpeechInput()),
         sentrixBubbleDurationProvider.overrideWithValue(Duration.zero),
+        settingsStoreProvider.overrideWithValue(settings ?? MemorySettingsStore()),
+        fileSaverProvider.overrideWithValue((name, content) async {
+          savedFiles[name] = content;
+          return true;
+        }),
         ...extraOverrides,
       ],
       child: const VigiroadApp(),

@@ -60,14 +60,18 @@ abstract interface class PlateScanner {
 }
 
 class MlKitPlateScanner implements PlateScanner {
-  MlKitPlateScanner({this.minSharpness = 12, this.formats = PlateFormats.all});
+  MlKitPlateScanner({
+    this.minSharpness = 12,
+    this.formats = PlateFormats.all,
+    Duration minInterval = const Duration(milliseconds: 150),
+  }) : _throttle = FrameThrottle(minInterval: minInterval);
 
   /// Seuil de netteté (variance du laplacien) sous lequel l'image est ignorée.
   final double minSharpness;
   final List<PlateFormat> formats;
 
   final _frames = StreamController<ScanFrame>.broadcast();
-  final _throttle = FrameThrottle();
+  final FrameThrottle _throttle;
   TextRecognizer? _recognizer;
   CameraController? _controller;
   CameraDescription? _camera;

@@ -18,6 +18,8 @@ import 'package:vigiroad/features/plates/domain/plate_format.dart';
 import 'package:vigiroad/features/plates/domain/plate_voter.dart';
 import 'package:vigiroad/features/search/data/photon_geocoder.dart';
 import 'package:vigiroad/features/sentrix/data/speech_input.dart';
+import 'package:vigiroad/features/settings/application/settings_controller.dart';
+import 'package:vigiroad/features/settings/domain/app_settings.dart';
 
 /// Service d'autorisations simulé, pour les tests uniquement.
 class FakePermissionService implements PermissionService {
@@ -262,8 +264,23 @@ class MemoryWatchlist implements WatchlistRepository {
 /// Historique en mémoire (tests).
 class MemoryDetectionLog implements DetectionLog {
   final records = <DetectionRecord>[];
+  var _nextId = 1;
   @override
-  Future<void> add(DetectionRecord r) async => records.insert(0, r);
+  Future<void> add(DetectionRecord r) async => records.insert(
+    0,
+    DetectionRecord(
+      id: r.id ?? _nextId++,
+      plate: r.plate,
+      display: r.display,
+      country: r.country,
+      category: r.category,
+      priority: r.priority,
+      confidence: r.confidence,
+      at: r.at,
+      latitude: r.latitude,
+      longitude: r.longitude,
+    ),
+  );
   @override
   Future<List<DetectionRecord>> recent({int limit = 500}) async => records.take(limit).toList();
   @override
@@ -304,4 +321,18 @@ class FakeSpeechInput implements SpeechInput {
 
   @override
   Future<void> cancel() async => cancels++;
+}
+
+/// Réglages en mémoire (tests).
+class MemorySettingsStore implements SettingsStore {
+  MemorySettingsStore([this.value = const AppSettings()]);
+  AppSettings value;
+  int saves = 0;
+  @override
+  Future<AppSettings> load() async => value;
+  @override
+  Future<void> save(AppSettings s) async {
+    value = s;
+    saves++;
+  }
 }

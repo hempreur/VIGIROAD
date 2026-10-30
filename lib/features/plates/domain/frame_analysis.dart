@@ -52,7 +52,7 @@ class FrameThrottle {
   FrameThrottle({
     this.minInterval = const Duration(milliseconds: 150),
     this.maxInterval = const Duration(milliseconds: 1000),
-  }) : _interval = const Duration(milliseconds: 250);
+  }) : _interval = minInterval > const Duration(milliseconds: 250) ? minInterval : const Duration(milliseconds: 250);
 
   final Duration minInterval;
   final Duration maxInterval;

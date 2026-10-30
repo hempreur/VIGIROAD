@@ -5,6 +5,7 @@ Android et iOS, interface DARK premium.
 
 | | |
 |---|---|
+| **Version** | 1.0.0 |
 | **Framework** | Flutter 3.47.9 / Dart 3.13 |
 | **État** | Riverpod 3 |
 | **Carte** | MapLibre GL + données OpenStreetMap |
@@ -13,29 +14,30 @@ Android et iOS, interface DARK premium.
 | **Données** | SQLite chiffré (SQLCipher), clé dans le trousseau sécurisé |
 | **Voix** | `speech_to_text` + `flutter_tts` (moteurs du système) |
 
-## État d'avancement
+## Version 1.0
 
 | Phase | Contenu | État |
 |---|---|---|
-| 1 | Initialisation, architecture, CI | ✅ PR #1 |
-| 2 | Interface DARK fidèle à la référence | ✅ PR #2 |
-| 3 | GPS et circulation | ✅ PR #3 |
+| 1 | Initialisation, architecture, CI | ✅ |
+| 2 | Interface DARK fidèle à la référence | ✅ |
+| 3 | GPS et guidage | ✅ |
 | 4 | Caméra et lecture des plaques | ✅ |
 | 5 | Base de plaques et alertes | ✅ |
 | 6 | SENTRIX et moteur vocal | ✅ |
 | 7 | Intégration simultanée | ✅ |
-| 8 | Historique et paramètres | 🔧 en cours |
-| 9 | Tests et optimisation | ⏳ |
-| 10 | Livraison 1.0 | ⏳ |
+| 8 | Historique et paramètres | ✅ |
+| 9 | Tests et optimisation | ✅ (tests sur appareil à réaliser) |
+| 10 | Livraison 1.0 | ✅ |
 
-Le détail et les limitations connues sont dans [`docs/ROADMAP.md`](docs/ROADMAP.md).
+**156 tests automatiques, 81 % de couverture.** Fonctionnalités et limitations :
+[`docs/RELEASE_NOTES_1.0.md`](docs/RELEASE_NOTES_1.0.md).
 
-## Installer l'APK de test
+![VIGIROAD comparé à la référence](docs/screenshots/comparaison_reference.png)
 
-1. Ouvrir **Releases** sur la page du dépôt, puis la pré-release **APK de test (développement)**
-   (étiquette `apk-dev`, mise à jour à chaque compilation réussie).
-2. Télécharger `vigiroad-dev-debug.apk` depuis le téléphone Android (7.0 ou plus) et l'ouvrir
-   (autoriser l'installation depuis cette source si le téléphone le demande).
+## Installer
+
+Android 7.0+ : télécharger `vigiroad-1.0.0-arm64.apk` depuis la release **v1.0.0** (page *Releases*)
+et l'ouvrir sur le téléphone. iOS et compilation : [`docs/INSTALL.md`](docs/INSTALL.md).
 
 ## Compiler soi-même
 
@@ -73,10 +75,14 @@ compile l'APK Android et un build iOS non signé à chaque push et Pull Request.
 
 ## Documentation
 
+- [Guide d'installation](docs/INSTALL.md)
 - [Architecture](docs/ARCHITECTURE.md)
 - [Design system et fidélité à la référence](docs/DESIGN.md)
 - [Configuration des services](docs/API_CONFIG.md)
 - [Feuille de route et limitations](docs/ROADMAP.md)
+- [Rapport de tests](docs/TEST_REPORT.md) · [Protocole sur appareil](docs/DEVICE_TEST_PROTOCOL.md)
+- [Captures et comparaison](docs/SCREENSHOTS.md)
+- [Notes de version 1.0](docs/RELEASE_NOTES_1.0.md)
 - [Module OCR](docs/OCR.md)
 - [Assistant SENTRIX](docs/SENTRIX.md)
 - [Format de la base de plaques](docs/PLATES_FORMAT.md)

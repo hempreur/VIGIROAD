@@ -15,7 +15,9 @@
 | 9 | Qualité | `feature/phase9-hardening` | Couverture de tests, profilage CPU/batterie/température, accessibilité | Rapport de tests |
 | 10 | Livraison | `release/1.0.0` | APK signé, archive iOS, documentation complète, captures finales | — |
 
-## Limitations connues (à ce stade)
+## Limitations connues (version 1.0)
+
+Voir aussi le tableau de [`RELEASE_NOTES_1.0.md`](RELEASE_NOTES_1.0.md).
 
 - **Trafic temps réel** : non disponible avec OpenStreetMap. Affiché comme indisponible ; un
   fournisseur payant peut être branché plus tard (voir `API_CONFIG.md`).

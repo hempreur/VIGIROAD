@@ -11,7 +11,10 @@ import 'package:vigiroad/features/navigation/data/location_source.dart';
 import 'package:vigiroad/features/navigation/data/osrm_router.dart';
 import 'package:vigiroad/features/navigation/data/speaker.dart';
 import 'package:vigiroad/features/plates/application/plate_scanning_controller.dart';
+import 'package:vigiroad/features/plates/application/alert_service.dart';
+import 'package:vigiroad/features/plates/application/watchlist_controller.dart';
 import 'package:vigiroad/features/plates/data/plate_scanner.dart';
+import 'package:vigiroad/features/plates/data/repositories.dart';
 
 import 'fakes.dart';
 
@@ -23,6 +26,8 @@ Future<void> pumpVigiroad(
   RouteService? routeService,
   Speaker? speaker,
   PlateScanner? scanner,
+  WatchlistRepository? watchlist,
+  DetectionLog? detections,
   List<Override> extraOverrides = const [],
 }) async {
   await tester.pumpWidget(
@@ -35,6 +40,9 @@ Future<void> pumpVigiroad(
         speakerProvider.overrideWithValue(speaker ?? FakeSpeaker()),
         wakelockProvider.overrideWithValue((_) {}),
         plateScannerProvider.overrideWithValue(scanner ?? FakePlateScanner()),
+        watchlistRepositoryProvider.overrideWith((ref) async => watchlist ?? MemoryWatchlist()),
+        detectionLogProvider.overrideWith((ref) async => detections ?? MemoryDetectionLog()),
+        alertSoundProvider.overrideWithValue(FakeAlertSound()),
         ...extraOverrides,
       ],
       child: const VigiroadApp(),

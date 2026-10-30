@@ -10,7 +10,10 @@ import 'package:vigiroad/features/navigation/data/speaker.dart';
 import 'package:vigiroad/features/navigation/domain/route.dart';
 import 'package:vigiroad/features/navigation/domain/geo_fix.dart';
 import 'package:vigiroad/features/navigation/presentation/widgets/map_view.dart';
+import 'package:vigiroad/features/plates/application/alert_service.dart';
 import 'package:vigiroad/features/plates/data/plate_scanner.dart';
+import 'package:vigiroad/features/plates/data/repositories.dart';
+import 'package:vigiroad/features/plates/domain/watch_entry.dart';
 import 'package:vigiroad/features/plates/domain/plate_format.dart';
 import 'package:vigiroad/features/plates/domain/plate_voter.dart';
 import 'package:vigiroad/features/search/data/photon_geocoder.dart';
@@ -227,4 +230,56 @@ class FakePlateScanner implements PlateScanner {
       analyzed: true,
     ));
   }
+}
+
+/// Liste de surveillance en mémoire (tests).
+class MemoryWatchlist implements WatchlistRepository {
+  final map = <String, WatchEntry>{};
+
+  @override
+  Future<List<WatchEntry>> all() async => map.values.toList();
+  @override
+  Future<void> upsert(WatchEntry e) async => map[e.plate] = e;
+  @override
+  Future<void> delete(String plate) async => map.remove(plate);
+  @override
+  Future<void> clear() async => map.clear();
+  @override
+  Future<(int, int)> importAll(List<WatchEntry> entries, {ImportMode mode = ImportMode.merge}) async {
+    if (mode == ImportMode.replaceSource && entries.isNotEmpty) {
+      map.removeWhere((_, e) => e.source == entries.first.source);
+    }
+    var added = 0, updated = 0;
+    for (final e in entries) {
+      map.containsKey(e.plate) ? updated++ : added++;
+      map[e.plate] = e;
+    }
+    return (added, updated);
+  }
+}
+
+/// Historique en mémoire (tests).
+class MemoryDetectionLog implements DetectionLog {
+  final records = <DetectionRecord>[];
+  @override
+  Future<void> add(DetectionRecord r) async => records.insert(0, r);
+  @override
+  Future<List<DetectionRecord>> recent({int limit = 500}) async => records.take(limit).toList();
+  @override
+  Future<void> delete(int id) async => records.removeWhere((r) => r.id == id);
+  @override
+  Future<int> purgeOlderThan(DateTime limit) async {
+    final before = records.length;
+    records.removeWhere((r) => r.at.isBefore(limit));
+    return before - records.length;
+  }
+  @override
+  Future<void> clear() async => records.clear();
+}
+
+/// Son d'alerte simulé.
+class FakeAlertSound implements AlertSound {
+  int plays = 0;
+  @override
+  Future<void> play({double volume = 1}) async => plays++;
 }

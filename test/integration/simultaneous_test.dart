@@ -74,7 +74,9 @@ void main() {
     // Toutes les annonces sont passées par une seule voix, guidage compris.
     expect(speaker.spoken.first, startsWith('Guidage démarré'));
     expect(speaker.spoken.any((s) => s.startsWith('Alerte. Plaque')), isTrue);
-    expect(speaker.spoken.last, startsWith('Dernière alerte'));
+    expect(speaker.spoken.any((s) => s.startsWith('Dernière alerte')), isTrue);
+    // Le guidage vocal a continué après la réponse de SENTRIX.
+    expect(speaker.spoken.last, startsWith('Dans 400 mètres, tournez à droite'));
     expect(c.read(positionProvider).value?.point, isA<GeoPoint>());
   });
 }

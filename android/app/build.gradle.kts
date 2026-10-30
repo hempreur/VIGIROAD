@@ -6,7 +6,8 @@ plugins {
 
 android {
     namespace = "fr.vigiroad.vigiroad"
-    compileSdk = flutter.compileSdkVersion
+    // permission_handler_android 13 compile contre l'API 37.
+    compileSdk = maxOf(37, flutter.compileSdkVersion)
     ndkVersion = flutter.ndkVersion
 
     compileOptions {

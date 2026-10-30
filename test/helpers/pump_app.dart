@@ -1,15 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:vigiroad/app/app.dart';
 import 'package:vigiroad/app/providers.dart';
 import 'package:vigiroad/core/permissions/permission_service.dart';
+import 'package:vigiroad/features/navigation/application/navigation_providers.dart';
+import 'package:vigiroad/features/navigation/data/location_source.dart';
 
-/// Monte l'application complète avec un service d'autorisations simulé.
-Future<void> pumpVigiroad(WidgetTester tester, PermissionService permissions) async {
+import 'fakes.dart';
+
+/// Monte l'application complète avec des services simulés.
+Future<void> pumpVigiroad(
+  WidgetTester tester,
+  PermissionService permissions, {
+  LocationSource? location,
+  List<Override> extraOverrides = const [],
+}) async {
   await tester.pumpWidget(
     ProviderScope(
-      overrides: [permissionServiceProvider.overrideWithValue(permissions)],
+      overrides: [
+        permissionServiceProvider.overrideWithValue(permissions),
+        locationSourceProvider.overrideWithValue(location ?? FakeLocationSource()),
+        mapViewBuilderProvider.overrideWithValue(fakeMapView),
+        ...extraOverrides,
+      ],
       child: const VigiroadApp(),
     ),
   );
@@ -27,3 +42,10 @@ Widget wrapDark(Widget child) => MaterialApp(
   theme: ThemeData.dark(),
   home: Scaffold(body: Center(child: child)),
 );
+
+/// Laisse passer le splash (1,8 s) et la transition.
+Future<void> passSplash(WidgetTester tester) async {
+  await tester.pump(const Duration(seconds: 2));
+  await tester.pump(const Duration(milliseconds: 600));
+  await tester.pump(const Duration(milliseconds: 600));
+}

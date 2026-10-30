@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:vigiroad/features/home/presentation/home_screen.dart';
+import 'package:vigiroad/features/navigation/presentation/navigation_screen.dart';
 import 'package:vigiroad/features/onboarding/presentation/permissions_screen.dart';
 import 'package:vigiroad/features/splash/presentation/splash_screen.dart';
 
@@ -18,7 +18,7 @@ void main() {
     await tester.pump(const Duration(seconds: 2));
     await tester.pump(const Duration(milliseconds: 600));
 
-    expect(find.byType(HomeScreen), findsOneWidget);
+    expect(find.byType(NavigationScreen), findsOneWidget);
   });
 
   testWidgets('splash puis écran d\'autorisations quand elles manquent', (tester) async {
@@ -43,6 +43,6 @@ void main() {
     await tester.pump();
     await tester.tap(find.text('Continuer'));
     await tester.pump(const Duration(milliseconds: 600));
-    expect(find.byType(HomeScreen), findsOneWidget);
+    expect(find.byType(NavigationScreen), findsOneWidget);
   });
 }

@@ -40,11 +40,11 @@ void main() {
     expect(store.value.autoStartDetection, isTrue);
     await tapText(tester, 'Économie');
     expect(store.value.performance, PerformanceMode.economy);
-    await tapText(tester, '7 jours');
-    expect(store.value.retention, Retention.days7);
     await tapText(tester, 'Son d\'alerte');
     expect(store.value.alertSound, isFalse);
     expect(find.text('Volume'), findsNothing, reason: 'volume masqué sans son');
+    await tapText(tester, '7 jours');
+    expect(store.value.retention, Retention.days7);
   });
 
   testWidgets('export de la liste et effacements confirmés', (tester) async {

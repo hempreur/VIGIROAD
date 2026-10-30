@@ -1,0 +1,46 @@
+# One-shot workflow: generates the native Android/iOS scaffolding with the
+# official `flutter create` and resolves current dependency versions, then
+# pushes the result to `chore/bootstrap-generated` for review.
+name: Bootstrap Flutter scaffolding
+on:
+  push:
+    branches: [chore/bootstrap]
+permissions:
+  contents: write
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - name: Generate project
+        run: |
+          set -eux
+          flutter --version > flutter_version.txt
+          flutter create --org fr.vigiroad --project-name vigiroad \
+            --platforms android,ios --description "VIGIROAD - GPS intelligent" /tmp/gen
+          cp -r /tmp/gen/android /tmp/gen/ios /tmp/gen/pubspec.yaml /tmp/gen/analysis_options.yaml .
+          cp /tmp/gen/.gitignore .gitignore
+          rm -rf /tmp/gen
+          mkdir -p lib test && cp -n /dev/null lib/main.dart || true
+      - name: Resolve dependencies
+        run: |
+          set -eux
+          flutter pub add flutter_riverpod go_router maplibre_gl geolocator camera \
+            google_mlkit_text_recognition sqflite_sqlcipher flutter_secure_storage \
+            speech_to_text flutter_tts http csv file_picker permission_handler \
+            wakelock_plus audioplayers shared_preferences path_provider path intl \
+            2>&1 | tee pub_add.log
+          flutter pub add --dev mocktail 2>&1 | tee -a pub_add.log
+          flutter pub deps --style=compact > pub_deps.txt 2>&1 || true
+      - name: Push generated branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b chore/bootstrap-generated
+          git add -A
+          git commit -m "chore: generate Flutter Android/iOS scaffolding and resolve dependencies"
+          git push -f origin chore/bootstrap-generated

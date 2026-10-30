@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
 import '../../../app/providers.dart';
+import '../../../core/audio/voice_providers.dart';
 import '../data/osrm_router.dart';
 import '../data/speaker.dart';
 import '../domain/geo_fix.dart';
@@ -79,7 +80,7 @@ class VoiceGuidanceController extends Notifier<bool> {
   bool build() => true;
   void toggle() {
     state = !state;
-    if (!state) unawaited(ref.read(speakerProvider).stop());
+    if (!state) unawaited(ref.read(voiceQueueProvider).clear(only: VoicePriority.guidance));
   }
 }
 
@@ -136,7 +137,7 @@ class NavigationSession extends Notifier<NavState> {
     _tracker = null;
     state = const NavState();
     ref.read(wakelockProvider)(false);
-    unawaited(ref.read(speakerProvider).stop());
+    unawaited(ref.read(voiceQueueProvider).clear(only: VoicePriority.guidance));
   }
 
   Future<void> _compute({required bool initial}) async {
@@ -166,7 +167,7 @@ class NavigationSession extends Notifier<NavState> {
       );
       ref.read(wakelockProvider)(true);
       if (ref.read(voiceGuidanceProvider)) {
-        unawaited(ref.read(speakerProvider).speak(initial ? _policy.start(route) : 'Itinéraire recalculé.'));
+        unawaited(_say(initial ? _policy.start(route) : 'Itinéraire recalculé.'));
       }
     } on RoutingException catch (e) {
       if (id != _requestId) return;
@@ -174,6 +175,8 @@ class NavigationSession extends Notifier<NavState> {
       state = NavState(status: NavStatus.failed, route: state.route, progress: state.progress, message: e.message);
     }
   }
+
+  Future<bool> _say(String text) => ref.read(voiceQueueProvider).say(text, VoicePriority.guidance);
 
   DateTime _eta(RouteProgress p) =>
       ref.read(clockProvider)().add(Duration(seconds: p.remainingS.round()));
@@ -203,7 +206,7 @@ class NavigationSession extends Notifier<NavState> {
       state = state.copyWith(status: NavStatus.arrived, progress: progress);
       ref.read(wakelockProvider)(false);
       if (ref.read(voiceGuidanceProvider)) {
-        unawaited(ref.read(speakerProvider).speak('Vous êtes arrivé à destination.'));
+        unawaited(_say('Vous êtes arrivé à destination.'));
       }
       return;
     }
@@ -217,7 +220,7 @@ class NavigationSession extends Notifier<NavState> {
 
     if (ref.read(voiceGuidanceProvider)) {
       final phrase = _policy.next(progress, tracker.route, speedKmh: (fix.speedKmh ?? 0).toDouble());
-      if (phrase != null) unawaited(ref.read(speakerProvider).speak(phrase));
+      if (phrase != null) unawaited(_say(phrase));
     }
   }
 }

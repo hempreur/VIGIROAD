@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/audio/voice_providers.dart';
 import '../../navigation/application/navigation_providers.dart';
 import '../../navigation/application/navigation_session.dart';
 import '../data/repositories.dart';
@@ -85,7 +86,7 @@ class AlertService extends Notifier<List<MatchOutcome>> {
     if (settings.announce) {
       // Annonce courte, épelée pour être comprise en conduisant.
       final spelled = alert.reading.display.split('').join(' ').replaceAll('-', ',');
-      unawaited(ref.read(speakerProvider).speak('Alerte. Plaque $spelled. ${alert.category}.'));
+      unawaited(ref.read(voiceQueueProvider).say('Alerte. Plaque $spelled. ${alert.category}.', VoicePriority.alert));
     }
     if (settings.logHistory) {
       final pos = ref.read(positionProvider).value?.point;

@@ -24,6 +24,12 @@
 - **Limitations de vitesse** : OSRM ne les fournit pas. Le panneau n'apparaît que si le serveur
   d'itinéraire renvoie `annotation.maxspeed` (serveurs compatibles Mapbox). Source OSM (`maxspeed`
   via Overpass ou tuiles dédiées) à évaluer ; couverture OSM incomplète en France.
+- **Guidage en arrière-plan** : le guidage fonctionne application au premier plan (écran maintenu
+  allumé). Le poursuivre application masquée demanderait un service de premier plan Android et le
+  mode « location » en arrière-plan iOS : prévu comme évolution.
+- **Température / batterie** : aucune API thermique n'est interrogée ; la cadence de l'OCR s'adapte
+  automatiquement à sa durée (téléphone chargé ou chaud = analyses plus espacées). Mesures réelles
+  en phase 9 sur appareil.
 - **Caméra en arrière-plan** : impossible sur iOS et fortement restreinte sur Android ; la lecture
   des plaques ne fonctionne qu'application au premier plan.
 - **Détection de plaques** : la première version localise les plaques via l'OCR et le format

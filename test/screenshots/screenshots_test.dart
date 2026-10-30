@@ -5,10 +5,19 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
 import 'package:vigiroad/core/permissions/permission_service.dart';
 import 'package:vigiroad/core/theme/vr_colors.dart';
 import 'package:vigiroad/core/theme/vr_typography.dart';
+import 'package:vigiroad/features/navigation/application/navigation_providers.dart';
+import 'package:vigiroad/features/navigation/domain/geo_fix.dart';
+import 'package:vigiroad/features/navigation/presentation/navigation_screen.dart';
+import 'package:vigiroad/features/plates/application/plates_providers.dart';
+import 'package:vigiroad/features/plates/domain/plate_models.dart';
+import 'package:vigiroad/features/search/data/photon_geocoder.dart';
+import 'package:vigiroad/features/search/presentation/search_screen.dart';
 import 'package:vigiroad/features/sentrix/domain/sentrix_state.dart';
 import 'package:vigiroad/features/sentrix/presentation/sentrix_head.dart';
 
@@ -50,18 +59,71 @@ void main() {
       AppCapability.microphone: CapabilityStatus.permanentlyDenied,
     });
     await pumpVigiroad(tester, service);
-    await tester.pump(const Duration(seconds: 2));
-    await tester.pump(const Duration(milliseconds: 800));
+    await passSplash(tester);
     await expectLater(find.byType(MaterialApp), matchesGoldenFile('goldens/02_permissions.png'));
   });
 
-  testWidgets('03 accueil phase 1', (tester) async {
+  testWidgets('03 navigation', (tester) async {
     usePhoneSurface(tester);
-    await pumpVigiroad(tester, FakePermissionService.allGranted());
-    await tester.pump(const Duration(seconds: 2));
-    await tester.pump(const Duration(milliseconds: 800));
-    await expectLater(find.byType(MaterialApp), matchesGoldenFile('goldens/03_home.png'));
+    await pumpVigiroad(tester, FakePermissionService.allGranted(), location: FakeLocationSource(testFix()));
+    await passSplash(tester);
+    await expectLater(find.byType(MaterialApp), matchesGoldenFile('goldens/03_navigation.png'));
   });
+
+  testWidgets('05 navigation avec alerte (données de test)', (tester) async {
+    usePhoneSurface(tester);
+    await pumpVigiroad(tester, FakePermissionService.allGranted(), location: FakeLocationSource(testFix()));
+    await passSplash(tester);
+    final c = ProviderScope.containerOf(tester.element(find.byType(NavigationScreen)));
+    const reading = PlateReading(
+      normalized: 'AA123BB',
+      display: 'AA-123-BB',
+      confidence: 0.98,
+      vehicleType: 'VP',
+    );
+    c.read(destinationProvider.notifier).set(
+      const Destination(label: 'Centre-ville', detail: '69002 Lyon', point: GeoPoint(45.764, 4.8357)),
+    );
+    c.read(lastReadingProvider.notifier).update(reading);
+    c.read(activeAlertProvider.notifier).raise(
+      PlateAlert(reading: reading, category: 'Véhicule à surveiller', priority: WatchPriority.high, at: DateTime(2026)),
+    );
+    await tester.pump(const Duration(milliseconds: 300));
+    await expectLater(find.byType(MaterialApp), matchesGoldenFile('goldens/05_navigation_alert.png'));
+  });
+
+  testWidgets('06 recherche', (tester) async {
+    usePhoneSurface(tester);
+    final geocoder = FakeGeocoder(const [
+      Place(label: 'Gare de Lyon', detail: '75012 Paris', point: GeoPoint(48.8443, 2.3744)),
+      Place(label: '12 Rue de la République', detail: '69002 Lyon', point: GeoPoint(45.764, 4.8357)),
+      Place(label: 'Lyon', detail: 'Rhône', point: GeoPoint(45.75, 4.85)),
+    ]);
+    await pumpVigiroad(
+      tester,
+      FakePermissionService.allGranted(),
+      location: FakeLocationSource(testFix()),
+      extraOverrides: [geocoderProvider.overrideWithValue(geocoder)],
+    );
+    await passSplash(tester);
+    await tester.tap(find.text('Où allez-vous ?'));
+    await tester.pump(const Duration(milliseconds: 600));
+    await tester.enterText(find.byType(TextField), 'lyon');
+    await tester.pump(const Duration(milliseconds: 500));
+    await tester.pump(const Duration(milliseconds: 100));
+    await expectLater(find.byType(MaterialApp), matchesGoldenFile('goldens/06_search.png'));
+  });
+
+  for (final (name, route) in [('07_settings', '/settings'), ('08_plates', '/plates')]) {
+    testWidgets(name, (tester) async {
+      usePhoneSurface(tester);
+      await pumpVigiroad(tester, FakePermissionService.allGranted());
+      await passSplash(tester);
+      GoRouter.of(tester.element(find.byType(NavigationScreen))).push(route);
+      await tester.pump(const Duration(milliseconds: 700));
+      await expectLater(find.byType(MaterialApp), matchesGoldenFile('goldens/$name.png'));
+    });
+  }
 
   testWidgets('04 états SENTRIX', (tester) async {
     usePhoneSurface(tester, size: const Size(600, 420));

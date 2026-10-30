@@ -17,8 +17,8 @@ Android et iOS, interface DARK premium.
 
 | Phase | Contenu | État |
 |---|---|---|
-| 1 | Initialisation, architecture, CI | ✅ en revue |
-| 2 | Interface DARK fidèle à la référence | ⏳ |
+| 1 | Initialisation, architecture, CI | ✅ PR #1 |
+| 2 | Interface DARK fidèle à la référence | 🔧 en cours |
 | 3 | GPS et circulation | ⏳ |
 | 4 | Caméra et lecture des plaques | ⏳ |
 | 5 | Base de plaques et alertes | ⏳ |

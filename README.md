@@ -19,9 +19,9 @@ Android et iOS, interface DARK premium.
 |---|---|---|
 | 1 | Initialisation, architecture, CI | ✅ PR #1 |
 | 2 | Interface DARK fidèle à la référence | ✅ PR #2 |
-| 3 | GPS et circulation | 🔧 en cours |
-| 4 | Caméra et lecture des plaques | ⏳ |
-| 5 | Base de plaques et alertes | ⏳ |
+| 3 | GPS et circulation | ✅ PR #3 |
+| 4 | Caméra et lecture des plaques | ✅ |
+| 5 | Base de plaques et alertes | 🔧 en cours |
 | 6 | SENTRIX et moteur vocal | ⏳ |
 | 7 | Intégration simultanée | ⏳ |
 | 8 | Historique et paramètres | ⏳ |
@@ -77,6 +77,8 @@ compile l'APK Android et un build iOS non signé à chaque push et Pull Request.
 - [Design system et fidélité à la référence](docs/DESIGN.md)
 - [Configuration des services](docs/API_CONFIG.md)
 - [Feuille de route et limitations](docs/ROADMAP.md)
+- [Module OCR](docs/OCR.md)
+- [Format de la base de plaques](docs/PLATES_FORMAT.md)
 - [Données personnelles et cadre légal](docs/PRIVACY.md)
 
 ## Licences tierces

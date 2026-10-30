@@ -12,6 +12,7 @@ import '../../../core/widgets/square_icon_button.dart';
 import '../../../core/widgets/vr_button.dart';
 import '../../plates/application/plates_providers.dart';
 import '../../plates/presentation/widgets/alert_banner.dart';
+import '../../plates/application/alert_service.dart';
 import '../../plates/application/plate_scanning_controller.dart';
 import '../../plates/presentation/widgets/camera_panel.dart';
 import '../../plates/presentation/widgets/scanner_preview.dart';
@@ -68,6 +69,8 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
     final alert = ref.watch(activeAlertProvider);
     final reading = ref.watch(lastReadingProvider);
     final scan = ref.watch(plateScanningProvider);
+    // Garde actif le moteur de correspondance tant que l'écran est affiché.
+    ref.watch(alertServiceProvider);
     final locationGranted =
         ref.watch(permissionsProvider).value?[AppCapability.location] == CapabilityStatus.granted;
     final mapBuilder = ref.watch(mapViewBuilderProvider);

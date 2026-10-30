@@ -54,6 +54,10 @@ dev_dependencies:
 flutter:
   uses-material-design: true
 
+  assets:
+    # Son d'alerte de correspondance (généré pour VIGIROAD, libre de droits).
+    - assets/sounds/alert.wav
+
   fonts:
     # Rajdhani (SIL OFL 1.1) : titres, chiffres de navigation, plaques.
     - family: Rajdhani

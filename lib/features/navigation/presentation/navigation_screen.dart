@@ -12,7 +12,9 @@ import '../../../core/widgets/square_icon_button.dart';
 import '../../../core/widgets/vr_button.dart';
 import '../../plates/application/plates_providers.dart';
 import '../../plates/presentation/widgets/alert_banner.dart';
+import '../../plates/application/plate_scanning_controller.dart';
 import '../../plates/presentation/widgets/camera_panel.dart';
+import '../../plates/presentation/widgets/scanner_preview.dart';
 import '../../plates/presentation/widgets/ocr_panel.dart';
 import '../../sentrix/domain/sentrix_state.dart';
 import '../../sentrix/presentation/sentrix_head.dart';
@@ -65,7 +67,7 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
     final speedLimit = nav.hasRoute ? nav.progress?.speedLimitKmh : null;
     final alert = ref.watch(activeAlertProvider);
     final reading = ref.watch(lastReadingProvider);
-    final scanning = ref.watch(plateScanningProvider);
+    final scan = ref.watch(plateScanningProvider);
     final locationGranted =
         ref.watch(permissionsProvider).value?[AppCapability.location] == CapabilityStatus.granted;
     final mapBuilder = ref.watch(mapViewBuilderProvider);
@@ -224,8 +226,21 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
                 SizedBox(
                   height: cameraH,
                   child: CameraPanel(
-                    active: scanning,
-                    inactiveDetail: 'Module caméra en cours de développement (phase 4)',
+                    active: scan.active,
+                    preview: const ScannerPreview(),
+                    onTap: ref.read(plateScanningProvider.notifier).toggle,
+                    inactiveMessage: switch (scan.status) {
+                      ScanStatus.error => scan.message ?? 'Caméra indisponible',
+                      ScanStatus.paused => 'Lecture suspendue',
+                      _ => 'Lecture des plaques arrêtée',
+                    },
+                    inactiveDetail: 'Touchez pour activer la caméra arrière',
+                    diagnostic: config.isProduction || scan.analysisMs == null
+                        ? null
+                        : '${scan.analysisMs} ms · net. ${scan.sharpness?.round()}',
+                    warning: scan.status == ScanStatus.running && scan.lowLight
+                        ? 'Luminosité faible : lecture moins fiable'
+                        : null,
                   ),
                 ),
                 const SizedBox(height: _gap),

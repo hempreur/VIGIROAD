@@ -29,15 +29,3 @@ class ActiveAlertController extends Notifier<PlateAlert?> {
   void raise(PlateAlert alert) => state = alert;
   void dismiss() => state = null;
 }
-
-/// La lecture des plaques est-elle en marche ? (interrupteur, phase 4).
-final plateScanningProvider = NotifierProvider<PlateScanningController, bool>(
-  PlateScanningController.new,
-);
-
-class PlateScanningController extends Notifier<bool> {
-  @override
-  bool build() => false;
-
-  void set(bool value) => state = value;
-}

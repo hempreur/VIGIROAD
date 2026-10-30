@@ -15,6 +15,9 @@ class CameraPanel extends StatelessWidget {
     this.preview,
     this.inactiveMessage = 'Lecture des plaques arrêtée',
     this.inactiveDetail,
+    this.onTap,
+    this.warning,
+    this.diagnostic,
   });
 
   final bool active;
@@ -22,9 +25,23 @@ class CameraPanel extends StatelessWidget {
   final String inactiveMessage;
   final String? inactiveDetail;
 
+  /// Marche / arrêt de la lecture.
+  final VoidCallback? onTap;
+
+  /// Avertissement affiché sur l'aperçu (ex. faible luminosité).
+  final String? warning;
+
+  /// Mesures affichées en version de développement (temps d'analyse…).
+  final String? diagnostic;
+
   @override
   Widget build(BuildContext context) {
-    return GlowPanel(
+    return Semantics(
+      button: onTap != null,
+      label: active ? 'Arrêter la lecture des plaques' : 'Activer la lecture des plaques',
+      child: GestureDetector(
+        onTap: onTap,
+        child: GlowPanel(
       padding: EdgeInsets.zero,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(17),
@@ -61,7 +78,26 @@ class CameraPanel extends StatelessWidget {
                 ),
               ),
             Positioned(left: 10, top: 10, child: _CameraBadge(live: active)),
+            if (diagnostic != null)
+              Positioned(
+                right: 10,
+                top: 12,
+                child: Text(diagnostic!, style: VrText.caption.copyWith(fontSize: 11)),
+              ),
+            if (warning != null)
+              Positioned(
+                left: 10,
+                right: 10,
+                bottom: 10,
+                child: Text(
+                  warning!,
+                  textAlign: TextAlign.center,
+                  style: VrText.caption.copyWith(color: VrColors.trafficSlow),
+                ),
+              ),
           ],
+        ),
+      ),
         ),
       ),
     );

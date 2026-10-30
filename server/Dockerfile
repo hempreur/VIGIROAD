@@ -8,7 +8,7 @@ COPY server/pubspec.yaml /app/server/
 WORKDIR /app/server
 RUN dart pub get
 COPY server /app/server
-RUN dart pub get --offline && dart compile exe bin/server.dart -o /app/bin/server
+RUN mkdir -p /app/bin && dart pub get --offline && dart compile exe bin/server.dart -o /app/bin/server
 
 FROM scratch
 COPY --from=build /runtime/ /

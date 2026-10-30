@@ -10,6 +10,7 @@ import 'package:vigiroad/features/plates/application/plates_providers.dart';
 import 'package:vigiroad/features/plates/domain/plate_models.dart';
 import 'package:vigiroad/features/search/presentation/search_screen.dart';
 import 'package:vigiroad/features/search/data/photon_geocoder.dart';
+import 'package:vigiroad/features/sentrix/presentation/sentrix_head.dart';
 
 import 'helpers/fakes.dart';
 import 'helpers/pump_app.dart';
@@ -99,7 +100,7 @@ void main() {
     await tester.tap(find.byTooltip('Retour'));
     await tester.pump(const Duration(milliseconds: 600));
 
-    await tester.tap(find.bySemanticsLabel('Ouvrir le menu SENTRIX'));
+    await tester.tap(find.descendant(of: find.byType(NavigationScreen), matching: find.byType(SentrixHead)));
     await tester.pump(const Duration(milliseconds: 600));
     expect(find.text('Que voulez-vous faire ?'), findsOneWidget);
     expect(find.text('Réglages'), findsOneWidget);

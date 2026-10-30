@@ -17,6 +17,7 @@ import 'package:vigiroad/features/plates/domain/watch_entry.dart';
 import 'package:vigiroad/features/plates/domain/plate_format.dart';
 import 'package:vigiroad/features/plates/domain/plate_voter.dart';
 import 'package:vigiroad/features/search/data/photon_geocoder.dart';
+import 'package:vigiroad/features/sentrix/data/speech_input.dart';
 
 /// Service d'autorisations simulé, pour les tests uniquement.
 class FakePermissionService implements PermissionService {
@@ -282,4 +283,25 @@ class FakeAlertSound implements AlertSound {
   int plays = 0;
   @override
   Future<void> play({double volume = 1}) async => plays++;
+}
+
+/// Reconnaissance vocale simulée : renvoie la phrase préparée.
+class FakeSpeechInput implements SpeechInput {
+  String? next;
+  SpeechUnavailable? error;
+  int cancels = 0;
+
+  @override
+  Future<String?> listenOnce({
+    required void Function(String partial) onPartial,
+    Duration listenFor = const Duration(seconds: 8),
+    Duration pauseFor = const Duration(seconds: 2),
+  }) async {
+    if (error != null) throw error!;
+    if (next != null) onPartial(next!);
+    return next;
+  }
+
+  @override
+  Future<void> cancel() async => cancels++;
 }

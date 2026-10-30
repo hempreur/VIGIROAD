@@ -15,6 +15,8 @@ import 'package:vigiroad/features/plates/application/alert_service.dart';
 import 'package:vigiroad/features/plates/application/watchlist_controller.dart';
 import 'package:vigiroad/features/plates/data/plate_scanner.dart';
 import 'package:vigiroad/features/plates/data/repositories.dart';
+import 'package:vigiroad/features/sentrix/application/sentrix_controller.dart';
+import 'package:vigiroad/features/sentrix/data/speech_input.dart';
 
 import 'fakes.dart';
 
@@ -28,6 +30,7 @@ Future<void> pumpVigiroad(
   PlateScanner? scanner,
   WatchlistRepository? watchlist,
   DetectionLog? detections,
+  SpeechInput? speech,
   List<Override> extraOverrides = const [],
 }) async {
   await tester.pumpWidget(
@@ -43,6 +46,8 @@ Future<void> pumpVigiroad(
         watchlistRepositoryProvider.overrideWith((ref) async => watchlist ?? MemoryWatchlist()),
         detectionLogProvider.overrideWith((ref) async => detections ?? MemoryDetectionLog()),
         alertSoundProvider.overrideWithValue(FakeAlertSound()),
+        speechInputProvider.overrideWithValue(speech ?? FakeSpeechInput()),
+        sentrixBubbleDurationProvider.overrideWithValue(Duration.zero),
         ...extraOverrides,
       ],
       child: const VigiroadApp(),

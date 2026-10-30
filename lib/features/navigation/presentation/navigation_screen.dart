@@ -18,7 +18,10 @@ import '../../sentrix/domain/sentrix_state.dart';
 import '../../sentrix/presentation/sentrix_head.dart';
 import '../application/navigation_providers.dart';
 import '../data/location_source.dart';
+import '../application/navigation_session.dart';
 import '../domain/geo_math.dart';
+import '../domain/instructions.dart';
+import 'widgets/guidance_widgets.dart';
 import 'widgets/maneuver_card.dart';
 import 'widgets/map_view.dart';
 import 'widgets/position_puck.dart';
@@ -56,6 +59,10 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
     final config = ref.watch(appConfigProvider);
     final position = ref.watch(positionProvider);
     final destination = ref.watch(destinationProvider);
+    final nav = ref.watch(navigationSessionProvider);
+    final voiceOn = ref.watch(voiceGuidanceProvider);
+    final showEta = nav.hasRoute && nav.progress != null && nav.arrival != null;
+    final speedLimit = nav.hasRoute ? nav.progress?.speedLimitKmh : null;
     final alert = ref.watch(activeAlertProvider);
     final reading = ref.watch(lastReadingProvider);
     final scanning = ref.watch(plateScanningProvider);
@@ -75,7 +82,7 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
     const alertH = 88.0;
     final bottomH = pad.bottom + _side + ocrH + _gap + cameraH + _gap + speedRowH +
         (alert != null ? alertH + _gap : 0);
-    final topH = pad.top + _side + 96;
+    final topH = pad.top + _side + 96 + (showEta ? 54 : 0);
     final insets = EdgeInsets.only(top: topH, bottom: bottomH);
     final puckY = topH + (size.height - topH - bottomH) / 2;
 
@@ -90,6 +97,7 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
                 tilted: _tilted,
                 fix: fix,
                 destination: destination?.point,
+                route: nav.route?.geometry,
                 insets: insets,
                 locationGranted: locationGranted,
                 onUserGesture: () {
@@ -115,7 +123,25 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(child: _buildManeuverCard(destination)),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildManeuverCard(destination, nav),
+                      if (showEta) ...[
+                        const SizedBox(height: 6),
+                        EtaChip(
+                          arrival: nav.arrival!,
+                          remainingS: nav.progress!.remainingS,
+                          remainingM: nav.progress!.remainingM,
+                          rerouting: nav.status == NavStatus.rerouting,
+                          voiceOn: voiceOn,
+                          onToggleVoice: ref.read(voiceGuidanceProvider.notifier).toggle,
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
                 const SizedBox(width: _gap),
                 Column(
                   children: [
@@ -156,7 +182,7 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
 
           if (position.hasError)
             Positioned(
-              top: pad.top + _side + 104,
+              top: topH + 4,
               left: _side,
               right: _side + _button + _gap,
               child: _LocationProblem(error: position.error!),
@@ -174,7 +200,14 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
                   height: speedRowH,
                   child: Row(
                     children: [
-                      SpeedGauge(speedKmh: fix?.speedKmh),
+                      SpeedGauge(
+                        speedKmh: fix?.speedKmh,
+                        overLimit: speedLimit != null && (fix?.speedKmh ?? 0) > speedLimit + 3,
+                      ),
+                      if (speedLimit != null) ...[
+                        const SizedBox(width: 10),
+                        SpeedLimitSign(limitKmh: speedLimit),
+                      ],
                       const Spacer(),
                       Semantics(
                         button: true,
@@ -215,20 +248,55 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
     );
   }
 
-  Widget _buildManeuverCard(Destination? destination) {
+  Widget _buildManeuverCard(Destination? destination, NavState nav) {
     void openSearch() => context.push(Routes.search);
+    final stop = ref.read(destinationProvider.notifier).clear;
     if (destination == null) return ManeuverCard.prompt(onTap: openSearch);
-    final here = ref.read(positionProvider).value;
-    return ManeuverCard(
-      icon: Icons.flag_rounded,
-      headline: here == null
-          ? 'Destination'
-          : formatDistance(distanceMeters(here.point, destination.point)),
-      title: destination.label,
-      subtitle: here == null ? destination.detail : 'à vol d\'oiseau — ${destination.detail}',
-      onTap: openSearch,
-      onClose: ref.read(destinationProvider.notifier).clear,
-    );
+
+    final step = nav.nextStep;
+    switch (nav.status) {
+      case NavStatus.guiding || NavStatus.rerouting when step != null:
+        return ManeuverCard(
+          icon: maneuverIcon(step),
+          headline: formatDistance(nav.progress!.toNextManeuverM),
+          title: Instructions.headline(step),
+          subtitle: Instructions.towards(step) ?? destination.label,
+          onClose: stop,
+        );
+      case NavStatus.arrived:
+        return ManeuverCard(
+          icon: Icons.flag_rounded,
+          headline: 'Arrivé',
+          title: destination.label,
+          subtitle: destination.detail,
+          onClose: stop,
+        );
+      case NavStatus.failed:
+        return ManeuverCard(
+          icon: Icons.wifi_off_rounded,
+          headline: 'Itinéraire indisponible',
+          title: nav.message ?? 'Erreur inconnue',
+          subtitle: 'Touchez pour réessayer',
+          onTap: ref.read(navigationSessionProvider.notifier).retry,
+          onClose: stop,
+        );
+      case NavStatus.waitingForGps:
+        return ManeuverCard(
+          icon: Icons.gps_not_fixed_rounded,
+          headline: 'En attente du GPS',
+          title: destination.label,
+          subtitle: 'Le guidage démarrera dès la première position',
+          onClose: stop,
+        );
+      default:
+        return ManeuverCard(
+          icon: Icons.route_rounded,
+          headline: 'Calcul…',
+          title: destination.label,
+          subtitle: destination.detail,
+          onClose: stop,
+        );
+    }
   }
 }
 

@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:vigiroad/features/history/presentation/history_screen.dart';
 import 'package:vigiroad/features/navigation/application/navigation_providers.dart';
 import 'package:vigiroad/features/navigation/data/location_source.dart';
+import 'package:vigiroad/features/navigation/data/osrm_router.dart';
 import 'package:vigiroad/features/navigation/domain/geo_fix.dart';
 import 'package:vigiroad/features/navigation/presentation/navigation_screen.dart';
 import 'package:vigiroad/features/plates/application/plates_providers.dart';
@@ -46,21 +47,61 @@ void main() {
     expect(find.textContaining('localisation du téléphone est désactivée'), findsOneWidget);
   });
 
-  testWidgets('destination : distance à vol d\'oiseau et annulation', (tester) async {
+  testWidgets('destination : guidage, heure d\'arrivée, limitation, annulation', (tester) async {
     usePhoneSurface(tester);
-    await pumpVigiroad(tester, FakePermissionService.allGranted(), location: FakeLocationSource(testFix()));
+    final speaker = FakeSpeaker();
+    await pumpVigiroad(
+      tester,
+      FakePermissionService.allGranted(),
+      location: FakeLocationSource(testFix(kmh: 46)),
+      speaker: speaker,
+    );
     await passSplash(tester);
 
     _container(tester).read(destinationProvider.notifier).set(
       const Destination(label: 'Lyon', detail: '69002 Lyon', point: GeoPoint(45.7640, 4.8357)),
     );
     await tester.pump();
+    await tester.pump();
 
-    expect(find.text('Lyon'), findsOneWidget);
-    expect(find.textContaining('km'), findsWidgets);
+    expect(find.text('Tournez à droite sur Avenue Victoria'), findsOneWidget);
+    expect(find.text('vers Centre-ville'), findsOneWidget);
+    expect(find.text('1,0 km'), findsOneWidget);
+    expect(find.textContaining('Arrivée'), findsOneWidget);
+    expect(find.text('50'), findsOneWidget, reason: 'limitation issue de l\'itinéraire');
+    expect(speaker.spoken.single, startsWith('Guidage démarré'));
+
+    await tester.tap(find.byTooltip('Couper le guidage vocal'));
+    await tester.pump();
+    expect(find.byTooltip('Activer le guidage vocal'), findsOneWidget);
+
     await tester.tap(find.byTooltip('Annuler la destination'));
     await tester.pump();
     expect(find.text('Où allez-vous ?'), findsOneWidget);
+  });
+
+  testWidgets('itinéraire impossible : message et nouvel essai', (tester) async {
+    usePhoneSurface(tester);
+    final router = FakeRouteService(error: const RoutingException('Aucun itinéraire routier trouvé vers cette destination.'));
+    await pumpVigiroad(
+      tester,
+      FakePermissionService.allGranted(),
+      location: FakeLocationSource(testFix()),
+      routeService: router,
+    );
+    await passSplash(tester);
+    _container(tester).read(destinationProvider.notifier).set(
+      const Destination(label: 'Île', detail: '', point: GeoPoint(43, 7)),
+    );
+    await tester.pump();
+    await tester.pump();
+    expect(find.text('Itinéraire indisponible'), findsOneWidget);
+
+    router.error = null;
+    await tester.tap(find.text('Itinéraire indisponible'));
+    await tester.pump();
+    await tester.pump();
+    expect(find.text('Tournez à droite sur Avenue Victoria'), findsOneWidget);
   });
 
   testWidgets('alerte : encadré rouge puis fermeture', (tester) async {
@@ -131,6 +172,7 @@ void main() {
     await tester.tap(find.text('Tour Eiffel'));
     await tester.pump(const Duration(milliseconds: 600));
     expect(find.byType(NavigationScreen), findsOneWidget);
-    expect(find.text('Tour Eiffel'), findsOneWidget);
+    await tester.pump();
+    expect(find.text('Tournez à droite sur Avenue Victoria'), findsOneWidget);
   });
 }

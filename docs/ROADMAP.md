@@ -25,9 +25,12 @@ Voir aussi le tableau de [`RELEASE_NOTES_1.0.md`](RELEASE_NOTES_1.0.md).
   (voir `API_CONFIG.md`).
 - **Services publics OSM** : le serveur OSRM de démonstration et Photon public suffisent pour le
   développement mais pas pour une exploitation ; prévoir un hébergement.
-- **Limitations de vitesse** : OSRM ne les fournit pas. Le panneau n'apparaît que si le serveur
-  d'itinéraire renvoie `annotation.maxspeed` (serveurs compatibles Mapbox). Source OSM (`maxspeed`
-  via Overpass ou tuiles dédiées) à évaluer ; couverture OSM incomplète en France.
+- **Limitations de vitesse** (1.1) : pendant le guidage, balise OpenStreetMap `maxspeed` de la voie
+  suivie (serveur VIGIROAD + Overpass), dans le sens de circulation. Valeurs explicites et valeurs
+  légales sans ambiguïté seulement (« FR:rural » — 80 ou 90 selon le département — reste inconnue) ;
+  la couverture OSM est incomplète : sans donnée, le panneau n'est pas affiché. Pas de données
+  officielles nationales ouvertes en France à ce jour ; panneaux temporaires et limitations
+  variables non connus. Hors guidage, aucune limitation n'est affichée.
 - **Guidage en arrière-plan** (1.1) : pendant un guidage, la localisation passe en service de
   premier plan Android (notification « Guidage en cours ») et en mode « location » iOS ; les consignes
   vocales continuent écran éteint. Désactivable dans les réglages. La caméra, elle, s'arrête toujours

@@ -33,6 +33,7 @@ import 'widgets/position_puck.dart';
 import 'widgets/speed_gauge.dart';
 import 'widgets/traffic_legend.dart';
 import '../../traffic/application/traffic_announcer.dart';
+import '../../traffic/application/speed_limit_controller.dart';
 import '../../traffic/application/traffic_controller.dart';
 import '../../traffic/presentation/traffic_event_sheet.dart';
 
@@ -81,7 +82,13 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
     final nav = ref.watch(navigationSessionProvider);
     final voiceOn = ref.watch(voiceGuidanceProvider);
     final showEta = nav.hasRoute && nav.progress != null && nav.arrival != null;
-    final speedLimit = nav.hasRoute ? nav.progress?.speedLimitKmh : null;
+    // Limitation fournie par l'itinéraire, sinon par OpenStreetMap (serveur
+    // VIGIROAD) ; inconnue → pas de panneau.
+    final osmLimits = ref.watch(speedLimitProvider);
+    final progress = nav.progress;
+    final speedLimit = nav.hasRoute && progress != null
+        ? progress.speedLimitKmh ?? osmLimits.at(progress.segmentIndex)
+        : null;
     final alert = ref.watch(activeAlertProvider);
     final reading = ref.watch(lastReadingProvider);
     final scan = ref.watch(plateScanningProvider);

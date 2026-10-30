@@ -4,6 +4,7 @@ import 'package:shelf/shelf.dart';
 import 'package:vigiroad_traffic/vigiroad_traffic.dart';
 
 import 'aggregator.dart';
+import 'speed/speed_limit_service.dart';
 
 /// Limiteur de débit par clé (seau à jetons).
 class RateLimiter {
@@ -49,10 +50,16 @@ bool _secureEquals(String a, String b) {
 /// Authentification par en-tête `X-Api-Key`, limite de débit par clé, zone
 /// interrogée plafonnée. Le transport HTTPS est assuré par l'hébergeur.
 class TrafficApi {
-  TrafficApi(this.aggregator, {required this.apiKeys, RateLimiter? limiter, this.maxBoxKm2 = 250000})
+  TrafficApi(this.aggregator, {required this.apiKeys, RateLimiter? limiter, this.maxBoxKm2 = 250000, this.speedLimits})
     : limiter = limiter ?? RateLimiter();
 
   final TrafficAggregator aggregator;
+
+  /// Limitations de vitesse OpenStreetMap (null = service désactivé).
+  final SpeedLimitService? speedLimits;
+
+  /// Longueur maximale d'un tronçon d'itinéraire pour `/v1/speedlimits`.
+  static const maxSpeedRouteM = 60000.0;
   final Set<String> apiKeys;
   final RateLimiter limiter;
   final double maxBoxKm2;
@@ -94,6 +101,27 @@ class TrafficApi {
           return _ok({
             ..._payload([for (final h in hits) h.event], BBox.around(route)),
             'along': [for (final h in hits) {'id': h.event.id, 'alongMeters': h.along.round(), 'offsetMeters': h.offset.round()}],
+          });
+        case ('POST', '/v1/speedlimits'):
+          final service = speedLimits;
+          if (service == null) return _error(503, 'Limitations de vitesse désactivées');
+          final body = jsonDecode(await req.readAsString());
+          final raw = body is Map<String, dynamic> ? body['route'] : null;
+          if (raw is! List || raw.length < 2 || raw.length > 5000) {
+            return _error(400, 'route : liste de 2 à 5 000 points [lng, lat] attendue');
+          }
+          final route = [for (final p in raw) LatLng.fromJson(p as List<dynamic>)];
+          var length = 0.0;
+          for (var i = 0; i + 1 < route.length; i++) {
+            length += haversine(route[i], route[i + 1]);
+          }
+          if (length > maxSpeedRouteM) return _error(400, 'Tronçon trop long (60 km au plus)');
+          final r = await service.along(route);
+          return _ok({
+            'limits': r.limits,
+            'complete': r.complete,
+            'source': 'OpenStreetMap',
+            'attribution': SpeedLimitService.attribution,
           });
         default:
           return _error(404, 'Ressource inconnue');

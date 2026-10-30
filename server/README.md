@@ -36,6 +36,9 @@ Render… Le HTTPS est assuré par l'hébergeur ou un proxy (Caddy, nginx).
 | `VR_WAZE_FEED_URL` | non | Active Waze for Cities (accès partenaire obtenu uniquement) |
 | `VR_DATEX2_FEEDS` | non | Flux DATEX II 2.x supplémentaires : `id\|PAYS\|url\|mention\|licence;…` |
 | `VR_DISABLE_SOURCES` | non | Identifiants de sources à désactiver |
+| `VR_WAZE_BBOX` | non | Zone de l'accord Waze (`minLng,minLat,maxLng,maxLat`) |
+| `VR_OVERPASS_URL` | non | Instance Overpass des limitations de vitesse (`overpass-api.de` par défaut) |
+| `VR_SPEEDLIMITS` | non | `off` pour désactiver les limitations de vitesse |
 
 ## API
 
@@ -46,6 +49,7 @@ Toutes les routes `/v1/*` exigent l'en-tête `X-Api-Key`. Limite : 120 requêtes
 | `GET /health` | État, nombre de sources, couverture (sans clé) |
 | `GET /v1/sources` | Sources, licences, mentions, santé, basculement |
 | `GET /v1/events?bbox=minLng,minLat,maxLng,maxLat` | Événements d'une zone (≤ 250 000 km²) |
+| `POST /v1/speedlimits` | `{"route": [[lng,lat],…]}` (≤ 60 km) → `{"limits": [50, null, …], "complete": true}`, une valeur par segment, `null` = inconnue |
 | `POST /v1/events/route` | `{"route": [[lng,lat],…], "bufferMeters": 150}` → événements sur l'itinéraire, avec distance depuis le départ |
 
 Réponse type :
@@ -64,6 +68,7 @@ Réponse type :
 }
 ```
 
-`coverage` liste les pays disposant de données fraîches : ailleurs, l'état est **inconnu**.
+`area.known` indique si une source à jour couvre la zone demandée (emprise de chaque source) :
+sinon l'état est **inconnu**. `coverage` liste les pays disposant de données fraîches.
 
 Sources, licences et fréquences : [`SOURCES.md`](SOURCES.md).

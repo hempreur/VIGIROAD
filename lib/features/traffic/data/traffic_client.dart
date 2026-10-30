@@ -19,6 +19,11 @@ abstract interface class TrafficClient {
 
   /// Perturbations à moins de [bufferM] d'un itinéraire.
   Future<TrafficSnapshot> alongRoute(List<LatLng> route, {double bufferM = 150});
+
+  /// Limitation (km/h) de chaque segment de [route] d'après OpenStreetMap
+  /// (`null` = inconnue). `complete` est faux si le serveur n'a pas pu tout
+  /// obtenir (à redemander plus tard).
+  Future<({List<int?> limits, bool complete})> speedLimits(List<LatLng> route);
 }
 
 class HttpTrafficClient implements TrafficClient {
@@ -67,10 +72,36 @@ class HttpTrafficClient implements TrafficClient {
     }),
   ));
 
+  @override
+  Future<({List<int?> limits, bool complete})> speedLimits(List<LatLng> route) async {
+    final body = await _json(() => _client.post(
+      _uri('/v1/speedlimits'),
+      headers: {..._headers, 'Content-Type': 'application/json'},
+      body: jsonEncode({'route': [for (final p in route) p.toJson()]}),
+    ), timeout: const Duration(seconds: 45));
+    final raw = body['limits'];
+    if (raw is! List || raw.length != route.length - 1) {
+      throw const TrafficException('Réponse du serveur de trafic illisible');
+    }
+    return (
+      limits: [for (final v in raw) v is num && v >= 5 && v <= 150 ? v.toInt() : null],
+      complete: body['complete'] == true,
+    );
+  }
+
   Future<TrafficSnapshot> _send(Future<http.Response> Function() request) async {
+    final j = await _json(request);
+    try {
+      return TrafficSnapshot.fromJson(j, receivedAt: _clock());
+    } on Object {
+      throw const TrafficException('Réponse du serveur de trafic illisible');
+    }
+  }
+
+  Future<Map<String, dynamic>> _json(Future<http.Response> Function() request, {Duration timeout = const Duration(seconds: 10)}) async {
     final http.Response res;
     try {
-      res = await request().timeout(const Duration(seconds: 10));
+      res = await request().timeout(timeout);
     } on Exception {
       throw const TrafficException('Serveur de trafic injoignable');
     }
@@ -81,11 +112,13 @@ class HttpTrafficClient implements TrafficClient {
         throw const TrafficException('Clé du serveur de trafic refusée');
       case 429:
         throw const TrafficException('Serveur de trafic saturé');
+      case 503:
+        throw const TrafficException('Service désactivé sur le serveur de trafic');
       default:
         throw TrafficException('Serveur de trafic : erreur ${res.statusCode}');
     }
     try {
-      return TrafficSnapshot.fromJson(jsonDecode(utf8.decode(res.bodyBytes)) as Map<String, dynamic>, receivedAt: _clock());
+      return jsonDecode(utf8.decode(res.bodyBytes)) as Map<String, dynamic>;
     } on Object {
       throw const TrafficException('Réponse du serveur de trafic illisible');
     }

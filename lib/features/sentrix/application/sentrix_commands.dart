@@ -52,7 +52,7 @@ final List<SentrixCommand> sentrixCommands = [
   SentrixCommand(
     id: 'navigation.eta',
     label: 'Heure d\'arrivée',
-    phrases: ['Heure d\'arrivée', 'Quand est-ce que j\'arrive', 'Combien de temps reste-t-il', 'Distance restante'],
+    phrases: ['Heure d\'arrivée', 'Dans combien de temps j\'arrive', 'Quand est-ce que j\'arrive', 'Combien de temps reste-t-il', 'Distance restante'],
     action: (c) async {
       final nav = c.ref.read(navigationSessionProvider);
       final p = nav.progress, eta = nav.arrival;

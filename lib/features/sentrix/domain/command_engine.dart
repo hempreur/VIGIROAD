@@ -57,7 +57,7 @@ const _accents = {
 const _stopWords = {
   'le', 'la', 'les', 'l', 'un', 'une', 'des', 'du', 'de', 'd', 'au', 'aux', 'a', 'et',
   'moi', 'me', 'm', 'je', 'j', 'tu', 'vous', 'stp', 'svp', 'sil', 'plait', 'te', 'please',
-  'sentrix', 'centrix', 'peux', 'pourrais', 'veux', 'voudrais', 'est', 'ce', 'que', 'qu', 'mon', 'ma', 'mes',
+  'sentrix', 'centrix', 's', 'il', 't', 'y', 'peux', 'pourrais', 'veux', 'voudrais', 'est', 'ce', 'que', 'qu', 'mon', 'ma', 'mes',
 };
 
 /// Variantes ramenées à une forme commune (conjugaisons, synonymes).
@@ -86,7 +86,7 @@ List<String> tokenize(String text) {
   }
   return b
       .toString()
-      .split(RegExp("[^a-z0-9]+"))
+      .split(RegExp('[^a-z0-9]+'))
       .where((w) => w.isNotEmpty && !_stopWords.contains(w))
       .map((w) => _synonyms[w] ?? w)
       .toList();

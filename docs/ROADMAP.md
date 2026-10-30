@@ -19,8 +19,10 @@
 
 Voir aussi le tableau de [`RELEASE_NOTES_1.0.md`](RELEASE_NOTES_1.0.md).
 
-- **Trafic temps réel** : non disponible avec OpenStreetMap. Affiché comme indisponible ; un
-  fournisseur payant peut être branché plus tard (voir `API_CONFIG.md`).
+- **Trafic temps réel** : perturbations officielles via le serveur VigiRoadTrafficAggregator
+  (incidents, travaux, fermetures), pas de mesure de vitesse de circulation. Hors des zones
+  couvertes, l'état est « inconnu ». Le serveur doit être hébergé (image Docker) et configuré
+  (voir `API_CONFIG.md`).
 - **Services publics OSM** : le serveur OSRM de démonstration et Photon public suffisent pour le
   développement mais pas pour une exploitation ; prévoir un hébergement.
 - **Limitations de vitesse** : OSRM ne les fournit pas. Le panneau n'apparaît que si le serveur

@@ -13,11 +13,29 @@ La pile retenue (MapLibre + OpenStreetMap) ne demande **aucune clé API**.
 
 ## Trafic en temps réel
 
-Les sources OpenStreetMap ne fournissent **pas** de trafic en temps réel. Conformément à la règle de
-transparence, l'application affiche « Trafic indisponible » plutôt que des couleurs inventées.
-Le module `traffic` exposera une interface `TrafficProvider` pour brancher ultérieurement un
-fournisseur (TomTom Traffic, HERE, Mapbox) ; ces services sont payants au-delà d'un quota gratuit
-et demandent une clé, à placer dans `config/<env>.local.env` (jamais commitée).
+Le trafic vient du serveur **VigiRoadTrafficAggregator** (`server/`), qui agrège les sources
+officielles (Bison Futé, points d'accès nationaux, TfL, 511…). Droits, licences et fréquences :
+[`server/SOURCES.md`](../server/SOURCES.md).
+
+| Variable | Rôle |
+|---|---|
+| `VR_TRAFFIC_API_URL` | Adresse HTTPS du serveur de trafic. Vide = trafic désactivé. |
+| `VR_TRAFFIC_API_KEY` | Clé d'accès au serveur (une des `VR_API_KEYS` du serveur). |
+
+En CI, ces valeurs viennent des secrets GitHub du même nom (`Settings → Secrets → Actions`) ;
+sans eux l'APK affiche « Source non configurée ». La clé limite l'accès au serveur mais, embarquée
+dans l'application, ne doit pas être considérée comme secrète : les clés des fournisseurs restent
+sur le serveur.
+
+Ce que l'application affiche — **jamais de trafic simulé** :
+
+- « **État inconnu ici** » quand aucune source à jour ne couvre la zone (le serveur renvoie
+  `area.known = false`) ;
+- « **Aucun incident signalé** » quand une source à jour couvre la zone sans rien signaler (et non
+  « fluide » : les sources décrivent des incidents, pas la vitesse de circulation) ;
+- les perturbations sur la carte (couleur = gravité), le détail au toucher, la mention de chaque
+  source et l'heure de mise à jour (obligations Bison Futé) ;
+- après 5 minutes sans réponse du serveur, plus aucune donnée n'est affichée.
 
 ## Ajouter une clé secrète
 

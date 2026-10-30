@@ -167,6 +167,19 @@ class TrafficAggregator {
     return out;
   }
 
+  /// Sources dont l'emprise touche [box] et dont la dernière collecte réussie
+  /// est récente. Vide : l'état du trafic y est **inconnu**.
+  List<SourceStatus> coveringFresh(BBox box) {
+    final now = _clock();
+    return [
+      for (final s in _status.values)
+        if (s.lastSuccess != null &&
+            now.difference(s.lastSuccess!) <= freshness.maxCollectionAge &&
+            s.connector.info.areas.any(box.intersects))
+          s,
+    ];
+  }
+
   /// Pays disposant actuellement de données fraîches (sinon : état inconnu).
   Set<String> coverage() {
     final now = _clock();

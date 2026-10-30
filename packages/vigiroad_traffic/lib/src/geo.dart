@@ -30,6 +30,25 @@ class BBox {
     return valid ? b : null;
   }
 
+  bool intersects(BBox o) => minLng <= o.maxLng && o.minLng <= maxLng && minLat <= o.maxLat && o.minLat <= maxLat;
+
+  /// Rectangle englobant une suite de points, agrandi de [padDeg] degrés.
+  static BBox around(Iterable<LatLng> points, {double padDeg = 0}) {
+    var minLat = 90.0, maxLat = -90.0, minLng = 180.0, maxLng = -180.0;
+    for (final p in points) {
+      minLat = math.min(minLat, p.lat);
+      maxLat = math.max(maxLat, p.lat);
+      minLng = math.min(minLng, p.lng);
+      maxLng = math.max(maxLng, p.lng);
+    }
+    return BBox(minLng - padDeg, minLat - padDeg, maxLng + padDeg, maxLat + padDeg);
+  }
+
+  List<double> toJson() => [minLng, minLat, maxLng, maxLat];
+
+  @override
+  String toString() => '$minLng,$minLat,$maxLng,$maxLat';
+
   bool contains(LatLng p) => p.lat >= minLat && p.lat <= maxLat && p.lng >= minLng && p.lng <= maxLng;
 
   /// Surface approximative en km² (limite des requêtes trop larges).

@@ -32,6 +32,9 @@ import 'widgets/map_view.dart';
 import 'widgets/position_puck.dart';
 import 'widgets/speed_gauge.dart';
 import 'widgets/traffic_legend.dart';
+import '../../traffic/application/traffic_announcer.dart';
+import '../../traffic/application/traffic_controller.dart';
+import '../../traffic/presentation/traffic_event_sheet.dart';
 
 /// Écran GPS principal — composition de l'image de référence :
 /// cartouche de guidage et boutons en haut, carte au centre, compteur,
@@ -84,6 +87,8 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
     final scan = ref.watch(plateScanningProvider);
     // Garde actif le moteur de correspondance tant que l'écran est affiché.
     ref.watch(alertServiceProvider);
+    final traffic = ref.watch(trafficProvider);
+    ref.watch(trafficAnnouncerProvider);
     final locationGranted =
         ref.watch(permissionsProvider).value?[AppCapability.location] == CapabilityStatus.granted;
     final mapBuilder = ref.watch(mapViewBuilderProvider);
@@ -122,6 +127,8 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
                 onUserGesture: () {
                   if (_following) setState(() => _following = false);
                 },
+                traffic: traffic.visible,
+                onTrafficTap: (e) => showTrafficEvent(context, e, ref.read(trafficProvider).attributions),
               ),
             ),
           ),
@@ -196,7 +203,7 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
           Positioned(
             top: pad.top + _side + 3 * _button + 3 * _gap + 6,
             right: _side,
-            child: const TrafficLegend(available: false),
+            child: TrafficLegend(state: traffic),
           ),
 
           if (position.hasError)

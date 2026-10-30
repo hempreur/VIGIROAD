@@ -24,6 +24,9 @@ class TflConnector extends TrafficConnector {
     attribution: 'Powered by TfL Open Data',
     minInterval: Duration(minutes: 2),
     homepage: 'https://tfl.gov.uk/info-for/open-data-users/',
+    // Grand Londres uniquement : le reste du Royaume-Uni reste « inconnu ».
+    areas: [BBox(-0.52, 51.28, 0.34, 51.70)],
+    coverageNote: 'Grand Londres',
     requiresKey: true,
   );
 

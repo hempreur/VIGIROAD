@@ -208,7 +208,10 @@ class SettingsScreen extends ConsumerWidget {
           InfoRow(label: 'Fond de carte', value: Uri.parse(config.mapStyleUrl).host),
           InfoRow(label: 'Itinéraires', value: Uri.parse(config.routingBaseUrl).host),
           InfoRow(label: 'Recherche d\'adresses', value: Uri.parse(config.geocodingBaseUrl).host),
-          const InfoRow(label: 'Trafic en temps réel', value: 'Aucun fournisseur configuré'),
+          InfoRow(
+            label: 'Trafic en temps réel',
+            value: config.trafficEnabled ? Uri.parse(config.trafficApiUrl).host : 'Aucun serveur configuré',
+          ),
           InfoRow(
             label: 'Synchronisation des plaques',
             value: config.platesSyncEnabled ? Uri.parse(config.platesSyncUrl).host : 'Désactivée',

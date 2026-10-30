@@ -81,7 +81,7 @@ class TrafficApi {
           final box = BBox.tryParse(req.url.queryParameters['bbox']);
           if (box == null) return _error(400, 'Paramètre bbox=minLng,minLat,maxLng,maxLat attendu');
           if (box.areaKm2 > maxBoxKm2) return _error(400, 'Zone trop grande');
-          return _ok(_payload(aggregator.inBox(box)));
+          return _ok(_payload(aggregator.inBox(box), box));
         case ('POST', '/v1/events/route'):
           final body = jsonDecode(await req.readAsString());
           final raw = body is Map<String, dynamic> ? body['route'] : null;
@@ -92,7 +92,7 @@ class TrafficApi {
           final buffer = ((body as Map<String, dynamic>)['bufferMeters'] as num?)?.toDouble().clamp(20, 1000) ?? 150.0;
           final hits = aggregator.alongRoute(route, bufferM: buffer.toDouble());
           return _ok({
-            ..._payload([for (final h in hits) h.event]),
+            ..._payload([for (final h in hits) h.event], BBox.around(route)),
             'along': [for (final h in hits) {'id': h.event.id, 'alongMeters': h.along.round(), 'offsetMeters': h.offset.round()}],
           });
         default:
@@ -105,17 +105,39 @@ class TrafficApi {
     }
   };
 
-  /// Réponse avec événements, mentions obligatoires des sources utilisées
-  /// et couverture (pays sans données fraîches = état inconnu).
-  Map<String, Object?> _payload(List<TrafficEvent> events) {
-    final used = {for (final e in events) ...e.sources};
+  /// Réponse avec événements, état de la zone demandée et mentions
+  /// obligatoires des sources utilisées.
+  ///
+  /// `area.known` est faux quand aucune source à jour ne couvre la zone :
+  /// l'application affiche alors l'état **inconnu** (jamais « fluide »).
+  /// `area.updatedAt` est la collecte la plus ancienne parmi les sources
+  /// couvrantes (date de mise à jour à afficher, exigée par Bison Futé).
+  Map<String, Object?> _payload(List<TrafficEvent> events, BBox box) {
+    final covering = aggregator.coveringFresh(box);
+    final used = {for (final e in events) ...e.sources, for (final s in covering) s.connector.info.id};
+    final oldest = covering.isEmpty
+        ? null
+        : covering.map((s) => s.lastSuccess!).reduce((a, b) => a.isBefore(b) ? a : b);
     return {
       'generatedAt': DateTime.now().toUtc().toIso8601String(),
       'coverage': aggregator.coverage().toList()..sort(),
+      'area': {
+        'known': covering.isNotEmpty,
+        'updatedAt': oldest?.toIso8601String(),
+        'sources': [
+          for (final s in covering)
+            {'source': s.connector.info.id, 'coverage': s.connector.info.coverageNote},
+        ],
+      },
       'attributions': [
         for (final s in aggregator.statuses)
           if (used.contains(s.connector.info.id))
-            {'source': s.connector.info.id, 'text': s.connector.info.attribution, 'url': s.connector.info.homepage},
+            {
+              'source': s.connector.info.id,
+              'text': s.connector.info.attribution,
+              'url': s.connector.info.homepage,
+              'updatedAt': s.lastSuccess?.toIso8601String(),
+            },
       ],
       'events': [for (final e in events) e.toJson()],
     };

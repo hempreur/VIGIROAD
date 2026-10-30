@@ -15,6 +15,8 @@ class AppConfig {
     required this.geocodingBaseUrl,
     required this.platesSyncUrl,
     required this.userAgent,
+    this.trafficApiUrl = '',
+    this.trafficApiKey = '',
   });
 
   /// Lit les valeurs `--dart-define`. Les valeurs par défaut pointent vers des
@@ -45,6 +47,8 @@ class AppConfig {
         'VR_USER_AGENT',
         defaultValue: 'VIGIROAD/1.0 (+https://github.com/hempreur/VIGIROAD)',
       ),
+      trafficApiUrl: const String.fromEnvironment('VR_TRAFFIC_API_URL'),
+      trafficApiKey: const String.fromEnvironment('VR_TRAFFIC_API_KEY'),
     );
   }
 
@@ -59,6 +63,17 @@ class AppConfig {
   /// User-Agent identifiant l'application auprès des services OSM
   /// (exigé par leurs politiques d'utilisation).
   final String userAgent;
+
+  /// Serveur VigiRoadTrafficAggregator (vide = trafic désactivé, affiché
+  /// comme « source non configurée »).
+  final String trafficApiUrl;
+
+  /// Clé d'accès au serveur de trafic. Elle limite l'accès au service mais,
+  /// embarquée dans l'application, n'est pas un secret : les clés des
+  /// fournisseurs (TfL, 511…) restent sur le serveur.
+  final String trafficApiKey;
+
+  bool get trafficEnabled => trafficApiUrl.isNotEmpty && trafficApiKey.isNotEmpty;
 
   bool get isProduction => environment == AppEnvironment.prod;
   bool get platesSyncEnabled => platesSyncUrl.isNotEmpty;

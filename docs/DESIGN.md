@@ -58,5 +58,5 @@ avec plaque au format européen, vignette, confiance, pays, type ; encadré d'al
 
 ## Captures de comparaison
 
-La CI génère les captures (`test/screenshots`) à chaque push ; elles sont publiées dans
-l'artefact `quality-report` et sur la branche `ci-logs/quality`.
+La CI génère les captures (`test/screenshots`) à chaque push ; elles sont publiées sur la
+branche `ci-logs/quality` (dossier `screenshots/`).

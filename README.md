@@ -32,9 +32,9 @@ Le détail et les limitations connues sont dans [`docs/ROADMAP.md`](docs/ROADMAP
 
 ## Installer l'APK de test
 
-1. Ouvrir l'onglet **Actions** du dépôt, choisir la dernière exécution verte de **CI**.
-2. Télécharger l'artefact **vigiroad-android-apk** et le décompresser.
-3. Copier `vigiroad-dev-debug.apk` sur le téléphone Android (7.0 ou plus) et l'ouvrir
+1. Ouvrir **Releases** sur la page du dépôt, puis la pré-release **APK de test (développement)**
+   (étiquette `apk-dev`, mise à jour à chaque compilation réussie).
+2. Télécharger `vigiroad-dev-debug.apk` depuis le téléphone Android (7.0 ou plus) et l'ouvrir
    (autoriser l'installation depuis cette source si le téléphone le demande).
 
 ## Compiler soi-même
@@ -69,6 +69,7 @@ compile l'APK Android et un build iOS non signé à chaque push et Pull Request.
 - `main` : branche stable, alimentée uniquement par Pull Request.
 - `feature/<phase>-<sujet>`, `fix/<sujet>` : développement.
 - `ci-logs/*` : journaux et captures publiés automatiquement par la CI (ne pas modifier).
+- Pré-release `apk-dev` : dernier APK de test compilé par la CI.
 
 ## Documentation
 

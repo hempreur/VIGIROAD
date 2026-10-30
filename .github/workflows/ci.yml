@@ -22,7 +22,7 @@ jobs:
     name: Analyse, tests, captures
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: subosito/flutter-action@v2
         with:
           channel: ${{ env.FLUTTER_CHANNEL }}
@@ -54,11 +54,6 @@ jobs:
       - name: Rapport de couverture
         if: success() || failure()
         run: cp coverage/lcov.info ci-out/ 2>/dev/null || true
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: quality-report
-          path: ci-out/
       - name: Publier les journaux
         if: always() && github.event_name == 'push'
         env:
@@ -71,8 +66,8 @@ jobs:
     needs: quality
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '17'
@@ -88,11 +83,18 @@ jobs:
           flutter build apk --debug --dart-define-from-file=config/dev.env 2>&1 | tee ci-out/build_apk.log
           cp build/app/outputs/flutter-apk/app-debug.apk ci-out/vigiroad-dev-debug.apk
           ls -la ci-out
-      - uses: actions/upload-artifact@v4
-        if: success()
-        with:
-          name: vigiroad-android-apk
-          path: ci-out/vigiroad-dev-debug.apk
+      # Publié comme pré-release (et non artefact Actions) : pas soumis au quota
+      # de stockage des artefacts. Toujours la dernière compilation réussie.
+      - name: Publier l'APK de test (pré-release apk-dev)
+        if: success() && github.event_name == 'push'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release delete apk-dev --cleanup-tag --yes || true
+          gh release create apk-dev ci-out/vigiroad-dev-debug.apk \
+            --prerelease --target "$GITHUB_SHA" \
+            --title "APK de test (développement)" \
+            --notes "Compilation debug, environnement dev. Branche ${GITHUB_REF_NAME}, commit ${GITHUB_SHA::8}. Ne pas distribuer."
       - name: Publier les journaux
         if: always() && github.event_name == 'push'
         env:
@@ -107,7 +109,7 @@ jobs:
     needs: quality
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: subosito/flutter-action@v2
         with:
           channel: ${{ env.FLUTTER_CHANNEL }}

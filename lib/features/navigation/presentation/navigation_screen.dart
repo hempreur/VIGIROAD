@@ -94,8 +94,9 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
     final size = media.size;
 
     // Hauteurs des zones, proportionnelles à l'écran comme sur la référence.
-    final cameraH = (size.height * 0.2).clamp(130.0, 190.0);
-    const ocrH = 104.0;
+    final compact = size.height < 720;
+    final cameraH = compact ? 100.0 : (size.height * 0.2).clamp(130.0, 190.0);
+    final ocrH = compact ? 88.0 : 104.0;
     const speedRowH = 72.0;
     const alertH = 88.0;
     final bottomH = pad.bottom + _side + ocrH + _gap + cameraH + _gap + speedRowH +

@@ -30,8 +30,11 @@ class SpeedGauge extends StatelessWidget {
           border: Border.all(color: ring, width: size * 0.045),
           boxShadow: [BoxShadow(color: ring.withValues(alpha: 0.5), blurRadius: 14)],
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        padding: EdgeInsets.all(size * 0.12),
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Text(
               speedKmh?.toString() ?? '--',
@@ -42,6 +45,7 @@ class SpeedGauge extends StatelessWidget {
               style: VrText.caption.copyWith(fontSize: size * 0.15, height: 1),
             ),
           ],
+        ),
         ),
       ),
     );

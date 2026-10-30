@@ -255,9 +255,9 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
                     diagnostic: config.isProduction || scan.analysisMs == null
                         ? null
                         : '${scan.analysisMs} ms · net. ${scan.sharpness?.round()}',
-                    warning: scan.status == ScanStatus.running && scan.lowLight
-                        ? 'Luminosité faible : lecture moins fiable'
-                        : null,
+                    warning: scan.status != ScanStatus.running
+                        ? null
+                        : scan.ocrError ?? (scan.lowLight ? 'Luminosité faible : lecture moins fiable' : null),
                   ),
                 ),
                 const SizedBox(height: _gap),

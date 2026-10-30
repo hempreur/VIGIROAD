@@ -23,6 +23,7 @@ class ScanState {
     this.sharpness,
     this.analysisMs,
     this.lowLight = false,
+    this.ocrError,
   });
 
   final ScanStatus status;
@@ -36,6 +37,9 @@ class ScanState {
 
   /// Luminosité faible : lecture moins fiable.
   final bool lowLight;
+
+  /// Analyse en échec répété : cause affichée au conducteur.
+  final String? ocrError;
 
   bool get active => status == ScanStatus.running || status == ScanStatus.starting;
 }
@@ -60,6 +64,8 @@ final plateScanningProvider = NotifierProvider<PlateScanningController, ScanStat
 /// et publie les plaques confirmées.
 class PlateScanningController extends Notifier<ScanState> {
   StreamSubscription<ScanFrame>? _sub;
+  StreamSubscription<String>? _errSub;
+  int _errorStreak = 0;
   late PlateVoter _voter;
   bool _wanted = false;
   AppLifecycleListener? _lifecycle;
@@ -84,6 +90,7 @@ class PlateScanningController extends Notifier<ScanState> {
     ref.onDispose(() {
       _lifecycle?.dispose();
       unawaited(_sub?.cancel());
+      unawaited(_errSub?.cancel());
       unawaited(scanner.stop());
       unawaited(_confirmed.close());
     });
@@ -122,6 +129,9 @@ class PlateScanningController extends Notifier<ScanState> {
   Future<void> _halt() async {
     await _sub?.cancel();
     _sub = null;
+    await _errSub?.cancel();
+    _errSub = null;
+    _errorStreak = 0;
     await ref.read(plateScannerProvider).stop();
     _voter.reset();
   }
@@ -130,6 +140,7 @@ class PlateScanningController extends Notifier<ScanState> {
     final scanner = ref.read(plateScannerProvider);
     state = const ScanState(status: ScanStatus.starting);
     _sub ??= scanner.frames.listen(_onFrame);
+    _errSub ??= scanner.errors.listen(_onError);
     try {
       await scanner.start();
       if (!_wanted) {
@@ -144,8 +155,17 @@ class PlateScanningController extends Notifier<ScanState> {
     }
   }
 
+  /// Trois échecs d'analyse d'affilée : la lecture ne fonctionne pas, on le
+  /// dit plutôt que de laisser croire qu'aucune plaque n'est visible.
+  void _onError(String message) {
+    if (state.status != ScanStatus.running) return;
+    if (++_errorStreak < 3) return;
+    state = ScanState(status: ScanStatus.running, ocrError: 'Lecture des plaques en échec : $message');
+  }
+
   void _onFrame(ScanFrame f) {
     if (state.status != ScanStatus.running) return;
+    if (f.analyzed) _errorStreak = 0;
     final now = ref.read(scanClockProvider)();
     final w = f.uprightSize.width, h = f.uprightSize.height;
     state = ScanState(

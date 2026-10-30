@@ -75,6 +75,22 @@ void main() {
     expect(c.read(plateScanningProvider).message, 'Aucune caméra arrière disponible.');
   });
 
+  test('échecs OCR répétés : cause affichée, effacée à la lecture suivante', () async {
+    await ctrl().start();
+    scanner.pushError('PlatformException(MlKitException)');
+    scanner.pushError('PlatformException(MlKitException)');
+    await pumpEventQueue();
+    expect(c.read(plateScanningProvider).ocrError, isNull, reason: 'deux échecs isolés sont tolérés');
+    scanner.pushError('PlatformException(MlKitException)');
+    await pumpEventQueue();
+    expect(c.read(plateScanningProvider).ocrError, contains('MlKitException'));
+    expect(c.read(plateScanningProvider).status, ScanStatus.running);
+
+    scanner.push(['AA-123-BB'], at: now);
+    await pumpEventQueue();
+    expect(c.read(plateScanningProvider).ocrError, isNull);
+  });
+
   test('arrêt : caméra libérée', () async {
     await ctrl().start();
     await ctrl().toggle();

@@ -54,6 +54,9 @@ abstract interface class PlateScanner {
   /// Contrôleur pour l'aperçu (null tant que la caméra n'est pas prête).
   CameraController? get controller;
   Stream<ScanFrame> get frames;
+
+  /// Erreurs d'analyse (OCR, conversion d'image), pour les rendre visibles.
+  Stream<String> get errors;
   Future<void> start();
   Future<void> stop();
   Future<void> dispose();
@@ -71,6 +74,7 @@ class MlKitPlateScanner implements PlateScanner {
   final List<PlateFormat> formats;
 
   final _frames = StreamController<ScanFrame>.broadcast();
+  final _errors = StreamController<String>.broadcast();
   final FrameThrottle _throttle;
   TextRecognizer? _recognizer;
   CameraController? _controller;
@@ -88,6 +92,9 @@ class MlKitPlateScanner implements PlateScanner {
 
   @override
   Stream<ScanFrame> get frames => _frames.stream;
+
+  @override
+  Stream<String> get errors => _errors.stream;
 
   @override
   Future<void> start() async {
@@ -137,6 +144,7 @@ class MlKitPlateScanner implements PlateScanner {
     await _recognizer?.close();
     _recognizer = null;
     await _frames.close();
+    await _errors.close();
   }
 
   int? _rotationDegrees(CameraController c) {
@@ -178,7 +186,10 @@ class MlKitPlateScanner implements PlateScanner {
 
       final format = InputImageFormatValue.fromRawValue(image.format.raw as int);
       final rot = InputImageRotationValue.fromRawValue(rotation);
-      if (format == null || rot == null) return;
+      if (format == null || rot == null) {
+        _error('format d\'image non pris en charge (${image.format.raw}, rotation $rotation)');
+        return;
+      }
       final input = InputImage.fromBytes(
         bytes: plane.bytes,
         metadata: InputImageMetadata(
@@ -219,9 +230,14 @@ class MlKitPlateScanner implements PlateScanner {
       ));
     } catch (e, st) {
       debugPrint('VIGIROAD OCR: $e\n$st');
+      _error('$e');
     } finally {
       _throttle.end(watch.elapsed);
     }
+  }
+
+  void _error(String message) {
+    if (!_errors.isClosed) _errors.add(message.length > 160 ? '${message.substring(0, 160)}…' : message);
   }
 
   void _emit(ScanFrame f) {

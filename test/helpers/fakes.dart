@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:camera/camera.dart' show CameraController;
 import 'package:flutter/widgets.dart';
 import 'package:vigiroad/core/permissions/permission_service.dart';
 import 'package:vigiroad/core/theme/vr_colors.dart';
@@ -9,6 +10,9 @@ import 'package:vigiroad/features/navigation/data/speaker.dart';
 import 'package:vigiroad/features/navigation/domain/route.dart';
 import 'package:vigiroad/features/navigation/domain/geo_fix.dart';
 import 'package:vigiroad/features/navigation/presentation/widgets/map_view.dart';
+import 'package:vigiroad/features/plates/data/plate_scanner.dart';
+import 'package:vigiroad/features/plates/domain/plate_format.dart';
+import 'package:vigiroad/features/plates/domain/plate_voter.dart';
 import 'package:vigiroad/features/search/data/photon_geocoder.dart';
 
 /// Service d'autorisations simulé, pour les tests uniquement.
@@ -180,3 +184,47 @@ GeoPoint north(double meters, [double eastMeters = 0]) => GeoPoint(
   48.8566 + meters / 111195.0,
   2.3522 + eastMeters / (111195.0 * 0.6578),
 );
+
+/// Lecteur de plaques simulé : les images analysées sont poussées par le test.
+class FakePlateScanner implements PlateScanner {
+  final _frames = StreamController<ScanFrame>.broadcast();
+  ScannerException? startError;
+  int starts = 0, stops = 0;
+
+  @override
+  CameraController? get controller => null;
+
+  @override
+  Stream<ScanFrame> get frames => _frames.stream;
+
+  @override
+  Future<void> start() async {
+    starts++;
+    if (startError != null) throw startError!;
+  }
+
+  @override
+  Future<void> stop() async => stops++;
+
+  @override
+  Future<void> dispose() async {}
+
+  void push(List<String> plates, {DateTime? at, Size size = const Size(720, 1280), double brightness = 120}) {
+    _frames.add(ScanFrame(
+      observations: [
+        for (final p in plates)
+          PlateObservation(
+            candidate: PlateFormats.extract(p).first,
+            at: at ?? DateTime.now(),
+            ocrConfidence: 0.92,
+            box: const Rect.fromLTWH(200, 700, 300, 70),
+          ),
+      ],
+      uprightSize: size,
+      sharpness: 80,
+      brightness: brightness,
+      took: const Duration(milliseconds: 60),
+      analyzed: true,
+    ));
+  }
+}

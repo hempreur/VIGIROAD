@@ -45,6 +45,7 @@ jobs:
         run: |
           set -o pipefail
           flutter test --exclude-tags screenshots --coverage --reporter expanded 2>&1 | tee ci-out/test.log
+          cp -r test_reports/. ci-out/ 2>/dev/null || true
       - name: Captures d'écran
         if: success() || failure()
         run: |

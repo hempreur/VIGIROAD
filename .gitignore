@@ -54,3 +54,4 @@ config/*.local.env
 *.jks
 *.keystore
 key.properties
+test_reports/

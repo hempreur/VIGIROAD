@@ -66,6 +66,12 @@ jobs:
     needs: quality
     runs-on: ubuntu-latest
     steps:
+      - name: Libérer de l'espace disque (NDK + ML Kit + MapLibre sont volumineux)
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android/sdk/ndk/2[0-6]* /opt/ghc /usr/local/.ghcup \
+            /usr/share/swift /usr/local/share/boost /opt/hostedtoolcache/CodeQL /usr/local/share/powershell
+          sudo docker image prune --all --force > /dev/null || true
+          df -h /
       - uses: actions/checkout@v5
       - uses: actions/setup-java@v5
         with:
@@ -80,9 +86,10 @@ jobs:
         run: |
           mkdir -p ci-out
           set -o pipefail
-          flutter build apk --debug --dart-define-from-file=config/dev.env 2>&1 | tee ci-out/build_apk.log
+          flutter build apk --debug --target-platform android-arm64 --dart-define-from-file=config/dev.env 2>&1 | tee ci-out/build_apk.log
           cp build/app/outputs/flutter-apk/app-debug.apk ci-out/vigiroad-dev-debug.apk
           ls -la ci-out
+          df -h /
       # Publié comme pré-release (et non artefact Actions) : pas soumis au quota
       # de stockage des artefacts. Toujours la dernière compilation réussie.
       - name: Publier l'APK de test (pré-release apk-dev)

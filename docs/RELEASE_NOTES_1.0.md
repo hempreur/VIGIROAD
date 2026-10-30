@@ -1,5 +1,13 @@
 # VIGIROAD 1.0 — fonctionnalités livrées et limitations
 
+## Correctif 1.0.1
+
+- **Lecture des plaques réparée dans les APK release** : l'optimisation R8 de la version release
+  pouvait retirer ou renommer des classes de la caméra et de Google ML Kit utilisées par le code
+  natif ; l'analyse échouait alors en silence. Ces classes sont désormais conservées.
+- Un échec répété de l'analyse s'affiche maintenant sur le panneau caméra, avec sa cause, au lieu
+  de laisser croire qu'aucune plaque n'est visible.
+
 ## Fonctionnalités livrées
 
 ### Navigation GPS

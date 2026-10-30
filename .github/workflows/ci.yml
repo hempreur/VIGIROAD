@@ -68,7 +68,8 @@ jobs:
 
   android:
     name: APK Android
-    needs: quality
+    # Pas d'APK publié si l'OCR ne fonctionne pas en release.
+    needs: [quality, ocr-release]
     runs-on: ubuntu-latest
     steps:
       - name: Libérer de l'espace disque (NDK + ML Kit + MapLibre sont volumineux)
@@ -129,8 +130,9 @@ jobs:
           rm -rf build/app/intermediates build/app/tmp
           free -m
           flutter build apk --release --split-per-abi --target-platform android-arm64,android-arm --dart-define-from-file=config/prod.env 2>&1 | tee ci-out/build_apk_release.log
-          cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk ci-out/vigiroad-1.0.0-arm64.apk
-          cp build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk ci-out/vigiroad-1.0.0-arm32.apk
+          VER="$(sed -n 's/^version: *\([^+]*\).*/\1/p' pubspec.yaml)"
+          cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk "ci-out/vigiroad-$VER-arm64.apk"
+          cp build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk "ci-out/vigiroad-$VER-arm32.apk"
           ls -la ci-out/*.apk
       - name: Publier la release (étiquette v* ou branche release/v*)
         if: success() && github.event_name == 'push' && (startsWith(github.ref, 'refs/tags/v') || startsWith(github.ref, 'refs/heads/release/v'))
@@ -139,13 +141,14 @@ jobs:
         run: |
           # Étiquette : celle poussée, ou dérivée de la branche release/vX.Y.Z.
           TAG="${GITHUB_REF_NAME#release/}"
+          VER="$(sed -n 's/^version: *\([^+]*\).*/\1/p' pubspec.yaml)"
           # Crée la release (et l'étiquette sur ce commit) si elle n'existe pas encore.
           if ! gh release view "$TAG" > /dev/null 2>&1; then
             {
               echo "**VIGIROAD ${TAG#v}** — GPS intelligent, lecture de plaques sur l'appareil, alertes et assistant vocal SENTRIX."
               echo
-              echo "- \`vigiroad-1.0.0-arm64.apk\` : téléphones Android 64 bits (recommandé)"
-              echo "- \`vigiroad-1.0.0-arm32.apk\` : anciens téléphones 32 bits"
+              echo "- \`vigiroad-$VER-arm64.apk\` : téléphones Android 64 bits (recommandé)"
+              echo "- \`vigiroad-$VER-arm32.apk\` : anciens téléphones 32 bits"
               echo
               echo "Installation : [docs/INSTALL.md](https://github.com/${GITHUB_REPOSITORY}/blob/main/docs/INSTALL.md)"
               echo
@@ -153,7 +156,7 @@ jobs:
             } > "$RUNNER_TEMP/notes.md"
             gh release create "$TAG" --title "VIGIROAD ${TAG#v}" --notes-file "$RUNNER_TEMP/notes.md" --target "$GITHUB_SHA"
           fi
-          gh release upload "$TAG" ci-out/vigiroad-1.0.0-arm64.apk ci-out/vigiroad-1.0.0-arm32.apk --clobber
+          gh release upload "$TAG" "ci-out/vigiroad-$VER-arm64.apk" "ci-out/vigiroad-$VER-arm32.apk" --clobber
       - name: Publier les journaux
         if: always() && github.event_name == 'push'
         env:
@@ -163,6 +166,55 @@ jobs:
           ls -la ci-out/*.apk > ci-out/apk_sizes.txt 2>/dev/null || true
           rm -f ci-out/*.apk
           .github/scripts/publish_logs.sh android ci-out
+
+  ocr-release:
+    name: OCR en APK release (émulateur)
+    needs: quality
+    runs-on: ubuntu-latest
+    steps:
+      - name: Libérer de l'espace disque
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android/sdk/ndk/2[0-6]* /opt/ghc /usr/local/.ghcup \
+            /usr/share/swift /usr/local/share/boost /opt/hostedtoolcache/CodeQL /usr/local/share/powershell
+          sudo docker image prune --all --force > /dev/null || true
+      - name: Activer KVM (émulateur accéléré)
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: ${{ env.FLUTTER_CHANNEL }}
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+      # Même configuration release (R8 + règles ProGuard) que l'APK publié.
+      - name: Compilation de l'APK release de test OCR
+        run: |
+          mkdir -p ci-out
+          set -o pipefail
+          flutter build apk --release -t tool/ocr_smoke/main.dart --target-platform android-x64 \
+            --dart-define-from-file=config/prod.env 2>&1 | tee ci-out/build_ocr_smoke.log
+          (cd android && ./gradlew --stop) || true
+      - name: Lecture d'une plaque par ML Kit dans l'APK release
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          arch: x86_64
+          target: google_apis
+          disable-animations: true
+          emulator-options: -no-window -no-audio -no-boot-anim -gpu swiftshader_indirect -camera-back none
+          script: .github/scripts/ocr_smoke.sh build/app/outputs/flutter-apk/app-release.apk ci-out
+      - name: Publier les journaux
+        if: always() && github.event_name == 'push'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          JOB_STATUS: ${{ job.status }}
+        run: .github/scripts/publish_logs.sh ocr-release ci-out
 
   ios:
     name: Build iOS (non signé)

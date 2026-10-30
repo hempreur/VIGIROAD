@@ -207,6 +207,13 @@ class FakePlateScanner implements PlateScanner {
   @override
   Stream<ScanFrame> get frames => _frames.stream;
 
+  final _errors = StreamController<String>.broadcast();
+
+  @override
+  Stream<String> get errors => _errors.stream;
+
+  void pushError(String message) => _errors.add(message);
+
   @override
   Future<void> start() async {
     starts++;

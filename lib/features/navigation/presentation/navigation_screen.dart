@@ -18,6 +18,7 @@ import '../../plates/presentation/widgets/camera_panel.dart';
 import '../../plates/presentation/widgets/scanner_preview.dart';
 import '../../plates/presentation/widgets/ocr_panel.dart';
 import '../../sentrix/domain/sentrix_state.dart';
+import '../../sentrix/presentation/sentrix_dock.dart';
 import '../../sentrix/presentation/sentrix_head.dart';
 import '../application/navigation_providers.dart';
 import '../data/location_source.dart';
@@ -193,6 +194,13 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
               child: _LocationProblem(error: position.error!),
             ),
 
+          // Bulle de SENTRIX, au-dessus de sa tête.
+          Positioned(
+            right: _side + 20,
+            bottom: bottomH + 2,
+            child: const SentrixBubble(),
+          ),
+
           // --- Bas : compteur, caméra, OCR, alerte -------------------------------
           Positioned(
             left: _side,
@@ -214,14 +222,7 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
                         SpeedLimitSign(limitKmh: speedLimit),
                       ],
                       const Spacer(),
-                      Semantics(
-                        button: true,
-                        label: 'Ouvrir le menu SENTRIX',
-                        child: GestureDetector(
-                          onTap: _openMenu,
-                          child: const SentrixHead(size: 78, state: SentrixState.idle),
-                        ),
-                      ),
+                      SentrixButton(onLongPress: _openMenu),
                     ],
                   ),
                 ),

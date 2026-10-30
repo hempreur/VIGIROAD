@@ -141,7 +141,7 @@ void main() {
     await tester.tap(find.byTooltip('Retour'));
     await tester.pump(const Duration(milliseconds: 600));
 
-    await tester.tap(find.descendant(of: find.byType(NavigationScreen), matching: find.byType(SentrixHead)));
+    await tester.longPress(find.descendant(of: find.byType(NavigationScreen), matching: find.byType(SentrixHead)));
     await tester.pump(const Duration(milliseconds: 600));
     expect(find.text('Que voulez-vous faire ?'), findsOneWidget);
     expect(find.text('Réglages'), findsOneWidget);

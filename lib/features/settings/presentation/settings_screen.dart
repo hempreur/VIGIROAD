@@ -7,6 +7,7 @@ import '../../../core/theme/vr_colors.dart';
 import '../../../core/theme/vr_typography.dart';
 import '../../../core/widgets/glow_panel.dart';
 import '../../../core/widgets/vr_page.dart';
+import '../../sentrix/application/sentrix_controller.dart';
 
 /// Réglages. Cette version affiche l'état réel des autorisations et des
 /// services configurés ; les réglages de détection, d'alerte et de voix
@@ -50,6 +51,24 @@ class SettingsScreen extends ConsumerWidget {
                           child: const Text('Modifier', style: TextStyle(color: VrColors.cyan)),
                         ),
                 ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 20),
+        const Text('COMMANDES VOCALES', style: VrText.sectionTitle),
+        const SizedBox(height: 4),
+        const Text(
+          'Touchez SENTRIX sur l\'écran de navigation puis parlez. Liste provisoire, '
+          'à valider avec le propriétaire du projet.',
+          style: VrText.caption,
+        ),
+        const SizedBox(height: 10),
+        GlowPanel(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+          child: Column(
+            children: [
+              for (final c in ref.watch(sentrixCommandsProvider))
+                InfoRow(label: c.label, value: '« ${c.phrases.first} »'),
             ],
           ),
         ),

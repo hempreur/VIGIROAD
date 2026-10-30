@@ -1,0 +1,135 @@
+name: CI
+
+on:
+  push:
+    branches: [main, 'feature/**', 'fix/**', 'chore/**']
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write  # publication des journaux sur ci-logs/*
+
+env:
+  FLUTTER_CHANNEL: stable
+  FLUTTER_VERSION: 3.47.9
+
+jobs:
+  quality:
+    name: Analyse, tests, captures
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: ${{ env.FLUTTER_CHANNEL }}
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+      - name: Dépendances
+        run: |
+          mkdir -p ci-out
+          set -o pipefail
+          flutter pub get 2>&1 | tee ci-out/pub_get.log
+          cp pubspec.lock ci-out/pubspec.lock
+      - name: Formatage (informatif)
+        run: dart format --output=none --set-exit-if-changed lib test > ci-out/format.log 2>&1 || echo "::warning::fichiers non formatés, voir format.log"
+      - name: Analyse statique
+        run: |
+          set -o pipefail
+          flutter analyze --no-fatal-infos 2>&1 | tee ci-out/analyze.log
+      - name: Tests unitaires et widgets
+        if: success() || failure()
+        run: |
+          set -o pipefail
+          flutter test --exclude-tags screenshots --coverage --reporter expanded 2>&1 | tee ci-out/test.log
+      - name: Captures d'écran
+        if: success() || failure()
+        run: |
+          set -o pipefail
+          flutter test --tags screenshots --update-goldens 2>&1 | tee ci-out/screenshots.log
+          mkdir -p ci-out/screenshots && cp test/screenshots/goldens/*.png ci-out/screenshots/ || true
+      - name: Rapport de couverture
+        if: success() || failure()
+        run: cp coverage/lcov.info ci-out/ 2>/dev/null || true
+      - name: Publier les journaux
+        if: always() && github.event_name == 'push'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          JOB_STATUS: ${{ job.status }}
+        run: .github/scripts/publish_logs.sh quality ci-out
+
+  android:
+    name: APK Android
+    needs: quality
+    runs-on: ubuntu-latest
+    steps:
+      - name: Libérer de l'espace disque (NDK + ML Kit + MapLibre sont volumineux)
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android/sdk/ndk/2[0-6]* /opt/ghc /usr/local/.ghcup \
+            /usr/share/swift /usr/local/share/boost /opt/hostedtoolcache/CodeQL /usr/local/share/powershell
+          sudo docker image prune --all --force > /dev/null || true
+          df -h /
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '21'  # maplibre_gl compile en Java 21
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: ${{ env.FLUTTER_CHANNEL }}
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+      - name: Compilation APK (debug, installable sur téléphone de test)
+        run: |
+          mkdir -p ci-out
+          set -o pipefail
+          flutter build apk --debug --target-platform android-arm64 --dart-define-from-file=config/dev.env 2>&1 | tee ci-out/build_apk.log
+          cp build/app/outputs/flutter-apk/app-debug.apk ci-out/vigiroad-dev-debug.apk
+          ls -la ci-out
+          df -h /
+      # Publié comme pré-release (et non artefact Actions) : pas soumis au quota
+      # de stockage des artefacts. Toujours la dernière compilation réussie.
+      - name: Publier l'APK de test (pré-release apk-dev)
+        if: success() && github.event_name == 'push'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release delete apk-dev --cleanup-tag --yes || true
+          gh release create apk-dev ci-out/vigiroad-dev-debug.apk \
+            --prerelease --target "$GITHUB_SHA" \
+            --title "APK de test (développement)" \
+            --notes "Compilation debug, environnement dev. Branche ${GITHUB_REF_NAME}, commit ${GITHUB_SHA::8}. Ne pas distribuer."
+      - name: Publier les journaux
+        if: always() && github.event_name == 'push'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          JOB_STATUS: ${{ job.status }}
+        run: |
+          rm -f ci-out/*.apk
+          .github/scripts/publish_logs.sh android ci-out
+
+  ios:
+    name: Build iOS (non signé)
+    needs: quality
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: ${{ env.FLUTTER_CHANNEL }}
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+      - name: Compilation iOS sans signature
+        run: |
+          mkdir -p ci-out
+          set -o pipefail
+          flutter build ios --release --no-codesign --dart-define-from-file=config/dev.env 2>&1 | tee ci-out/build_ios.log
+      - name: Publier les journaux
+        if: always() && github.event_name == 'push'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          JOB_STATUS: ${{ job.status }}
+        run: .github/scripts/publish_logs.sh ios ci-out

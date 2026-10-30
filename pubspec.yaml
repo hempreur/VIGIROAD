@@ -1,0 +1,70 @@
+name: vigiroad
+description: "VIGIROAD - GPS intelligent avec reconnaissance de plaques et assistant vocal SENTRIX."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.13.7
+
+# Versions résolues par la CI (Flutter 3.47.9 / Dart 3.13.7) le 30/10/2026.
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  # Architecture
+  flutter_riverpod: ^3.4.3
+  go_router: ^18.1.2
+
+  # Navigation & cartographie
+  maplibre_gl: ^0.27.1
+  geolocator: ^14.0.1
+  http: ^1.6.0
+
+  # Caméra & OCR (analyse locale)
+  camera: ^0.12.2
+  google_mlkit_text_recognition: ^0.17.1
+
+  # Données
+  sqflite_sqlcipher: ^3.4.1
+  flutter_secure_storage: ^11.2.0
+  shared_preferences: ^2.5.6
+  file_picker: ^13.3.0
+  path_provider: ^2.1.6
+  path: ^1.9.1
+
+  # SENTRIX
+  speech_to_text: ^7.5.0
+  flutter_tts: ^4.2.5
+  audioplayers: ^6.8.1
+
+  # Système
+  permission_handler: ^13.0.2
+  wakelock_plus: ^1.8.2
+  intl: any # version imposée par flutter_localizations
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  mocktail: ^1.0.5
+
+flutter:
+  uses-material-design: true
+
+  fonts:
+    # Rajdhani (SIL OFL 1.1) : titres, chiffres de navigation, plaques.
+    - family: Rajdhani
+      fonts:
+        - asset: assets/fonts/Rajdhani-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Rajdhani-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Rajdhani-Bold.ttf
+          weight: 700
+    # Inter (SIL OFL 1.1, police variable) : textes courants.
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter.ttf

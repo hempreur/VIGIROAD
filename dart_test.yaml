@@ -1,0 +1,3 @@
+tags:
+  # Génère les captures de l'interface (flutter test --tags screenshots --update-goldens).
+  screenshots:

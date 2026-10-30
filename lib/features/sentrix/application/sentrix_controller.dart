@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app/providers.dart';
 import '../../../core/permissions/permission_service.dart';
-import '../../navigation/application/navigation_session.dart';
+import '../../../core/audio/voice_providers.dart';
 import '../data/speech_input.dart';
 import '../domain/command_engine.dart';
 import '../domain/sentrix_state.dart';
@@ -70,8 +70,9 @@ class SentrixController extends Notifier<SentrixUi> {
       return;
     }
 
-    // Pas d'écoute pendant une annonce : SENTRIX s'entendrait lui-même.
-    await ref.read(speakerProvider).stop();
+    // Pas d'écoute pendant ses propres réponses : SENTRIX s'entendrait.
+    // Les consignes de navigation et les alertes, elles, ne sont pas coupées.
+    await ref.read(voiceQueueProvider).clear(only: VoicePriority.assistant);
     state = const SentrixUi(visual: SentrixState.listening, reply: 'Je vous écoute…');
 
     final String? heard;
@@ -126,7 +127,7 @@ class SentrixController extends Notifier<SentrixUi> {
     );
     if (speak) {
       try {
-        await ref.read(speakerProvider).speak(r.reply);
+        await ref.read(voiceQueueProvider).say(r.reply, VoicePriority.assistant);
       } catch (_) {
         // Pas de synthèse vocale : la réponse reste affichée.
       }

@@ -65,8 +65,12 @@ sont conservées (voir `PRIVACY.md`).
 
 - L'OCR s'exécute hors du thread d'interface (le plugin ML Kit traite en natif) ; une seule
   analyse en vol à la fois, les images arrivant pendant l'analyse sont abandonnées.
-- File d'annonces vocales à priorité : guidage > alerte > réponse SENTRIX ; jamais deux voix
-  simultanées.
+- File d'annonces vocales à priorité (`core/audio/voice_queue.dart`) : guidage > alerte > réponse
+  SENTRIX ; jamais deux voix simultanées. Une consigne interrompt une réponse SENTRIX ; une alerte
+  interrompue est répétée ; seule la consigne la plus récente reste en attente ; une annonce en
+  attente depuis plus de 12 s est abandonnée.
+- Au retour au premier plan (appel terminé, réglages système), les autorisations sont relues et le
+  GPS est relancé s'il avait échoué.
 - La caméra est arrêtée quand l'application passe en arrière-plan (contrainte iOS et Android) ;
   le guidage GPS peut continuer.
 

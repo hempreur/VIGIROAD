@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/audio/voice_providers.dart';
 import '../../navigation/application/navigation_providers.dart';
+import '../../settings/application/settings_controller.dart';
 import '../../navigation/application/navigation_session.dart';
 import '../data/repositories.dart';
 import '../domain/alert_decider.dart';
@@ -36,6 +37,8 @@ class AlertSettings {
     this.volume = 1,
     this.announce = true,
     this.logHistory = true,
+    this.saveLocation = true,
+    this.retention,
     this.policy = const AlertPolicy(),
   });
 
@@ -47,10 +50,28 @@ class AlertSettings {
 
   /// Enregistrement des correspondances dans l'historique.
   final bool logHistory;
+
+  /// Enregistrer la position GPS avec la correspondance.
+  final bool saveLocation;
+
+  /// Durée de conservation de l'historique (`null` = illimitée).
+  final Duration? retention;
   final AlertPolicy policy;
 }
 
-final alertSettingsProvider = Provider<AlertSettings>((ref) => const AlertSettings());
+/// Réglages d'alerte issus des réglages de l'application.
+final alertSettingsProvider = Provider<AlertSettings>((ref) {
+  final s = ref.watch(appSettingsProvider);
+  return AlertSettings(
+    sound: s.alertSound,
+    volume: s.alertVolume,
+    announce: s.sentrixAnnounce,
+    logHistory: s.logHistory,
+    saveLocation: s.saveLocation,
+    retention: s.retention.duration,
+    policy: AlertPolicy(minConfidence: s.minConfidence),
+  );
+});
 final alertSoundProvider = Provider<AlertSound>((ref) => AssetAlertSound());
 
 /// Événements récents (diagnostic, tests).
@@ -89,7 +110,7 @@ class AlertService extends Notifier<List<MatchOutcome>> {
       unawaited(ref.read(voiceQueueProvider).say('Alerte. Plaque $spelled. ${alert.category}.', VoicePriority.alert));
     }
     if (settings.logHistory) {
-      final pos = ref.read(positionProvider).value?.point;
+      final pos = settings.saveLocation ? ref.read(positionProvider).value?.point : null;
       final log = await ref.read(detectionLogProvider.future);
       await log.add(DetectionRecord(
         plate: alert.reading.normalized,
@@ -102,12 +123,21 @@ class AlertService extends Notifier<List<MatchOutcome>> {
         latitude: pos?.latitude,
         longitude: pos?.longitude,
       ));
+      if (settings.retention != null) {
+        await log.purgeOlderThan(alert.at.subtract(settings.retention!));
+      }
       ref.invalidate(detectionsProvider);
     }
   }
 }
 
 /// Historique des correspondances.
-final detectionsProvider = FutureProvider<List<DetectionRecord>>(
-  (ref) async => (await ref.watch(detectionLogProvider.future)).recent(),
-);
+/// La durée de conservation est appliquée à chaque lecture de l'historique.
+final detectionsProvider = FutureProvider<List<DetectionRecord>>((ref) async {
+  final log = await ref.watch(detectionLogProvider.future);
+  final retention = ref.watch(alertSettingsProvider.select((s) => s.retention));
+  if (retention != null) {
+    await log.purgeOlderThan(ref.read(clockProvider)().subtract(retention));
+  }
+  return log.recent();
+});

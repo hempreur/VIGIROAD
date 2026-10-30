@@ -19,6 +19,7 @@ import '../../plates/presentation/widgets/scanner_preview.dart';
 import '../../plates/presentation/widgets/ocr_panel.dart';
 import '../../sentrix/domain/sentrix_state.dart';
 import '../../sentrix/presentation/sentrix_dock.dart';
+import '../../settings/application/settings_controller.dart';
 import '../../sentrix/presentation/sentrix_head.dart';
 import '../application/navigation_providers.dart';
 import '../data/location_source.dart';
@@ -44,7 +45,18 @@ class NavigationScreen extends ConsumerStatefulWidget {
 
 class _NavigationScreenState extends ConsumerState<NavigationScreen> {
   bool _following = true;
-  bool _tilted = true;
+  late bool _tilted = ref.read(appSettingsProvider).drive3d;
+
+  @override
+  void initState() {
+    super.initState();
+    // Lecture des plaques au démarrage si demandé dans les réglages.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted && ref.read(appSettingsProvider).autoStartDetection) {
+        ref.read(plateScanningProvider.notifier).start().ignore();
+      }
+    });
+  }
 
   static const double _gap = 8;
   static const double _side = 12;

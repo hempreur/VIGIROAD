@@ -5,6 +5,7 @@ import 'package:wakelock_plus/wakelock_plus.dart';
 
 import '../../../app/providers.dart';
 import '../../../core/audio/voice_providers.dart';
+import '../../settings/application/settings_controller.dart';
 import '../data/osrm_router.dart';
 import '../data/speaker.dart';
 import '../domain/geo_fix.dart';
@@ -77,7 +78,7 @@ final voiceGuidanceProvider = NotifierProvider<VoiceGuidanceController, bool>(Vo
 
 class VoiceGuidanceController extends Notifier<bool> {
   @override
-  bool build() => true;
+  bool build() => ref.watch(appSettingsProvider.select((s) => s.voiceGuidance));
   void toggle() {
     state = !state;
     if (!state) unawaited(ref.read(voiceQueueProvider).clear(only: VoicePriority.guidance));

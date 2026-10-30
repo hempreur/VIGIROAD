@@ -21,10 +21,10 @@ Android et iOS, interface DARK premium.
 | 2 | Interface DARK fidèle à la référence | ✅ PR #2 |
 | 3 | GPS et circulation | ✅ PR #3 |
 | 4 | Caméra et lecture des plaques | ✅ |
-| 5 | Base de plaques et alertes | 🔧 en cours |
-| 6 | SENTRIX et moteur vocal | ⏳ |
-| 7 | Intégration simultanée | ⏳ |
-| 8 | Historique et paramètres | ⏳ |
+| 5 | Base de plaques et alertes | ✅ |
+| 6 | SENTRIX et moteur vocal | ✅ |
+| 7 | Intégration simultanée | ✅ |
+| 8 | Historique et paramètres | 🔧 en cours |
 | 9 | Tests et optimisation | ⏳ |
 | 10 | Livraison 1.0 | ⏳ |
 
@@ -78,6 +78,7 @@ compile l'APK Android et un build iOS non signé à chaque push et Pull Request.
 - [Configuration des services](docs/API_CONFIG.md)
 - [Feuille de route et limitations](docs/ROADMAP.md)
 - [Module OCR](docs/OCR.md)
+- [Assistant SENTRIX](docs/SENTRIX.md)
 - [Format de la base de plaques](docs/PLATES_FORMAT.md)
 - [Données personnelles et cadre légal](docs/PRIVACY.md)
 

@@ -25,6 +25,9 @@ class Datex2Connector extends TrafficConnector {
       attribution: 'Information fournie par Bison Futé',
       minInterval: Duration(minutes: 2),
       homepage: 'https://www.bison-fute.gouv.fr/s-abonner.html',
+      // France métropolitaine (Corse comprise).
+      areas: [BBox(-5.3, 41.3, 9.7, 51.2)],
+      coverageNote: 'réseau routier national non concédé (hors autoroutes concédées et routes locales)',
       verified: true,
     ),
   );

@@ -42,7 +42,7 @@ référence. **À valider avec le propriétaire du projet.**
 | Arrêter la navigation | « Annule le guidage » |
 | Heure d'arrivée | « Dans combien de temps j'arrive ? » |
 | Activer / désactiver la détection | « Active la détection », « Éteins la caméra » |
-| Afficher le trafic | répond honnêtement que le trafic n'est pas configuré |
+| Afficher le trafic | résume les perturbations sur l'itinéraire (ou autour), « inconnu » hors zone couverte, ou indique que le trafic n'est pas configuré |
 | Lire la dernière alerte | « Lire la dernière alerte » |
 | Ouvrir l'historique / la liste des plaques / les réglages | « Montre-moi l'historique » |
 | Couper / activer le guidage vocal | « Coupe le guidage vocal » |
@@ -71,3 +71,10 @@ et vérifiée par le test « chaque commande se reconnaît par sa phrase d'exemp
 
 L'écoute ne démarre que sur appui. La transcription utilise le moteur du système (Google sur Android,
 Apple sur iOS), qui peut traiter l'audio en ligne selon le téléphone.
+
+## Annonces des perturbations
+
+Pendant le guidage, SENTRIX annonce chaque perturbation signalée sur l'itinéraire quand elle est à
+moins de 5 km devant (« Attention, accident sur la N20 dans 2 kilomètres. »), une seule fois. Les
+annonces passent après les consignes de navigation et les alertes de plaques, et le bouton de
+coupure du guidage vocal les coupe aussi.

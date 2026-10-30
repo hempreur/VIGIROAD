@@ -1042,6 +1042,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.4.4"
+  vigiroad_traffic:
+    dependency: "direct main"
+    description:
+      path: "packages/vigiroad_traffic"
+      relative: true
+    source: path
+    version: "1.0.0"
   vm_service:
     dependency: transitive
     description:

@@ -12,12 +12,15 @@ import '../source.dart';
 /// partenaires et ses conditions interdisent tout autre usage. Lit les
 /// alertes du flux JSON partenaire (`alerts`).
 class WazePartnerConnector extends TrafficConnector {
-  WazePartnerConnector(this.feedUrl);
+  WazePartnerConnector(this.feedUrl, {this.areas = const []});
 
   final Uri feedUrl;
 
+  /// Zone couverte par l'accord partenaire (`VR_WAZE_BBOX`).
+  final List<BBox> areas;
+
   @override
-  SourceInfo get info => const SourceInfo(
+  SourceInfo get info => SourceInfo(
     id: 'waze-partner',
     name: 'Waze for Cities (flux partenaire)',
     countries: [],
@@ -25,6 +28,8 @@ class WazePartnerConnector extends TrafficConnector {
     attribution: 'Données Waze',
     minInterval: Duration(minutes: 2),
     homepage: 'https://www.waze.com/wazeforcities/',
+    areas: areas,
+    coverageNote: 'zone de l\'accord partenaire, signalements de la communauté Waze',
     requiresKey: true,
   );
 

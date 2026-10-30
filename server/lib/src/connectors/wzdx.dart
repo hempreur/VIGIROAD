@@ -24,6 +24,8 @@ class WzdxConnector extends TrafficConnector {
       // 60 requêtes/heure autorisées par clé : une toutes les 2 minutes reste en dessous.
       minInterval: Duration(minutes: 2),
       homepage: 'https://511.org/open-data/traffic',
+      areas: [BBox(-123.1, 36.9, -121.2, 38.9)],
+      coverageNote: 'baie de San Francisco, zones de travaux uniquement',
       requiresKey: true,
     ),
   );

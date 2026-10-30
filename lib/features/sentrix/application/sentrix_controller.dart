@@ -96,6 +96,29 @@ class SentrixController extends Notifier<SentrixUi> {
     await execute(heard, session: session);
   }
 
+  /// Annonce spontanée de SENTRIX (perturbation sur l'itinéraire…) :
+  /// affichée dans la bulle et prononcée. N'interrompt pas une écoute en
+  /// cours. Renvoie `true` si l'annonce a été prononcée jusqu'au bout.
+  Future<bool> announce(String text) async {
+    if (state.busy) return false;
+    final session = ++_session;
+    _bubbleTimer?.cancel();
+    state = SentrixUi(visual: SentrixState.speaking, reply: text);
+    var spoken = false;
+    try {
+      spoken = await ref.read(voiceQueueProvider).say(text, VoicePriority.assistant);
+    } catch (_) {
+      // Pas de synthèse vocale : l'annonce reste affichée.
+    }
+    if (session == _session) {
+      _bubbleTimer = Timer(ref.read(sentrixBubbleDurationProvider), () {
+        if (session == _session) state = const SentrixUi();
+      });
+      state = SentrixUi(reply: text);
+    }
+    return spoken;
+  }
+
   /// Interprète et exécute une phrase (aussi utilisé par les tests).
   Future<CommandResult> execute(String utterance, {int? session}) async {
     final s = session ?? ++_session;

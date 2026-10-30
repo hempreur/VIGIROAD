@@ -8,6 +8,8 @@ import '../../navigation/domain/instructions.dart';
 import '../../plates/application/alert_service.dart';
 import '../../plates/application/plate_scanning_controller.dart';
 import '../../plates/application/plates_providers.dart';
+import '../../traffic/application/traffic_controller.dart';
+import '../../traffic/application/traffic_summary.dart';
 import '../domain/command_engine.dart';
 
 /// Contexte donné aux actions : accès aux modules de l'application.
@@ -96,9 +98,10 @@ final List<SentrixCommand> sentrixCommands = [
     id: 'traffic.show',
     label: 'Afficher le trafic',
     phrases: ['Afficher le trafic', 'État du trafic', 'Y a-t-il des bouchons'],
-    action: (c) async => const CommandResult.failure(
-      'Le trafic en temps réel n\'est pas disponible : aucun fournisseur de trafic n\'est configuré.',
-    ),
+    action: (c) async {
+      final r = trafficSummary(c.ref.read(trafficProvider), c.ref.read(navigationSessionProvider));
+      return r.ok ? CommandResult(r.text) : CommandResult.failure(r.text);
+    },
   ),
   SentrixCommand(
     id: 'alert.last',

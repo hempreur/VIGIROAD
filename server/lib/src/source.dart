@@ -15,6 +15,8 @@ class SourceInfo {
     required this.attribution,
     required this.minInterval,
     required this.homepage,
+    this.areas = const [],
+    this.coverageNote,
     this.requiresKey = false,
     this.verified = false,
   });
@@ -31,6 +33,13 @@ class SourceInfo {
   /// Intervalle minimal entre deux interrogations (fréquence autorisée).
   final Duration minInterval;
   final String homepage;
+
+  /// Emprise couverte par la source. Hors de ces zones, l'état du trafic est
+  /// inconnu. Une source sans emprise ne rend aucune zone « connue ».
+  final List<BBox> areas;
+
+  /// Réseau effectivement couvert (affiché avec la mention).
+  final String? coverageNote;
   final bool requiresKey;
 
   /// Format confirmé sur le flux réel (et non seulement sur la documentation).
@@ -44,6 +53,8 @@ class SourceInfo {
     'attribution': attribution,
     'minIntervalSeconds': minInterval.inSeconds,
     'homepage': homepage,
+    'areas': [for (final a in areas) a.toJson()],
+    'coverageNote': coverageNote,
     'verified': verified,
   };
 }

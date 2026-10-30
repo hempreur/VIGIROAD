@@ -3,7 +3,9 @@ import 'dart:math' show Point;
 
 import 'package:flutter/widgets.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
+import 'package:vigiroad_traffic/vigiroad_traffic.dart' as tr;
 
+import '../../../traffic/domain/traffic_labels.dart';
 import '../../domain/geo_fix.dart';
 
 /// Paramètres transmis à la vue carte par l'écran de navigation.
@@ -18,6 +20,8 @@ class MapViewArgs {
     required this.insets,
     required this.locationGranted,
     required this.onUserGesture,
+    this.traffic = const [],
+    this.onTrafficTap,
   });
 
   final String styleUrl;
@@ -40,6 +44,10 @@ class MapViewArgs {
 
   /// Appelé quand l'utilisateur manipule la carte (désactive le suivi).
   final VoidCallback onUserGesture;
+
+  /// Perturbations signalées par les sources officielles.
+  final List<tr.TrafficEvent> traffic;
+  final void Function(tr.TrafficEvent event)? onTrafficTap;
 }
 
 /// Carte MapLibre sombre (données OpenStreetMap).
@@ -57,6 +65,9 @@ class _VrMapViewState extends State<VrMapView> {
   bool _styleReady = false;
   Circle? _destinationMarker;
   List<Line> _routeLines = const [];
+  List<Line> _trafficLines = const [];
+  List<Circle> _trafficCircles = const [];
+  final _circleEvents = <String, tr.TrafficEvent>{};
 
   /// Centre de la France métropolitaine, avant le premier point GPS.
   static const _initial = CameraPosition(target: LatLng(46.6, 2.4), zoom: 5);
@@ -79,6 +90,59 @@ class _VrMapViewState extends State<VrMapView> {
     if (!identical(a.route, old.args.route)) {
       unawaited(_syncRoute());
     }
+    if (!identical(a.traffic, old.args.traffic)) {
+      unawaited(_syncTraffic());
+    }
+  }
+
+  /// Perturbations : tronçon concerné (trait coloré selon la gravité) et
+  /// point touchable, cerclé de noir pour rester lisible sur la carte sombre.
+  Future<void> _syncTraffic() async {
+    final c = _controller;
+    if (c == null || !_styleReady) return;
+    if (_trafficLines.isNotEmpty) await c.removeLines(_trafficLines);
+    if (_trafficCircles.isNotEmpty) await c.removeCircles(_trafficCircles);
+    _trafficLines = const [];
+    _trafficCircles = const [];
+    _circleEvents.clear();
+    final events = widget.args.traffic;
+    if (events.isEmpty) return;
+    LatLng ll(tr.LatLng p) => LatLng(p.lat, p.lng);
+    final withLine = [for (final e in events) if (e.geometry.length >= 2) e];
+    _trafficLines = await c.addLines([
+      for (final e in withLine)
+        LineOptions(
+          geometry: [for (final p in e.geometry) ll(p)],
+          lineColor: TrafficLabels.hex(TrafficLabels.color(e.severity)),
+          lineWidth: 6,
+          lineOpacity: 0.85,
+          lineJoin: 'round',
+        ),
+    ]);
+    _trafficCircles = await c.addCircles([
+      for (final e in events)
+        CircleOptions(
+          geometry: ll(e.position),
+          circleRadius: 7,
+          circleColor: TrafficLabels.hex(TrafficLabels.color(e.severity)),
+          circleStrokeWidth: 2.5,
+          circleStrokeColor: '#02050A',
+        ),
+    ]);
+    for (var i = 0; i < _trafficCircles.length && i < events.length; i++) {
+      _circleEvents[_trafficCircles[i].id] = events[i];
+    }
+  }
+
+  void _onCircleTapped(Circle circle) {
+    final e = _circleEvents[circle.id];
+    if (e != null) widget.args.onTrafficTap?.call(e);
+  }
+
+  @override
+  void dispose() {
+    _controller?.onCircleTapped.remove(_onCircleTapped);
+    super.dispose();
   }
 
   /// Itinéraire en trois couches superposées : halo bleu électrique flou,
@@ -156,12 +220,16 @@ class _VrMapViewState extends State<VrMapView> {
         myLocationRenderMode: MyLocationRenderMode.normal,
         attributionButtonPosition: AttributionButtonPosition.bottomLeft,
         attributionButtonMargins: Point(8, a.insets.bottom + 8),
-        onMapCreated: (c) => _controller = c,
+        onMapCreated: (c) {
+          _controller = c;
+          c.onCircleTapped.add(_onCircleTapped);
+        },
         onStyleLoadedCallback: () {
           _styleReady = true;
           unawaited(_controller?.updateContentInsets(widget.args.insets));
           unawaited(_syncDestination());
           unawaited(_syncRoute());
+          unawaited(_syncTraffic());
           if (widget.args.following) unawaited(_follow());
         },
       ),

@@ -30,7 +30,7 @@ lib/
     home/                      accueil provisoire (phase 1)
     sentrix/                   assistant : états, tête animée (+ moteur vocal, phase 6)
     navigation/   (phase 3)    position, recherche, itinéraire, guidage
-    traffic/      (phase 3)    interface fournisseur de trafic
+    traffic/                   client du serveur de trafic, état connu/inconnu, annonces SENTRIX
     plates/       (phases 4-5) caméra, OCR, normalisation, base, correspondance, alertes
     history/      (phase 8)    journal des correspondances
     settings/     (phase 8)    réglages

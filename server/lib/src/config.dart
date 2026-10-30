@@ -1,3 +1,5 @@
+import 'package:vigiroad_traffic/vigiroad_traffic.dart';
+
 import 'aggregator.dart';
 import 'connectors/datex2.dart';
 import 'connectors/tfl.dart';
@@ -45,22 +47,28 @@ class ServerConfig {
             attribution: 'Information fournie par Bison Futé — transport.data.gouv.fr',
             minInterval: Duration(minutes: 5),
             homepage: 'https://transport.data.gouv.fr/datasets/evenements-routiers-sur-le-reseau-routier-national-non-concede',
+            areas: [BBox(-5.3, 41.3, 9.7, 51.2)],
+            coverageNote: 'réseau routier national non concédé (hors autoroutes concédées et routes locales)',
           ),
         ),
       ),
       if (_key('VR_TFL_APP_KEY') case final k?) SourceChain(TflConnector(k)),
       if (_key('VR_511_SFBAY_KEY') case final k?) SourceChain(WzdxConnector.sfBay(k)),
       if (_key('VR_AZ511_KEY') case final k?) SourceChain(Us511V2Connector.arizona(k)),
-      if (_key('VR_WAZE_FEED_URL') case final u?) SourceChain(WazePartnerConnector(Uri.parse(u))),
+      if (_key('VR_WAZE_FEED_URL') case final u?)
+        SourceChain(WazePartnerConnector(Uri.parse(u), areas: [?BBox.tryParse(_key('VR_WAZE_BBOX'))])),
       ...datex2Feeds(),
     ];
     return [for (final c in out) if (!disabled.contains(c.primary.info.id)) c];
   }
 
-  /// `VR_DATEX2_FEEDS` = `id|PAYS|url|mention|licence;…` (DATEX II 2.x).
+  /// `VR_DATEX2_FEEDS` = `id|PAYS|url|mention|licence|minLng,minLat,maxLng,maxLat;…`
+  /// (DATEX II 2.x). Sans emprise, la source alimente la carte mais ne rend
+  /// aucune zone « connue ».
   List<SourceChain> datex2Feeds() => [
     for (final entry in (env['VR_DATEX2_FEEDS'] ?? '').split(';'))
-      if (entry.split('|') case [final id, final country, final url, final attribution, final licence])
+      if (entry.split('|') case [final id, final country, final url, final attribution, final licence, ...final rest]
+          when rest.length <= 1)
         SourceChain(
           Datex2Connector(
             country: country.trim().toUpperCase(),
@@ -73,6 +81,7 @@ class ServerConfig {
               attribution: attribution.trim(),
               minInterval: const Duration(minutes: 5),
               homepage: url.trim(),
+              areas: [if (rest.isNotEmpty) ?BBox.tryParse(rest.first.trim())],
             ),
           ),
         ),

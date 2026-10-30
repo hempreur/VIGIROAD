@@ -8,9 +8,11 @@ import 'package:vigiroad_traffic_aggregator/traffic_aggregator.dart';
 
 /// Source simulée (tests uniquement).
 class FakeConnector extends TrafficConnector {
-  FakeConnector(this.id, {this.countries = const ['FR'], this.interval = const Duration(minutes: 2)});
+  FakeConnector(this.id, {this.countries = const ['FR'], this.interval = const Duration(minutes: 2), List<BBox>? areas})
+    : areas = areas ?? [countries.contains('GB') ? const BBox(-0.52, 51.28, 0.34, 51.7) : const BBox(-5.3, 41.3, 9.7, 51.2)];
   final String id;
   final List<String> countries;
+  final List<BBox> areas;
   final Duration interval;
   List<TrafficEvent> next = [];
   bool failing = false;
@@ -25,6 +27,8 @@ class FakeConnector extends TrafficConnector {
     attribution: 'Mention $id',
     minInterval: interval,
     homepage: 'https://example.org/$id',
+    areas: areas,
+    coverageNote: 'réseau de test',
   );
 
   @override
@@ -128,6 +132,17 @@ void main() {
     await agg.tickOnce();
     expect(agg.events(), isEmpty, reason: 'jamais de données périmées présentées comme actuelles');
     expect(agg.coverage(), isEmpty);
+    expect(agg.coveringFresh(const BBox(1, 47, 3, 49)), isEmpty);
+  });
+
+  test('zone connue seulement dans l\'emprise d\'une source à jour', () async {
+    await agg.tickOnce();
+    expect(agg.coveringFresh(const BBox(1, 47, 3, 49)).map((s) => s.connector.info.id), ['fr-primary']);
+    expect(agg.coveringFresh(const BBox(-0.2, 51.4, 0.0, 51.6)).map((s) => s.connector.info.id), ['gb-src']);
+    // Manchester : Royaume-Uni mais hors de l'emprise (Londres) → inconnu.
+    expect(agg.coveringFresh(const BBox(-2.3, 53.4, -2.1, 53.5)), isEmpty);
+    // Espagne : aucune source → inconnu.
+    expect(agg.coveringFresh(const BBox(-4, 40, -3, 40.5)), isEmpty);
   });
 
   test('événements le long d\'un itinéraire, dans l\'ordre', () async {
@@ -172,6 +187,23 @@ void main() {
       expect((body['events'] as List).single['id'], 'fr-primary:1');
       expect((body['attributions'] as List).single['text'], 'Mention fr-primary');
       expect(body['coverage'], ['FR', 'GB']);
+      expect(body['area']['known'], isTrue);
+      expect(body['area']['updatedAt'], now.toIso8601String());
+    });
+
+    test('zone sans source : état inconnu, aucun événement inventé', () async {
+      final body = jsonDecode(await (await get('/v1/events?bbox=-4,40,-3,40.5')).readAsString()) as Map<String, dynamic>;
+      expect(body['area']['known'], isFalse);
+      expect(body['area']['updatedAt'], isNull);
+      expect(body['events'], isEmpty);
+      expect(body['attributions'], isEmpty);
+    });
+
+    test('zone couverte sans incident : connue, mention de la source tout de même', () async {
+      final body = jsonDecode(await (await get('/v1/events?bbox=4,45,5,46')).readAsString()) as Map<String, dynamic>;
+      expect(body['area']['known'], isTrue);
+      expect(body['events'], isEmpty);
+      expect((body['attributions'] as List).single['source'], 'fr-primary');
     });
 
     test('zone invalide ou trop grande', () async {
@@ -202,12 +234,14 @@ void main() {
     final c = ServerConfig({
       'VR_API_KEYS': 'courte,cle-suffisamment-longue',
       'VR_TFL_APP_KEY': 'abc',
-      'VR_DATEX2_FEEDS': 'si-nap|si|https://example.org/d2.xml|Vir: NAP Slovenija|CC BY 4.0',
+      'VR_DATEX2_FEEDS': 'si-nap|si|https://example.org/d2.xml|Vir: NAP Slovenija|CC BY 4.0|13.3,45.4,16.6,46.9',
       'VR_DISABLE_SOURCES': 'gb-tfl',
     });
     expect(c.apiKeys, {'cle-suffisamment-longue'});
     final ids = c.chains().map((s) => s.primary.info.id).toList();
     expect(ids, ['fr-bison-fute', 'si-nap']);
     expect(c.chains().first.fallback?.info.id, 'fr-pan-transport-data-gouv');
+    expect(c.chains().last.primary.info.areas.single.minLng, 13.3);
+    expect(c.chains().first.primary.info.areas, isNotEmpty);
   });
 }

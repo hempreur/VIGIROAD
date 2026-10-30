@@ -25,6 +25,8 @@ class Us511V2Connector extends TrafficConnector {
       attribution: 'Données : AZ511 / ADOT',
       minInterval: Duration(minutes: 2),
       homepage: 'https://www.az511.com/developers/doc',
+      areas: [BBox(-114.9, 31.3, -109.0, 37.0)],
+      coverageNote: 'Arizona',
       requiresKey: true,
     ),
   );

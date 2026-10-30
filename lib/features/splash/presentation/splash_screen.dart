@@ -73,10 +73,16 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                   const SizedBox(height: 28),
                   const BrandWordmark(size: 44),
                   const SizedBox(height: 8),
-                  Text(
-                    'NAVIGATION  •  LECTURE DE PLAQUES  •  ASSISTANT VOCAL',
-                    textAlign: TextAlign.center,
-                    style: VrText.caption.copyWith(letterSpacing: 1.4, fontSize: 11),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        'NAVIGATION  •  LECTURE DE PLAQUES  •  ASSISTANT VOCAL',
+                        maxLines: 1,
+                        style: VrText.caption.copyWith(letterSpacing: 1.2, fontSize: 11),
+                      ),
+                    ),
                   ),
                   const SizedBox(height: 40),
                   const _GlowProgress(),

@@ -20,7 +20,8 @@ class SentrixHead extends StatefulWidget {
 
   final SentrixState state;
 
-  /// Largeur du widget ; la hauteur vaut 0,9 × la largeur.
+  /// Largeur du widget ; la hauteur vaut 0,8 × la largeur (tête plus large
+  /// que haute, comme sur la référence).
   final double size;
 
   @override
@@ -48,7 +49,7 @@ class _SentrixHeadState extends State<SentrixHead>
       image: true,
       child: SizedBox(
         width: widget.size,
-        height: widget.size * 0.9,
+        height: widget.size * 0.8,
         child: RepaintBoundary(
           child: AnimatedBuilder(
             animation: _clock,
@@ -104,8 +105,8 @@ class SentrixPainter extends CustomPainter {
       final cx = left ? w * 0.075 : w * 0.925;
       final ear = Rect.fromCenter(
         center: Offset(cx, h * 0.47),
-        width: w * 0.15,
-        height: h * 0.42,
+        width: w * 0.16,
+        height: h * 0.5,
       );
       canvas.drawRRect(
         RRect.fromRectAndRadius(ear, Radius.circular(w * 0.07)),
@@ -120,7 +121,7 @@ class SentrixPainter extends CustomPainter {
       final ring = Rect.fromCenter(
         center: Offset(cx + (left ? -w * 0.012 : w * 0.012), h * 0.47),
         width: w * 0.05,
-        height: h * 0.32,
+        height: h * 0.38,
       );
       final ringPaint = Paint()
         ..color = _eyeColor.withValues(alpha: glowPulse)
@@ -189,7 +190,7 @@ class SentrixPainter extends CustomPainter {
     );
 
     // --- Visière -----------------------------------------------------------------
-    final visor = Rect.fromLTWH(w * 0.17, h * 0.2, w * 0.66, h * 0.56);
+    final visor = Rect.fromLTWH(w * 0.165, h * 0.17, w * 0.67, h * 0.6);
     final visorR = RRect.fromRectAndRadius(visor, Radius.circular(w * 0.2));
     canvas.drawRRect(
       visorR,
@@ -221,7 +222,7 @@ class SentrixPainter extends CustomPainter {
 
     // --- Yeux -------------------------------------------------------------------
     final eyeY = h * 0.47;
-    final eyeDx = w * 0.15;
+    final eyeDx = w * 0.14;
     final eyeW = w * 0.15;
     final center = w / 2;
     _paintEyes(canvas, Offset(center - eyeDx, eyeY), eyeW, w, glowPulse);
@@ -259,7 +260,7 @@ class SentrixPainter extends CustomPainter {
 
   void _paintEyes(Canvas canvas, Offset c, double eyeW, double w, double pulse) {
     final color = _eyeColor;
-    final stroke = w * 0.032;
+    final stroke = w * 0.036;
     final glow = Paint()
       ..color = color.withValues(alpha: 0.55 * pulse)
       ..style = PaintingStyle.stroke

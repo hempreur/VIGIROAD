@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:vigiroad/features/home/presentation/home_screen.dart';
 import 'package:vigiroad/features/onboarding/presentation/permissions_screen.dart';
@@ -36,7 +37,7 @@ void main() {
     await tester.pump();
 
     expect(find.text('Autoriser'), findsNWidgets(2));
-    expect(find.bySemanticsLabel('Autorisé'), findsOneWidget);
+    expect(find.byIcon(Icons.check_circle_rounded), findsOneWidget);
 
     await tester.ensureVisible(find.text('Continuer'));
     await tester.pump();

@@ -45,7 +45,7 @@ class _Scenario {
 }
 
 /// Lecture OCR simulée d'une plaque sur une image.
-String? simulateRead(String plate, Random r, _Scenario s) {
+String? _simulateRead(String plate, Random r, _Scenario s) {
   if (r.nextDouble() < s.miss) return null;
   final chars = plate.split('');
   for (var i = 0; i < chars.length; i++) {
@@ -96,7 +96,7 @@ void main() {
         for (var f = 0; f < s.frames; f++) {
           final now = t0.add(Duration(milliseconds: 250 * f));
           final lines = [
-            ?simulateRead(plate, r, s),
+            ?_simulateRead(plate, r, s),
             if (r.nextDouble() < 0.3) _distractors[r.nextInt(_distractors.length)],
           ];
           sw.start();

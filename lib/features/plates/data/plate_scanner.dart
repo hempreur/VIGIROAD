@@ -172,7 +172,7 @@ class MlKitPlateScanner implements PlateScanner {
         return;
       }
 
-      final format = InputImageFormatValue.fromRawValue(image.format.raw);
+      final format = InputImageFormatValue.fromRawValue(image.format.raw as int);
       final rot = InputImageRotationValue.fromRawValue(rotation);
       if (format == null || rot == null) return;
       final input = InputImage.fromBytes(

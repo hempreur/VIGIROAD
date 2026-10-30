@@ -220,6 +220,10 @@ abstract final class PlateFormats {
   static const List<PlateFormat> all = [FrenchSivFormat(), FrenchFniFormat()];
 
   /// Tous les candidats d'une ligne, meilleurs (moins corrigés) d'abord.
+  ///
+  /// Si une plaque SIV est lue sur la ligne, les lectures FNI de la même
+  /// ligne sont écartées : « AA-123-BB 75 » contient aussi « 123 BB 75 »
+  /// (bloc central + département de la bande droite), faux positif FNI.
   static List<PlateCandidate> extract(String line, {List<PlateFormat> formats = all}) {
     final out = <PlateCandidate>[];
     final seen = <String>{};
@@ -227,6 +231,9 @@ abstract final class PlateFormats {
       for (final c in f.extract(line)) {
         if (seen.add(c.normalized)) out.add(c);
       }
+    }
+    if (out.any((c) => c.formatId == 'FR-SIV')) {
+      out.removeWhere((c) => c.formatId == 'FR-FNI');
     }
     out.sort((a, b) => a.corrections.compareTo(b.corrections));
     return out;

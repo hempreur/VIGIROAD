@@ -35,6 +35,11 @@ void main() {
       expect(PlateFormats.extract('A4-I2Z-8B'), isEmpty);
     });
 
+    test('département de la bande droite : pas de fausse plaque FNI', () {
+      final c = PlateFormats.extract('AA-123-BB 75');
+      expect(c.map((e) => e.normalized), ['AA123BB']);
+    });
+
     test('textes sans plaque ignorés', () {
       for (final t in ['SORTIE 12', 'PARKING', 'PARIS 75', 'A6 LYON', '50']) {
         expect(PlateFormats.extract(t), isEmpty, reason: t);

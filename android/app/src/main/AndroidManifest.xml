@@ -9,6 +9,11 @@
     <uses-permission android:name="android.permission.CAMERA"/>
     <!-- Microphone : commandes vocales SENTRIX (écoute déclenchée manuellement) -->
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <!-- Guidage en arrière-plan : service de premier plan de localisation -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-feature android:name="android.hardware.camera" android:required="false"/>
     <uses-feature android:name="android.hardware.location.gps" android:required="false"/>
     <application

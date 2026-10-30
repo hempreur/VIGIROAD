@@ -26,9 +26,10 @@ Voir aussi le tableau de [`RELEASE_NOTES_1.0.md`](RELEASE_NOTES_1.0.md).
 - **Limitations de vitesse** : OSRM ne les fournit pas. Le panneau n'apparaît que si le serveur
   d'itinéraire renvoie `annotation.maxspeed` (serveurs compatibles Mapbox). Source OSM (`maxspeed`
   via Overpass ou tuiles dédiées) à évaluer ; couverture OSM incomplète en France.
-- **Guidage en arrière-plan** : le guidage fonctionne application au premier plan (écran maintenu
-  allumé). Le poursuivre application masquée demanderait un service de premier plan Android et le
-  mode « location » en arrière-plan iOS : prévu comme évolution.
+- **Guidage en arrière-plan** (1.1) : pendant un guidage, la localisation passe en service de
+  premier plan Android (notification « Guidage en cours ») et en mode « location » iOS ; les consignes
+  vocales continuent écran éteint. Désactivable dans les réglages. La caméra, elle, s'arrête toujours
+  en arrière-plan (contrainte des systèmes).
 - **Température / batterie** : aucune API thermique n'est interrogée ; la cadence de l'OCR s'adapte
   automatiquement à sa durée (téléphone chargé ou chaud = analyses plus espacées). Mesures réelles
   en phase 9 sur appareil.

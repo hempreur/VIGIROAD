@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
 import '../../../app/providers.dart';
@@ -64,6 +65,14 @@ final routeServiceProvider = Provider<RouteService>((ref) {
 });
 
 final speakerProvider = Provider<Speaker>((ref) => TtsSpeaker());
+
+/// Demande l'autorisation d'afficher des notifications (Android 13+), pour
+/// la notification « Guidage en cours » du guidage en arrière-plan.
+final notificationPermissionProvider = Provider<Future<void> Function()>(
+  (ref) => () async {
+    await Permission.notification.request();
+  },
+);
 
 /// Horloge injectable (tests).
 final clockProvider = Provider<DateTime Function()>((ref) => DateTime.now);
@@ -138,6 +147,7 @@ class NavigationSession extends Notifier<NavState> {
     _tracker = null;
     state = const NavState();
     ref.read(wakelockProvider)(false);
+    _setBackground(false);
     unawaited(ref.read(voiceQueueProvider).clear(only: VoicePriority.guidance));
   }
 
@@ -167,6 +177,7 @@ class NavigationSession extends Notifier<NavState> {
         arrival: _eta(progress),
       );
       ref.read(wakelockProvider)(true);
+      _setBackground(true);
       if (ref.read(voiceGuidanceProvider)) {
         unawaited(_say(initial ? _policy.start(route) : 'Itinéraire recalculé.'));
       }
@@ -175,6 +186,14 @@ class NavigationSession extends Notifier<NavState> {
       // En recalcul, on garde l'ancien tracé affiché.
       state = NavState(status: NavStatus.failed, route: state.route, progress: state.progress, message: e.message);
     }
+  }
+
+  /// Passe la localisation en mode arrière-plan pendant le guidage, si le
+  /// réglage est actif.
+  void _setBackground(bool guiding) {
+    final enabled = guiding && ref.read(appSettingsProvider).backgroundGuidance;
+    if (enabled) ref.read(notificationPermissionProvider)().ignore();
+    ref.read(backgroundLocationProvider.notifier).set(enabled);
   }
 
   Future<bool> _say(String text) => ref.read(voiceQueueProvider).say(text, VoicePriority.guidance);
@@ -206,6 +225,7 @@ class NavigationSession extends Notifier<NavState> {
     if (progress.arrived) {
       state = state.copyWith(status: NavStatus.arrived, progress: progress);
       ref.read(wakelockProvider)(false);
+      _setBackground(false);
       if (ref.read(voiceGuidanceProvider)) {
         unawaited(_say('Vous êtes arrivé à destination.'));
       }

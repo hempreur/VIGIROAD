@@ -65,8 +65,12 @@ class FakeLocationSource implements LocationSource {
 
   void push(GeoFix fix) => _controller.add(fix);
 
+  /// Modes demandés successivement (premier plan / arrière-plan).
+  final modes = <bool>[];
+
   @override
-  Stream<GeoFix> watch() async* {
+  Stream<GeoFix> watch({bool background = false}) async* {
+    modes.add(background);
     if (error != null) throw error!;
     if (initial != null) yield initial!;
     yield* _controller.stream;

@@ -48,7 +48,7 @@
 | Trafic | Pas de trafic en temps réel (choix OpenStreetMap) ; affiché « Source non configurée » | Brancher TomTom/HERE/Mapbox (payant) via l'interface prévue |
 | Limitations de vitesse | Non fournies par OSRM : panneau masqué | Serveur compatible Mapbox ou données OSM `maxspeed` |
 | Serveurs | OSRM et Photon publics = démonstration, sans garantie | Héberger ses instances |
-| Arrière-plan | Guidage et caméra uniquement application au premier plan | Service de premier plan Android / mode location iOS |
+| Arrière-plan | Caméra uniquement application au premier plan (contrainte système) ; le guidage continue en arrière-plan depuis la 1.1 | — |
 | OCR | Taux de lecture réel non mesuré sur route (seul le banc synthétique l'est) | Protocole `DEVICE_TEST_PROTOCOL.md` |
 | OCR iOS | ML Kit ne fournit pas la confiance par ligne sur iOS (valeur par défaut) | — |
 | Formats | Plaques françaises uniquement pour la lecture | Ajouter des `PlateFormat` |

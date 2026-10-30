@@ -9,9 +9,24 @@ final locationSourceProvider = Provider<LocationSource>(
   (ref) => const GeolocatorLocationSource(),
 );
 
-/// Flux de positions GPS en direct.
+/// Localisation en arrière-plan demandée (guidage en cours et réglage actif).
+final backgroundLocationProvider = NotifierProvider<BackgroundLocationController, bool>(
+  BackgroundLocationController.new,
+);
+
+class BackgroundLocationController extends Notifier<bool> {
+  @override
+  bool build() => false;
+
+  void set(bool value) {
+    if (state != value) state = value;
+  }
+}
+
+/// Flux de positions GPS en direct ; redémarré en mode arrière-plan
+/// pendant le guidage.
 final positionProvider = StreamProvider<GeoFix>(
-  (ref) => ref.watch(locationSourceProvider).watch(),
+  (ref) => ref.watch(locationSourceProvider).watch(background: ref.watch(backgroundLocationProvider)),
 );
 
 /// Destination choisie par l'utilisateur (calcul d'itinéraire en phase 3).

@@ -123,6 +123,12 @@ class SettingsScreen extends ConsumerWidget {
         _Panel([
           _Switch('Guidage vocal', null, s.voiceGuidance, (v) => set((x) => x.copyWith(voiceGuidance: v))),
           _Switch('Vue conduite 3D par défaut', null, s.drive3d, (v) => set((x) => x.copyWith(drive3d: v))),
+          _Switch(
+            'Guidage en arrière-plan',
+            'Consignes vocales écran éteint ou dans une autre application (notification « Guidage en cours »)',
+            s.backgroundGuidance,
+            (v) => set((x) => x.copyWith(backgroundGuidance: v)),
+          ),
         ]),
 
         const _Section('HISTORIQUE ET DONNÉES'),

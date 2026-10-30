@@ -4,6 +4,11 @@ import 'package:vigiroad/features/navigation/application/navigation_providers.da
 import 'package:vigiroad/features/navigation/application/navigation_session.dart';
 import 'package:vigiroad/features/navigation/data/osrm_router.dart';
 import 'package:vigiroad/features/navigation/domain/geo_fix.dart';
+import 'package:vigiroad/features/navigation/data/location_source.dart';
+import 'package:vigiroad/features/settings/application/settings_controller.dart';
+import 'package:vigiroad/features/settings/domain/app_settings.dart';
+import 'package:flutter/foundation.dart';
+import 'package:geolocator/geolocator.dart';
 
 import 'helpers/fakes.dart';
 
@@ -16,6 +21,8 @@ class _Env {
         speakerProvider.overrideWithValue(speaker),
         wakelockProvider.overrideWithValue((on) => wakelock.add(on)),
         clockProvider.overrideWithValue(() => now),
+        notificationPermissionProvider.overrideWithValue(() async => notificationRequests++),
+        settingsStoreProvider.overrideWithValue(settingsStore),
       ],
     );
     // Garde les providers actifs comme le ferait l'écran.
@@ -27,6 +34,8 @@ class _Env {
   final router = FakeRouteService();
   final speaker = FakeSpeaker();
   final wakelock = <bool>[];
+  var notificationRequests = 0;
+  final settingsStore = MemorySettingsStore();
   DateTime now = DateTime(2026, 10, 30, 15, 0);
   late final ProviderContainer container;
 
@@ -130,5 +139,45 @@ void main() {
     await pumpEventQueue();
     expect(env.state.status, NavStatus.idle);
     expect(env.wakelock.last, isFalse);
+  });
+
+  test('guidage en arrière-plan : localisation relancée en mode service, puis rétablie', () async {
+    final env = _Env();
+    addTearDown(env.container.dispose);
+    await env.container.read(settingsControllerProvider.future);
+    await env.fix(north(0));
+    await env.go();
+    await pumpEventQueue();
+    expect(env.container.read(backgroundLocationProvider), isTrue);
+    expect(env.location.modes.last, isTrue);
+    expect(env.notificationRequests, 1);
+
+    env.container.read(destinationProvider.notifier).clear();
+    await pumpEventQueue();
+    expect(env.container.read(backgroundLocationProvider), isFalse);
+    expect(env.location.modes.last, isFalse);
+  });
+
+  test('réglage désactivé : pas de mode arrière-plan', () async {
+    final env = _Env();
+    addTearDown(env.container.dispose);
+    env.settingsStore.value = const AppSettings(backgroundGuidance: false);
+    await env.container.read(settingsControllerProvider.future);
+    await env.fix(north(0));
+    await env.go();
+    expect(env.state.status, NavStatus.guiding);
+    expect(env.container.read(backgroundLocationProvider), isFalse);
+  });
+
+  test('réglages de localisation selon la plateforme', () {
+    final android = buildLocationSettings(TargetPlatform.android, background: true) as AndroidSettings;
+    expect(android.foregroundNotificationConfig?.notificationText, 'Guidage en cours');
+    final androidFg = buildLocationSettings(TargetPlatform.android, background: false) as AndroidSettings;
+    expect(androidFg.foregroundNotificationConfig, isNull);
+    final ios = buildLocationSettings(TargetPlatform.iOS, background: true) as AppleSettings;
+    expect(ios.allowBackgroundLocationUpdates, isTrue);
+    expect(ios.showBackgroundLocationIndicator, isTrue);
+    final iosFg = buildLocationSettings(TargetPlatform.iOS, background: false) as AppleSettings;
+    expect(iosFg.allowBackgroundLocationUpdates, isFalse);
   });
 }

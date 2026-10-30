@@ -55,6 +55,11 @@
 	<string>SENTRIX utilise le microphone lorsque vous appuyez sur le bouton d'écoute pour comprendre vos commandes vocales.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>SENTRIX transforme vos commandes vocales en texte pour les exécuter.</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>location</string>
+		<string>audio</string>
+	</array>
 	<key>UIStatusBarStyle</key>
 	<string>UIStatusBarStyleLightContent</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>

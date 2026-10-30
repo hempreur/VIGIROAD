@@ -14,6 +14,7 @@ class MapViewArgs {
     required this.tilted,
     required this.fix,
     required this.destination,
+    this.route,
     required this.insets,
     required this.locationGranted,
     required this.onUserGesture,
@@ -28,6 +29,9 @@ class MapViewArgs {
   final bool tilted;
   final GeoFix? fix;
   final GeoPoint? destination;
+
+  /// Tracé de l'itinéraire en cours (ligne bleue lumineuse).
+  final List<GeoPoint>? route;
 
   /// Zones de la carte masquées par les panneaux : le point focal de la
   /// caméra est recentré dans la partie visible.
@@ -52,6 +56,7 @@ class _VrMapViewState extends State<VrMapView> {
   MapLibreMapController? _controller;
   bool _styleReady = false;
   Circle? _destinationMarker;
+  List<Line> _routeLines = const [];
 
   /// Centre de la France métropolitaine, avant le premier point GPS.
   static const _initial = CameraPosition(target: LatLng(46.6, 2.4), zoom: 5);
@@ -71,6 +76,28 @@ class _VrMapViewState extends State<VrMapView> {
     if (a.destination != old.args.destination) {
       unawaited(_syncDestination());
     }
+    if (!identical(a.route, old.args.route)) {
+      unawaited(_syncRoute());
+    }
+  }
+
+  /// Itinéraire en trois couches superposées : halo bleu électrique flou,
+  /// trait cyan, cœur clair — l'effet « néon » de la référence.
+  Future<void> _syncRoute() async {
+    final c = _controller;
+    if (c == null || !_styleReady) return;
+    if (_routeLines.isNotEmpty) {
+      await c.removeLines(_routeLines);
+      _routeLines = const [];
+    }
+    final route = widget.args.route;
+    if (route == null || route.length < 2) return;
+    final geometry = [for (final p in route) LatLng(p.latitude, p.longitude)];
+    _routeLines = await c.addLines([
+      LineOptions(geometry: geometry, lineColor: '#066DD3', lineWidth: 18, lineBlur: 8, lineOpacity: 0.7, lineJoin: 'round'),
+      LineOptions(geometry: geometry, lineColor: '#19CFF4', lineWidth: 8, lineOpacity: 0.95, lineJoin: 'round'),
+      LineOptions(geometry: geometry, lineColor: '#C9FFFF', lineWidth: 2.5, lineOpacity: 0.9, lineJoin: 'round'),
+    ]);
   }
 
   Future<void> _follow() async {
@@ -134,6 +161,7 @@ class _VrMapViewState extends State<VrMapView> {
           _styleReady = true;
           unawaited(_controller?.updateContentInsets(widget.args.insets));
           unawaited(_syncDestination());
+          unawaited(_syncRoute());
           if (widget.args.following) unawaited(_follow());
         },
       ),

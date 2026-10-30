@@ -21,7 +21,9 @@
   fournisseur payant peut être branché plus tard (voir `API_CONFIG.md`).
 - **Services publics OSM** : le serveur OSRM de démonstration et Photon public suffisent pour le
   développement mais pas pour une exploitation ; prévoir un hébergement.
-- **Limitations de vitesse** : à extraire des données OSM (`maxspeed`), couverture incomplète.
+- **Limitations de vitesse** : OSRM ne les fournit pas. Le panneau n'apparaît que si le serveur
+  d'itinéraire renvoie `annotation.maxspeed` (serveurs compatibles Mapbox). Source OSM (`maxspeed`
+  via Overpass ou tuiles dédiées) à évaluer ; couverture OSM incomplète en France.
 - **Caméra en arrière-plan** : impossible sur iOS et fortement restreinte sur Android ; la lecture
   des plaques ne fonctionne qu'application au premier plan.
 - **Détection de plaques** : la première version localise les plaques via l'OCR et le format

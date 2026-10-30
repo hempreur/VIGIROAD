@@ -6,7 +6,10 @@ import 'package:vigiroad/app/app.dart';
 import 'package:vigiroad/app/providers.dart';
 import 'package:vigiroad/core/permissions/permission_service.dart';
 import 'package:vigiroad/features/navigation/application/navigation_providers.dart';
+import 'package:vigiroad/features/navigation/application/navigation_session.dart';
 import 'package:vigiroad/features/navigation/data/location_source.dart';
+import 'package:vigiroad/features/navigation/data/osrm_router.dart';
+import 'package:vigiroad/features/navigation/data/speaker.dart';
 
 import 'fakes.dart';
 
@@ -15,6 +18,8 @@ Future<void> pumpVigiroad(
   WidgetTester tester,
   PermissionService permissions, {
   LocationSource? location,
+  RouteService? routeService,
+  Speaker? speaker,
   List<Override> extraOverrides = const [],
 }) async {
   await tester.pumpWidget(
@@ -23,6 +28,9 @@ Future<void> pumpVigiroad(
         permissionServiceProvider.overrideWithValue(permissions),
         locationSourceProvider.overrideWithValue(location ?? FakeLocationSource()),
         mapViewBuilderProvider.overrideWithValue(fakeMapView),
+        routeServiceProvider.overrideWithValue(routeService ?? FakeRouteService()),
+        speakerProvider.overrideWithValue(speaker ?? FakeSpeaker()),
+        wakelockProvider.overrideWithValue((_) {}),
         ...extraOverrides,
       ],
       child: const VigiroadApp(),

@@ -63,7 +63,7 @@ class ManeuverCard extends StatelessWidget {
                     const SizedBox(height: 2),
                     Text(
                       title,
-                      maxLines: 1,
+                      maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: VrText.label.copyWith(fontSize: 14.5),
                     ),

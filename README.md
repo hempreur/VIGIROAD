@@ -39,7 +39,7 @@ Le détail et les limitations connues sont dans [`docs/ROADMAP.md`](docs/ROADMAP
 
 ## Compiler soi-même
 
-Prérequis : Flutter 3.47.9 (canal stable), Android Studio (SDK Android, JDK 17) ; pour iOS, un Mac avec Xcode et CocoaPods.
+Prérequis : Flutter 3.47.9 (canal stable), Android Studio (SDK Android, JDK 21) ; pour iOS, un Mac avec Xcode et CocoaPods.
 
 ```bash
 git clone https://github.com/hempreur/VIGIROAD.git && cd VIGIROAD

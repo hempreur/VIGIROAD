@@ -9,14 +9,14 @@ abstract interface class Speaker {
 }
 
 class TtsSpeaker implements Speaker {
-  TtsSpeaker({String language = 'fr-FR'}) : _language = language;
+  TtsSpeaker({this.language = 'fr-FR'});
 
   final FlutterTts _tts = FlutterTts();
-  final String _language;
+  final String language;
   Future<void>? _init;
 
   Future<void> _ensureInit() => _init ??= () async {
-    await _tts.setLanguage(_language);
+    await _tts.setLanguage(language);
     await _tts.setSpeechRate(defaultTargetPlatform == TargetPlatform.iOS ? 0.52 : 0.5);
     await _tts.setVolume(1);
     await _tts.awaitSpeakCompletion(true);

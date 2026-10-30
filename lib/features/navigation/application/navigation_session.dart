@@ -112,7 +112,8 @@ class NavigationSession extends Notifier<NavState> {
       }
     });
     _lastFix = ref.read(positionProvider).value;
-    ref.onDispose(() => ref.read(wakelockProvider)(false));
+    final wakelock = ref.read(wakelockProvider);
+    ref.onDispose(() => wakelock(false));
     return const NavState();
   }
 

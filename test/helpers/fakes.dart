@@ -122,7 +122,7 @@ class _GridPainter extends CustomPainter {
 NavRoute testRoute() {
   const start = GeoPoint(48.8566, 2.3522);
   const dLat1km = 1000 / 111195.0;
-  final dLon500m = 500 / (111195.0 * 0.6578);
+  const dLon500m = 500 / (111195.0 * 0.6578);
   final corner = GeoPoint(start.latitude + dLat1km, start.longitude);
   final end = GeoPoint(corner.latitude, corner.longitude + dLon500m);
   final geometry = <GeoPoint>[

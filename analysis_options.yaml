@@ -1,6 +1,10 @@
 include: package:flutter_lints/flutter.yaml
 
 analyzer:
+  # Serveur et paquet partagé : analysés par leur propre tâche CI (Dart pur).
+  exclude:
+    - server/**
+    - packages/**
   language:
     strict-casts: true
     strict-raw-types: true

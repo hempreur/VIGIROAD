@@ -1,0 +1,11 @@
+name: vigiroad_traffic
+description: Modèle unique des événements de trafic VIGIROAD (partagé serveur / application).
+publish_to: none
+version: 1.0.0
+
+environment:
+  sdk: ^3.13.0
+
+dev_dependencies:
+  lints: ^6.0.0
+  test: ^1.25.0

@@ -1,0 +1,3 @@
+[{"ID":2,"SourceId":"347507","Organization":"ADOT","RoadwayName":"I-10","DirectionOfTravel":"Eastbound","Description":"Crash, right lane blocked","Reported":1793390000,"LastUpdated":1793391000,"StartDate":1793390000,"PlannedEndDate":0,"LanesAffected":"1","Latitude":33.4484,"Longitude":-112.074,"EventType":"accidentsAndIncidents","IsFullClosure":false,"Severity":"Major","EncodedPolyline":"_p~iF~ps|U_ulLnnqC_mqNvxq`@"},
+ {"ID":3,"RoadwayName":"SR-87","DirectionOfTravel":"Both Directions","Reported":1793380000,"LastUpdated":1793380500,"Latitude":34.0,"Longitude":-111.5,"EventType":"roadwork","IsFullClosure":true,"Severity":""},
+ {"ID":4,"RoadwayName":"X","LastUpdated":1793380500,"Latitude":null,"Longitude":null,"EventType":"roadwork"}]

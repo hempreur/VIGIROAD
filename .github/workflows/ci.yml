@@ -66,6 +66,43 @@ jobs:
           JOB_STATUS: ${{ job.status }}
         run: .github/scripts/publish_logs.sh quality ci-out
 
+  server:
+    name: Agrégateur de trafic (serveur)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: stable
+      - name: Paquet partagé vigiroad_traffic
+        working-directory: packages/vigiroad_traffic
+        run: |
+          mkdir -p ../../ci-out
+          set -o pipefail
+          dart pub get 2>&1 | tee ../../ci-out/traffic_pub_get.log
+          dart analyze --fatal-warnings 2>&1 | tee ../../ci-out/traffic_analyze.log
+          dart test --reporter expanded 2>&1 | tee ../../ci-out/traffic_test.log
+      - name: Serveur VigiRoadTrafficAggregator
+        if: success() || failure()
+        working-directory: server
+        run: |
+          set -o pipefail
+          dart pub get 2>&1 | tee ../ci-out/server_pub_get.log
+          dart analyze --fatal-warnings 2>&1 | tee ../ci-out/server_analyze.log
+          dart test --reporter expanded 2>&1 | tee ../ci-out/server_test.log
+      - name: Image Docker
+        if: success()
+        run: |
+          set -o pipefail
+          docker build -f server/Dockerfile -t vigiroad-traffic:ci . 2>&1 | tee ci-out/docker_build.log
+          docker images vigiroad-traffic:ci | tee -a ci-out/docker_build.log
+      - name: Publier les journaux
+        if: always() && github.event_name == 'push'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          JOB_STATUS: ${{ job.status }}
+        run: .github/scripts/publish_logs.sh server ci-out
+
   android:
     name: APK Android
     needs: quality

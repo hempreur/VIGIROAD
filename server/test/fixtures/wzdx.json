@@ -1,0 +1,7 @@
+{"feed_info":{"version":"4.2","update_date":"2026-10-30T20:00:00Z"},"type":"FeatureCollection","features":[
+ {"id":"wz-1","type":"Feature","properties":{"core_details":{"event_type":"work-zone","data_source_id":"ds","road_names":["I-80"],"direction":"eastbound","description":"Night lane closure","update_date":"2026-10-30T19:30:00Z"},"start_date":"2026-10-30T18:00:00Z","end_date":"2026-11-02T06:00:00Z","vehicle_impact":"some-lanes-closed"},
+  "geometry":{"type":"LineString","coordinates":[[-122.30,37.82],[-122.29,37.83]]}},
+ {"id":"wz-2","type":"Feature","properties":{"core_details":{"event_type":"work-zone","road_names":["US 101"],"direction":"northbound","update_date":"2026-10-30T19:00:00Z"},"vehicle_impact":"all-lanes-closed"},
+  "geometry":{"type":"MultiPoint","coordinates":[[-122.40,37.70]]}},
+ {"id":"wz-3","type":"Feature","properties":{"core_details":{"event_type":"work-zone"}},"geometry":{"type":"Point","coordinates":[-122.1,37.5]}}
+]}

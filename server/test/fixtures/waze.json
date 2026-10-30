@@ -1,0 +1,2 @@
+{"alerts":[{"uuid":"a1","type":"ACCIDENT","street":"A6","country":"FR","location":{"x":2.35,"y":48.85},"pubMillis":1793390000000,"reliability":8},
+ {"uuid":"a2","type":"HAZARD","location":{"x":2.36,"y":48.86},"pubMillis":1793390000000,"reliability":2}]}

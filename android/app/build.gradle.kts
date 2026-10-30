@@ -30,11 +30,31 @@ android {
         versionName = flutter.versionName
     }
 
+    // Signature de distribution : fournie par l'environnement (secrets CI ou
+    // poste du propriétaire), jamais commitée. Sans clé, la version release
+    // est signée avec la clé de débogage (installable, non publiable).
+    val releaseKeystore = System.getenv("VR_KEYSTORE_PATH")?.let { file(it) }?.takeIf { it.exists() }
+    signingConfigs {
+        if (releaseKeystore != null) {
+            create("release") {
+                storeFile = releaseKeystore
+                storePassword = System.getenv("VR_KEYSTORE_PASSWORD")
+                keyAlias = System.getenv("VR_KEY_ALIAS")
+                keyPassword = System.getenv("VR_KEY_PASSWORD")
+            }
+        }
+    }
+
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = if (releaseKeystore != null) {
+                signingConfigs.getByName("release")
+            } else {
+                signingConfigs.getByName("debug")
+            }
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
 }

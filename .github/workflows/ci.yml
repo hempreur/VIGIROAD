@@ -2,7 +2,8 @@ name: CI
 
 on:
   push:
-    branches: [main, 'feature/**', 'fix/**', 'chore/**']
+    branches: [main, 'feature/**', 'fix/**', 'chore/**', 'release/**']
+    tags: ['v*']
   pull_request:
     branches: [main]
 
@@ -52,9 +53,12 @@ jobs:
           set -o pipefail
           flutter test --tags screenshots --update-goldens 2>&1 | tee ci-out/screenshots.log
           mkdir -p ci-out/screenshots && cp test/screenshots/goldens/*.png ci-out/screenshots/ || true
-      - name: Rapport de couverture
+      - name: Rapport de couverture et résumé des tests
         if: success() || failure()
-        run: cp coverage/lcov.info ci-out/ 2>/dev/null || true
+        run: |
+          cp coverage/lcov.info ci-out/ 2>/dev/null || true
+          python3 .github/scripts/test_summary.py ci-out > ci-out/test_summary.md || true
+          cat ci-out/test_summary.md || true
       - name: Publier les journaux
         if: always() && github.event_name == 'push'
         env:
@@ -103,12 +107,40 @@ jobs:
             --prerelease --target "$GITHUB_SHA" \
             --title "APK de test (développement)" \
             --notes "Compilation debug, environnement dev. Branche ${GITHUB_REF_NAME}, commit ${GITHUB_SHA::8}. Ne pas distribuer."
+      - name: Compilation APK release (branche main et étiquettes v*)
+        if: success() && github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v') || startsWith(github.ref, 'refs/heads/release/') || github.ref == 'refs/heads/feature/phase9-quality')
+        env:
+          KEYSTORE_B64: ${{ secrets.VR_KEYSTORE_BASE64 }}
+          VR_KEYSTORE_PASSWORD: ${{ secrets.VR_KEYSTORE_PASSWORD }}
+          VR_KEY_ALIAS: ${{ secrets.VR_KEY_ALIAS }}
+          VR_KEY_PASSWORD: ${{ secrets.VR_KEY_PASSWORD }}
+        run: |
+          set -o pipefail
+          if [ -n "$KEYSTORE_B64" ]; then
+            echo "$KEYSTORE_B64" | base64 -d > "$RUNNER_TEMP/release.jks"
+            export VR_KEYSTORE_PATH="$RUNNER_TEMP/release.jks"
+            echo "Signature : clé de distribution"
+          else
+            echo "::warning::Aucune clé de distribution : APK release signé avec la clé de débogage"
+          fi
+          rm -rf build/app/intermediates build/app/tmp
+          flutter build apk --release --split-per-abi --target-platform android-arm64,android-arm --dart-define-from-file=config/prod.env 2>&1 | tee ci-out/build_apk_release.log
+          cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk ci-out/vigiroad-1.0.0-arm64.apk
+          cp build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk ci-out/vigiroad-1.0.0-arm32.apk
+          ls -la ci-out/*.apk
+      - name: Publier l'APK release (étiquette v*)
+        if: success() && startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release upload "$GITHUB_REF_NAME" ci-out/vigiroad-1.0.0-arm64.apk ci-out/vigiroad-1.0.0-arm32.apk --clobber
       - name: Publier les journaux
         if: always() && github.event_name == 'push'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           JOB_STATUS: ${{ job.status }}
         run: |
+          ls -la ci-out/*.apk > ci-out/apk_sizes.txt 2>/dev/null || true
           rm -f ci-out/*.apk
           .github/scripts/publish_logs.sh android ci-out
 

@@ -59,10 +59,14 @@ class CameraPanel extends StatelessWidget {
                     colors: [Color(0xFF0A1622), Color(0xFF03080E)],
                   ),
                 ),
-                child: Center(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 36, 16, 12),
-                    child: Column(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 38, 16, 8),
+                  child: LayoutBuilder(
+                    builder: (context, box) => FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: SizedBox(
+                        width: box.maxWidth,
+                        child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         const Icon(Icons.videocam_off_rounded, color: VrColors.textMuted, size: 34),
@@ -73,6 +77,8 @@ class CameraPanel extends StatelessWidget {
                           Text(inactiveDetail!, style: VrText.caption, textAlign: TextAlign.center),
                         ],
                       ],
+                    ),
+                      ),
                     ),
                   ),
                 ),

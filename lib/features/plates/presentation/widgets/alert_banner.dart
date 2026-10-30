@@ -35,7 +35,13 @@ class AlertBanner extends StatelessWidget {
               const Icon(Icons.warning_rounded, color: VrColors.alert, size: 46),
               const SizedBox(width: 10),
               Expanded(
-                child: Column(
+                child: LayoutBuilder(
+                  builder: (context, box) => FittedBox(
+                    fit: BoxFit.scaleDown,
+                    alignment: Alignment.centerLeft,
+                    child: SizedBox(
+                      width: box.maxWidth,
+                      child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -56,6 +62,9 @@ class AlertBanner extends StatelessWidget {
                       style: VrText.label.copyWith(color: VrColors.alertText.withValues(alpha: 0.85)),
                     ),
                   ],
+                ),
+                    ),
+                  ),
                 ),
               ),
               if (thumbnail != null) ...[

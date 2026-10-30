@@ -32,9 +32,13 @@ class OcrPanel extends StatelessWidget {
                   children: [
                     const Icon(Icons.document_scanner_outlined, color: VrColors.cyan, size: 20),
                     const SizedBox(width: 8),
-                    Text(
-                      'Lecture OCR',
-                      style: VrText.sectionTitle.copyWith(fontSize: 17, color: VrColors.textPrimary),
+                    Flexible(
+                      child: Text(
+                        'Lecture OCR',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: VrText.sectionTitle.copyWith(fontSize: 17, color: VrColors.textPrimary),
+                      ),
                     ),
                   ],
                 ),

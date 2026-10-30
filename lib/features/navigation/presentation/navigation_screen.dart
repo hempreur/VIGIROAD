@@ -72,7 +72,7 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
     final cameraH = (size.height * 0.2).clamp(130.0, 190.0);
     const ocrH = 104.0;
     const speedRowH = 72.0;
-    const alertH = 78.0;
+    const alertH = 88.0;
     final bottomH = pad.bottom + _side + ocrH + _gap + cameraH + _gap + speedRowH +
         (alert != null ? alertH + _gap : 0);
     final topH = pad.top + _side + 96;

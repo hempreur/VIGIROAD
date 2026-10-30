@@ -1,6 +1,7 @@
 @Tags(['screenshots'])
 library;
 
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -119,7 +120,7 @@ void main() {
       usePhoneSurface(tester);
       await pumpVigiroad(tester, FakePermissionService.allGranted());
       await passSplash(tester);
-      GoRouter.of(tester.element(find.byType(NavigationScreen))).push(route);
+      unawaited(GoRouter.of(tester.element(find.byType(NavigationScreen))).push(route));
       await tester.pump(const Duration(milliseconds: 700));
       await expectLater(find.byType(MaterialApp), matchesGoldenFile('goldens/$name.png'));
     });

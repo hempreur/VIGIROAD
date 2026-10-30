@@ -38,7 +38,7 @@ class ManeuverCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Semantics(
       button: onTap != null,
-      label: [headline, title, if (subtitle != null) subtitle!].join(', '),
+      label: [headline, title, ?subtitle].join(', '),
       excludeSemantics: onClose == null,
       child: GestureDetector(
         onTap: onTap,

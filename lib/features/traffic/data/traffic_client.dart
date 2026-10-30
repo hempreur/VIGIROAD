@@ -78,7 +78,7 @@ class HttpTrafficClient implements TrafficClient {
       _uri('/v1/speedlimits'),
       headers: {..._headers, 'Content-Type': 'application/json'},
       body: jsonEncode({'route': [for (final p in route) p.toJson()]}),
-    ), timeout: const Duration(seconds: 45));
+    ), timeout: const Duration(seconds: 90));
     final raw = body['limits'];
     if (raw is! List || raw.length != route.length - 1) {
       throw const TrafficException('Réponse du serveur de trafic illisible');

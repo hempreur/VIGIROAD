@@ -91,6 +91,18 @@ void main() {
       expect(calls, 1);
     });
 
+    test('préchargement puis demande servie depuis le cache', () async {
+      var calls = 0;
+      final s = SpeedLimitService(client: MockClient((_) async {
+        calls++;
+        return http.Response(overpassBody, 200);
+      }));
+      await s.warm(route);
+      expect(calls, 1);
+      expect((await s.along(route)).limits, [50, 50, null]);
+      expect(calls, 1);
+    });
+
     test('Overpass saturé : inconnu, pause avant nouvel essai', () async {
       var calls = 0;
       final s = SpeedLimitService(client: MockClient((_) async {

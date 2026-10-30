@@ -28,6 +28,9 @@ final speedLimitProvider = NotifierProvider<SpeedLimitController, SpeedLimits>(S
 class SpeedLimitController extends Notifier<SpeedLimits> {
   static const windowM = 20000.0;
 
+  /// Première fenêtre plus courte : premier panneau affiché plus vite.
+  static const firstWindowM = 5000.0;
+
   /// Distance restante dans la fenêtre chargée qui déclenche la suivante.
   static const refillM = 6000.0;
   static const retryAfter = Duration(seconds: 45);
@@ -85,8 +88,9 @@ class SpeedLimitController extends Notifier<SpeedLimits> {
     final client = ref.read(trafficClientProvider);
     if (client == null) return;
     final last = route.geometry.length - 1;
+    final window = _coveredUntil == 0 ? firstWindowM : windowM;
     var end = start + 1;
-    while (end < last && _cum[end + 1] - _cum[start] <= windowM && end - start < 4000) {
+    while (end < last && _cum[end + 1] - _cum[start] <= window && end - start < 4000) {
       end++;
     }
     _busy = true;

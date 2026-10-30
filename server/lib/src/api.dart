@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:shelf/shelf.dart';
@@ -98,6 +99,8 @@ class TrafficApi {
           final route = [for (final p in raw) LatLng.fromJson(p as List<dynamic>)];
           final buffer = ((body as Map<String, dynamic>)['bufferMeters'] as num?)?.toDouble().clamp(20, 1000) ?? 150.0;
           final hits = aggregator.alongRoute(route, bufferM: buffer.toDouble());
+          // Les limitations de vitesse de l'itinéraire seront demandées ensuite.
+          if (speedLimits case final s?) unawaited(s.warm(route));
           return _ok({
             ..._payload([for (final h in hits) h.event], BBox.around(route)),
             'along': [for (final h in hits) {'id': h.event.id, 'alongMeters': h.along.round(), 'offsetMeters': h.offset.round()}],

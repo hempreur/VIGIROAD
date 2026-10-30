@@ -38,10 +38,15 @@ class SpeedLimitService {
   static const tileDeg = 0.02; // ≈ 2 km
   static const attribution = '© contributeurs OpenStreetMap (ODbL)';
 
-  /// Types de voies routières interrogés (pas de chemins piétons ni cyclables).
+  /// Types de voies routières interrogés. Ni chemins piétons ou cyclables,
+  /// ni voies de service (allées de parking…) : très nombreuses en ville,
+  /// elles alourdiraient fortement les réponses sans servir au guidage.
   static const _highways =
       'motorway|motorway_link|trunk|trunk_link|primary|primary_link|secondary|secondary_link|'
-      'tertiary|tertiary_link|unclassified|residential|living_street|service|road';
+      'tertiary|tertiary_link|unclassified|residential|living_street|road';
+
+  /// Préchargement : nombre maximal de tuiles (≈ 2 km) par itinéraire.
+  static const maxWarmTiles = 150;
 
   final _cache = <(int, int), ({List<OsmWay> ways, DateTime at})>{};
   Future<void> _lock = Future.value();
@@ -61,6 +66,22 @@ class SpeedLimitService {
           for (final w in entry.ways) w.id: w,
     };
     return (limits: matcher.match(route, ways.values.toList()), complete: missing.isEmpty);
+  }
+
+  /// Précharge les tuiles d'un itinéraire (appelé dès son calcul) pour que
+  /// les demandes de limitations suivantes soient servies depuis le cache.
+  Future<void> warm(List<LatLng> route) async {
+    final tiles = <(int, int)>{};
+    for (final p in route) {
+      tiles.add((_tile(p).y, _tile(p).x));
+      if (tiles.length >= maxWarmTiles) break;
+    }
+    // Par lots : une demande de limitations arrivée entre-temps passe avant
+    // la suite du préchargement au lieu d'attendre l'itinéraire entier.
+    final list = tiles.toList();
+    for (var i = 0; i < list.length; i += tilesPerQuery) {
+      await _ensure(list.sublist(i, math.min(list.length, i + tilesPerQuery)).toSet());
+    }
   }
 
   /// Charge les tuiles absentes ou périmées ; renvoie celles restées absentes.

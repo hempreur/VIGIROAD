@@ -40,6 +40,10 @@ Future<void> main() async {
       print('   ${e.key == null ? 'inconnue' : '${e.key} km/h'} : ${(e.value / 1000).toStringAsFixed(2)} km');
     }
   }
+  final again = Stopwatch()..start();
+  final (_, (lat, lng)) = trips.values.first;
+  await service.along([LatLng(lat, lng), LatLng(lat + 0.001, lng)]);
+  print('Nouvelle demande servie depuis le cache : ${again.elapsedMilliseconds} ms');
   print('Requêtes Overpass : ${service.overpassQueries}');
   client.close();
 }

@@ -11,6 +11,8 @@ Future<void> openPlates(WidgetTester tester) async {
   await passSplash(tester);
   unawaitedPush(tester);
   await tester.pump(const Duration(milliseconds: 700));
+  await tester.pump();
+  await tester.pump();
 }
 
 void unawaitedPush(WidgetTester tester) =>

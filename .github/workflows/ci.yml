@@ -179,19 +179,29 @@ jobs:
           # Étiquette : celle poussée, ou dérivée de la branche release/vX.Y.Z.
           TAG="${GITHUB_REF_NAME#release/}"
           VER="$(sed -n 's/^version: *\([^+]*\).*/\1/p' pubspec.yaml)"
+          {
+            echo "**VIGIROAD ${TAG#v}** — GPS intelligent, lecture de plaques sur l'appareil, alertes et assistant vocal SENTRIX."
+            echo
+            echo "- \`vigiroad-$VER-arm64.apk\` : téléphones Android 64 bits (recommandé)"
+            echo "- \`vigiroad-$VER-arm32.apk\` : anciens téléphones 32 bits"
+            echo
+            echo "Installation : [docs/INSTALL.md](https://github.com/${GITHUB_REPOSITORY}/blob/main/docs/INSTALL.md)"
+            echo
+            tail -n +2 docs/RELEASE_NOTES_1.0.md
+          } > "$RUNNER_TEMP/notes.md"
           # Crée la release (et l'étiquette sur ce commit) si elle n'existe pas encore.
           if ! gh release view "$TAG" > /dev/null 2>&1; then
-            {
-              echo "**VIGIROAD ${TAG#v}** — GPS intelligent, lecture de plaques sur l'appareil, alertes et assistant vocal SENTRIX."
-              echo
-              echo "- \`vigiroad-$VER-arm64.apk\` : téléphones Android 64 bits (recommandé)"
-              echo "- \`vigiroad-$VER-arm32.apk\` : anciens téléphones 32 bits"
-              echo
-              echo "Installation : [docs/INSTALL.md](https://github.com/${GITHUB_REPOSITORY}/blob/main/docs/INSTALL.md)"
-              echo
-              tail -n +2 docs/RELEASE_NOTES_1.0.md
-            } > "$RUNNER_TEMP/notes.md"
             gh release create "$TAG" --title "VIGIROAD ${TAG#v}" --notes-file "$RUNNER_TEMP/notes.md" --target "$GITHUB_SHA"
+          else
+            # Release déjà existante (republication depuis la branche release/v*) :
+            # l'étiquette suit le commit compilé et les APK d'une autre version
+            # sont retirés, pour qu'aucun fichier obsolète ne reste téléchargeable.
+            gh api -X PATCH "repos/${GITHUB_REPOSITORY}/git/refs/tags/${TAG}" -f sha="$GITHUB_SHA" -F force=true > /dev/null
+            gh release view "$TAG" --json assets -q '.assets[].name' | { grep -v -F "vigiroad-$VER-" || true; } | while read -r old; do
+              echo "Retrait de l'APK obsolète : $old"
+              gh release delete-asset "$TAG" "$old" --yes
+            done
+            gh release edit "$TAG" --title "VIGIROAD ${TAG#v}" --notes-file "$RUNNER_TEMP/notes.md"
           fi
           gh release upload "$TAG" "ci-out/vigiroad-$VER-arm64.apk" "ci-out/vigiroad-$VER-arm32.apk" --clobber
       - name: Publier les journaux

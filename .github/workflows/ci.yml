@@ -137,6 +137,20 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          # Crée la release à partir de l'étiquette si elle n'existe pas encore.
+          if ! gh release view "$GITHUB_REF_NAME" > /dev/null 2>&1; then
+            {
+              echo "**VIGIROAD ${GITHUB_REF_NAME#v}** — GPS intelligent, lecture de plaques sur l'appareil, alertes et assistant vocal SENTRIX."
+              echo
+              echo "- \`vigiroad-1.0.0-arm64.apk\` : téléphones Android 64 bits (recommandé)"
+              echo "- \`vigiroad-1.0.0-arm32.apk\` : anciens téléphones 32 bits"
+              echo
+              echo "Installation : [docs/INSTALL.md](https://github.com/${GITHUB_REPOSITORY}/blob/main/docs/INSTALL.md)"
+              echo
+              tail -n +2 docs/RELEASE_NOTES_1.0.md
+            } > "$RUNNER_TEMP/notes.md"
+            gh release create "$GITHUB_REF_NAME" --title "VIGIROAD ${GITHUB_REF_NAME#v}" --notes-file "$RUNNER_TEMP/notes.md" --verify-tag
+          fi
           gh release upload "$GITHUB_REF_NAME" ci-out/vigiroad-1.0.0-arm64.apk ci-out/vigiroad-1.0.0-arm32.apk --clobber
       - name: Publier les journaux
         if: always() && github.event_name == 'push'

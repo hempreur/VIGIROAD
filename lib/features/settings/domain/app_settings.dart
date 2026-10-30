@@ -42,6 +42,7 @@ class AppSettings {
     this.sentrixAnnounce = true,
     this.voiceGuidance = true,
     this.drive3d = true,
+    this.backgroundGuidance = true,
     this.logHistory = true,
     this.saveLocation = true,
     this.retention = Retention.days30,
@@ -66,6 +67,9 @@ class AppSettings {
 
   /// Vue inclinée « conduite » par défaut.
   final bool drive3d;
+
+  /// Le guidage continue application masquée ou écran éteint.
+  final bool backgroundGuidance;
   final bool logHistory;
 
   /// Enregistrer la position GPS dans l'historique.
@@ -85,6 +89,7 @@ class AppSettings {
     bool? sentrixAnnounce,
     bool? voiceGuidance,
     bool? drive3d,
+    bool? backgroundGuidance,
     bool? logHistory,
     bool? saveLocation,
     Retention? retention,
@@ -99,6 +104,7 @@ class AppSettings {
     sentrixAnnounce: sentrixAnnounce ?? this.sentrixAnnounce,
     voiceGuidance: voiceGuidance ?? this.voiceGuidance,
     drive3d: drive3d ?? this.drive3d,
+    backgroundGuidance: backgroundGuidance ?? this.backgroundGuidance,
     logHistory: logHistory ?? this.logHistory,
     saveLocation: saveLocation ?? this.saveLocation,
     retention: retention ?? this.retention,
@@ -115,6 +121,7 @@ class AppSettings {
     'sentrixAnnounce': sentrixAnnounce,
     'voiceGuidance': voiceGuidance,
     'drive3d': drive3d,
+    'backgroundGuidance': backgroundGuidance,
     'logHistory': logHistory,
     'saveLocation': saveLocation,
     'retention': retention.name,
@@ -139,6 +146,7 @@ class AppSettings {
       sentrixAnnounce: pick('sentrixAnnounce', d.sentrixAnnounce),
       voiceGuidance: pick('voiceGuidance', d.voiceGuidance),
       drive3d: pick('drive3d', d.drive3d),
+      backgroundGuidance: pick('backgroundGuidance', d.backgroundGuidance),
       logHistory: pick('logHistory', d.logHistory),
       saveLocation: pick('saveLocation', d.saveLocation),
       retention: pickEnum('retention', Retention.values, d.retention),

@@ -49,6 +49,7 @@ Future<void> pumpVigiroad(
         routeServiceProvider.overrideWithValue(routeService ?? FakeRouteService()),
         speakerProvider.overrideWithValue(speaker ?? FakeSpeaker()),
         wakelockProvider.overrideWithValue((_) {}),
+        notificationPermissionProvider.overrideWithValue(() async {}),
         plateScannerProvider.overrideWithValue(scanner ?? FakePlateScanner()),
         watchlistRepositoryProvider.overrideWith((ref) async => watchlist ?? MemoryWatchlist()),
         detectionLogProvider.overrideWith((ref) async => detections ?? MemoryDetectionLog()),

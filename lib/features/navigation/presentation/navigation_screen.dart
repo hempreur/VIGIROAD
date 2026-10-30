@@ -82,7 +82,7 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
     const alertH = 88.0;
     final bottomH = pad.bottom + _side + ocrH + _gap + cameraH + _gap + speedRowH +
         (alert != null ? alertH + _gap : 0);
-    final topH = pad.top + _side + 96 + (showEta ? 54 : 0);
+    final topH = pad.top + _side + 112 + (showEta ? 54 : 0);
     final insets = EdgeInsets.only(top: topH, bottom: bottomH);
     final puckY = topH + (size.height - topH - bottomH) / 2;
 

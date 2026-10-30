@@ -19,6 +19,10 @@ abstract interface class RouteService {
 }
 
 /// Calcul d'itinéraire via une API compatible OSRM (profil voiture).
+///
+/// OSRM ne fournit pas les limitations de vitesse ; le champ
+/// `annotation.maxspeed` est lu s'il est présent (serveurs compatibles
+/// Mapbox), sinon la limitation reste inconnue et n'est pas affichée.
 class OsrmRouter implements RouteService {
   OsrmRouter({required this.baseUrl, required this.userAgent, http.Client? client})
     : _client = client ?? http.Client();
@@ -35,7 +39,6 @@ class OsrmRouter implements RouteService {
         'overview': 'full',
         'geometries': 'geojson',
         'steps': 'true',
-        'annotations': 'maxspeed',
         'alternatives': 'false',
         if (bearing != null) 'bearings': '${bearing.round() % 360},45;',
       },

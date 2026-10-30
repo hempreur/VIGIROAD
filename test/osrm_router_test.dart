@@ -48,7 +48,7 @@ void main() {
     expect(() => parseOsrmResponse('{"code":"InvalidQuery"}'), throwsA(isA<RoutingException>()));
   });
 
-  test('requête : coordonnées lon,lat, étapes, limitations, cap', () async {
+  test('requête : coordonnées lon,lat, étapes, cap', () async {
     late Uri sent;
     final client = MockClient((req) async {
       sent = req.url;
@@ -58,7 +58,7 @@ void main() {
     await router.route(const GeoPoint(48.8566, 2.3522), const GeoPoint(45.764, 4.8357), bearing: 372);
     expect(sent.path, '/route/v1/driving/2.352200,48.856600;4.835700,45.764000');
     expect(sent.queryParameters['steps'], 'true');
-    expect(sent.queryParameters['annotations'], 'maxspeed');
+    expect(sent.queryParameters.containsKey('annotations'), isFalse, reason: 'option non standard OSRM');
     expect(sent.queryParameters['bearings'], '12,45;');
   });
 

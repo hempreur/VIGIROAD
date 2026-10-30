@@ -123,7 +123,11 @@ jobs:
           else
             echo "::warning::Aucune clé de distribution : APK release signé avec la clé de débogage"
           fi
+          # Libère la mémoire de la compilation debug (démon Gradle, Kotlin).
+          (cd android && ./gradlew --stop) || true
+          pkill -f 'KotlinCompileDaemon' || true
           rm -rf build/app/intermediates build/app/tmp
+          free -m
           flutter build apk --release --split-per-abi --target-platform android-arm64,android-arm --dart-define-from-file=config/prod.env 2>&1 | tee ci-out/build_apk_release.log
           cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk ci-out/vigiroad-1.0.0-arm64.apk
           cp build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk ci-out/vigiroad-1.0.0-arm32.apk

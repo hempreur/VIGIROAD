@@ -42,14 +42,16 @@ class OcrPanel extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 8),
-                FittedBox(
-                  fit: BoxFit.scaleDown,
-                  alignment: Alignment.centerLeft,
-                  child: PlateBadge(
-                    text: r?.display,
-                    countryLetter: euBandLetter(r?.country ?? 'FR'),
-                    height: 46,
+                const SizedBox(height: 6),
+                Flexible(
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    alignment: Alignment.centerLeft,
+                    child: PlateBadge(
+                      text: r?.display,
+                      countryLetter: euBandLetter(r?.country ?? 'FR'),
+                      height: 46,
+                    ),
                   ),
                 ),
               ],

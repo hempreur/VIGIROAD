@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:vigiroad/app/providers.dart';
+import 'package:vigiroad/core/permissions/permission_service.dart';
 import 'package:vigiroad/features/sentrix/application/voice_training_controller.dart';
 import 'package:vigiroad/features/sentrix/data/stored_zip.dart';
 import 'package:vigiroad/features/sentrix/data/voice_samples.dart';
@@ -139,7 +140,9 @@ void main() {
         overrides: [
           voiceSampleStoreProvider.overrideWith((ref) async => store),
           sampleRecorderProvider.overrideWithValue(recorder),
-          permissionServiceProvider.overrideWithValue(FakePermissionService.allDenied()),
+          permissionServiceProvider.overrideWithValue(
+            FakePermissionService({for (final c in AppCapability.values) c: CapabilityStatus.permanentlyDenied}),
+          ),
         ],
       );
       c.listen(voiceTrainingProvider, (_, _) {});

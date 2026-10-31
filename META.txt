@@ -1,0 +1,5 @@
+job=android
+sha=f665fc96f87537e30a2202bc5e4475a193ce27cc
+ref=refs/heads/feature/wakeword-v1.2
+run=https://github.com/hempreur/VIGIROAD/actions/runs/41250891185
+status=success

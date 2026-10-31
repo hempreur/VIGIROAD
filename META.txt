@@ -1,0 +1,5 @@
+job=ocr-release
+sha=e5b869b6b0c9bbf74db763e12292c3c65885599c
+ref=refs/heads/feature/sentrix-recorder
+run=https://github.com/hempreur/VIGIROAD/actions/runs/41172396375
+status=success

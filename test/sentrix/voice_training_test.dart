@@ -73,18 +73,25 @@ void main() {
     late FakeRecorder recorder;
     late ProviderContainer c;
     Uint8List? saved;
+    String? shared;
 
     setUp(() async {
       tmp = await Directory.systemTemp.createTemp('vigiroad_voix');
       store = VoiceSampleStore(Directory('${tmp.path}/sentrix_samples'));
       recorder = FakeRecorder();
       saved = null;
+      shared = null;
       c = ProviderContainer(
         overrides: [
           voiceSampleStoreProvider.overrideWith((ref) async => store),
           sampleRecorderProvider.overrideWithValue(recorder),
           permissionServiceProvider.overrideWithValue(FakePermissionService.allGranted()),
           zipSaverProvider.overrideWithValue((name, bytes) async {
+            saved = bytes;
+            return true;
+          }),
+          zipSharerProvider.overrideWithValue((name, bytes) async {
+            shared = name;
             saved = bytes;
             return true;
           }),
@@ -118,7 +125,9 @@ void main() {
       await ctrl().record(SampleKind.speech);
       expect(c.read(voiceTrainingProvider).canExport, isTrue);
 
-      expect(await ctrl().export(appVersion: '1.1.0'), isTrue);
+      expect(await ctrl().export(appVersion: '1.1.2'), isTrue);
+      expect(shared, 'vigiroad_sentrix_voix.zip', reason: 'envoi par le menu de partage par défaut');
+      expect(c.read(voiceTrainingProvider).exported, isTrue);
       final files = readZip(saved!);
       expect(files.keys.where((k) => k.startsWith('sentrix/')), hasLength(30));
       expect(files.keys, contains('speech/speech_001.wav'));
@@ -169,6 +178,7 @@ void main() {
     await tester.pump();
     expect(find.text('1. Dites « Sentrix »'), findsOneWidget);
     expect(find.textContaining('uniquement à l\'arrêt'), findsOneWidget);
-    expect(find.textContaining('Exporter (au moins 30'), findsOneWidget);
+    expect(find.textContaining('Disponible après au moins 30'), findsOneWidget);
+    expect(find.text('Envoyer les enregistrements'), findsOneWidget);
   });
 }

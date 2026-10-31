@@ -1,0 +1,27 @@
+00:00 +0: loading test/connectors_test.dart
+00:00 +0: test/aggregator_test.dart: fusion entre sources et respect de la fréquence autorisée
+00:00 +1: test/aggregator_test.dart: basculement vers la source de secours puis retour
+00:00 +2: test/aggregator_test.dart: attente exponentielle plafonnée après échecs
+00:00 +3: test/aggregator_test.dart: données obsolètes exclues et couverture inconnue sans collecte récente
+00:00 +4: test/aggregator_test.dart: zone connue seulement dans l'emprise d'une source à jour
+00:00 +5: test/aggregator_test.dart: événements le long d'un itinéraire, dans l'ordre
+00:00 +6: test/aggregator_test.dart: API santé sans clé
+00:00 +7: test/connectors_test.dart: DATEX II (Bison Futé) situations réelles et localisées uniquement
+00:00 +8: test/connectors_test.dart: DATEX II (Bison Futé) situations réelles et localisées uniquement
+00:00 +9: test/aggregator_test.dart: API événements d'une zone avec mentions des sources
+00:00 +10: test/aggregator_test.dart: API événements d'une zone avec mentions des sources
+00:00 +11: test/aggregator_test.dart: API événements d'une zone avec mentions des sources
+00:00 +12: test/aggregator_test.dart: API événements d'une zone avec mentions des sources
+00:00 +13: test/connectors_test.dart: DATEX II (Bison Futé) lecture HTTP réelle via le client
+00:00 +14: test/connectors_test.dart: DATEX II (Bison Futé) lecture HTTP réelle via le client
+00:00 +15: test/connectors_test.dart: DATEX II (Bison Futé) lecture HTTP réelle via le client
+00:00 +16: test/connectors_test.dart: DATEX II (Bison Futé) lecture HTTP réelle via le client
+00:00 +17: test/connectors_test.dart: DATEX II (Bison Futé) lecture HTTP réelle via le client
+00:00 +18: test/connectors_test.dart: DATEX II (Bison Futé) lecture HTTP réelle via le client
+00:00 +19: test/connectors_test.dart: DATEX II (Bison Futé) lecture HTTP réelle via le client
+00:00 +20: test/connectors_test.dart: WZDx (511 SF Bay) conversion
+00:00 +21: test/connectors_test.dart: 511 v2 (Arizona) conversion, dates Unix, polyligne
+00:00 +22: test/connectors_test.dart: TfL conversion
+00:00 +23: test/connectors_test.dart: Waze for Cities (partenaire) alertes fiables seulement
+00:00 +24: test/connectors_test.dart: polyligne Google
+00:00 +25: All tests passed!

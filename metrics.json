@@ -1,0 +1,124 @@
+{
+  "threshold": 0.9,
+  "validation": {
+    "threshold": 0.9,
+    "recall": 0.0,
+    "fa_per_hour": null,
+    "step": 30000
+  },
+  "test": {
+    "recall": 0.8268518518518518,
+    "fa_per_hour_fr_speech": 8.373551364710844,
+    "fr_speech_hours": 8.001384010416666,
+    "positives": 1080
+  },
+  "openwakeword_validation": {
+    "hours": 10.696555555555555,
+    "fa_per_hour": 142.1018188617312
+  },
+  "curve_test": [
+    {
+      "threshold": 0.05,
+      "recall": 0.9148148148148149,
+      "fa_per_hour": 30.74468113013235
+    },
+    {
+      "threshold": 0.1,
+      "recall": 0.9074074074074074,
+      "fa_per_hour": 25.620567608443626
+    },
+    {
+      "threshold": 0.15,
+      "recall": 0.9009259259259259,
+      "fa_per_hour": 22.996021658310376
+    },
+    {
+      "threshold": 0.2,
+      "recall": 0.8981481481481481,
+      "fa_per_hour": 21.49628111537709
+    },
+    {
+      "threshold": 0.25,
+      "recall": 0.8935185185185185,
+      "fa_per_hour": 19.24667030097716
+    },
+    {
+      "threshold": 0.3,
+      "recall": 0.887962962962963,
+      "fa_per_hour": 18.621778408088293
+    },
+    {
+      "threshold": 0.35,
+      "recall": 0.8824074074074074,
+      "fa_per_hour": 17.621951379466104
+    },
+    {
+      "threshold": 0.4,
+      "recall": 0.8796296296296297,
+      "fa_per_hour": 16.997059486577236
+    },
+    {
+      "threshold": 0.45,
+      "recall": 0.8740740740740741,
+      "fa_per_hour": 16.12221083653282
+    },
+    {
+      "threshold": 0.5,
+      "recall": 0.8731481481481481,
+      "fa_per_hour": 15.497318943643949
+    },
+    {
+      "threshold": 0.55,
+      "recall": 0.8694444444444445,
+      "fa_per_hour": 14.622470293599532
+    },
+    {
+      "threshold": 0.6,
+      "recall": 0.8666666666666667,
+      "fa_per_hour": 14.122556779288438
+    },
+    {
+      "threshold": 0.65,
+      "recall": 0.862037037037037,
+      "fa_per_hour": 12.997751372088473
+    },
+    {
+      "threshold": 0.7,
+      "recall": 0.8537037037037037,
+      "fa_per_hour": 12.122902722044056
+    },
+    {
+      "threshold": 0.75,
+      "recall": 0.85,
+      "fa_per_hour": 11.373032450577414
+    },
+    {
+      "threshold": 0.8,
+      "recall": 0.8425925925925926,
+      "fa_per_hour": 10.87311893626632
+    },
+    {
+      "threshold": 0.85,
+      "recall": 0.837037037037037,
+      "fa_per_hour": 9.498356771910808
+    },
+    {
+      "threshold": 0.9,
+      "recall": 0.8268518518518518,
+      "fa_per_hour": 8.373551364710844
+    },
+    {
+      "threshold": 0.95,
+      "recall": 0.8111111111111111,
+      "fa_per_hour": 6.873810821777558
+    }
+  ],
+  "data": {
+    "positives_train": 13320,
+    "adversarial": 1110,
+    "speech_windows": 303458,
+    "acav": true
+  },
+  "selftest": false,
+  "seconds": 5294
+}

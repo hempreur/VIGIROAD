@@ -1,0 +1,48 @@
+[0;93m2026-10-31 02:10:44.144224596 [W:onnxruntime:Default, device_discovery.cc:95 GetPciBusId] Skipping pci_bus_id for PCI path at "/sys/devices/LNXSYSTM:00/LNXSYBUS:00/ACPI0004:00/MSFT1000:00/5620e0c7-8062-4dce-aeb7-520c7ef76171" because filename "5620e0c7-8062-4dce-aeb7-520c7ef76171" did not match expected pattern of [0-9a-f]+:[0-9a-f]+:[0-9a-f]+[.][0-9a-f]+[m
+1. Synthèse des voix
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+  fr/fr_FR/mls/medium/fr_FR-mls-medium : 125 locuteur(s), total 5000 extraits
+  fr/fr_FR/upmc/medium/fr_FR-upmc-medium : 2 locuteur(s), total 5640 extraits
+  fr/fr_FR/siwis/medium/fr_FR-siwis-medium : 1 locuteur(s), total 5960 extraits
+  fr/fr_FR/tom/medium/fr_FR-tom-medium : 1 locuteur(s), total 6280 extraits
+  fr/fr_FR/mls/medium/fr_FR-mls-medium : 125 locuteur(s), total 1250 extraits
+  fr/fr_FR/upmc/medium/fr_FR-upmc-medium : 2 locuteur(s), total 1410 extraits
+  fr/fr_FR/siwis/medium/fr_FR-siwis-medium : 1 locuteur(s), total 1490 extraits
+   positifs : {'train': 4440, 'val': 760, 'test': 1080}, adverses : 1110  (1173 s)
+2. Parole réelle et plongements (au fil de l'eau)
+  MLS train : 30.0 h, 7216 enregistrements  (mémoire 3.9 Go)
+  MLS dev : 4.0 h, 961 enregistrements  (mémoire 5.1 Go)
+  MLS test : 8.0 h, 1927 enregistrements  (mémoire 5.1 Go)
+   x_speech (303458, 16, 96), validation 4.00 h, test 8.00 h  (mémoire 5.1 Go, 3862 s)
+   négatifs openWakeWord (ACAV100M, 2 000 h) et validation openWakeWord
+   x_pos (13320, 16, 96), x_adv (1110, 16, 96), x_speech (303458, 16, 96)  (mémoire 6.1 Go, 4782 s)
+   ACAV : forme (5625000, 16, 96), type float16, moyenne 1.888, écart-type 16.161
+   parole MLS : moyenne 2.031, écart-type 16.062
+   positifs : moyenne 2.058, écart-type 15.368
+   caractéristiques enregistrées : /home/runner/work/_temp/sentrix-features.npz (1384 Mo)
+3. Entraînement
+   pas 2000: perte 0.1008, validation None
+   pas 4000: perte 0.0970, validation None
+   pas 6000: perte 0.1221, validation None
+   pas 8000: perte 0.1562, validation None
+   pas 10000: perte 0.0690, validation None
+   pas 12000: perte 0.0939, validation None
+   pas 14000: perte 0.0837, validation None
+   pas 16000: perte 0.0598, validation None
+   pas 18000: perte 0.0195, validation None
+   pas 20000: perte 0.1381, validation None
+   pas 22000: perte 0.0120, validation None
+   pas 24000: perte 0.0021, validation None
+   pas 26000: perte 0.0026, validation None
+   pas 28000: perte 0.1233, validation None
+   pas 30000: perte 0.0025, validation None
+4. Mesures
+{
+  "recall": 0.8268518518518518,
+  "fa_per_hour_fr_speech": 8.373551364710844,
+  "fr_speech_hours": 8.001384010416666,
+  "positives": 1080
+}
+/home/runner/work/VIGIROAD/VIGIROAD/tools/wakeword/train_sentrix.py:476: DeprecationWarning: You are using the legacy TorchScript-based ONNX export. Starting in PyTorch 2.9, the new torch.export-based ONNX exporter has become the default. Learn more about the new export logic: https://docs.pytorch.org/docs/stable/onnx_export.html. For exporting control flow: https://pytorch.org/tutorials/beginner/onnx/export_control_flow_model_to_onnx_tutorial.html
+  torch.onnx.export(
+   export vérifié : score 0.995  (5295 s)

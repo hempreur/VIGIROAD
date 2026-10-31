@@ -1,0 +1,5 @@
+job=ios
+sha=c1013e5a977c8d3a8f2351abfc014879f07ee934
+ref=refs/heads/release/v1.1.1
+run=https://github.com/hempreur/VIGIROAD/actions/runs/41173766256
+status=success

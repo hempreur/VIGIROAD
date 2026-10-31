@@ -1,0 +1,13 @@
+== Paris, Concorde → Bastille : 4.4 km, 212 points, 33738 ms, complet=true
+   limitation connue sur 100.0 % de la distance
+   30 km/h : 4.40 km
+== Essonne, N20 Arpajon → Étampes : 20.1 km, 339 points, 64380 ms, complet=true
+   limitation connue sur 95.8 % de la distance
+   90 km/h : 15.52 km
+   50 km/h : 1.87 km
+   70 km/h : 1.52 km
+   inconnue : 0.85 km
+   20 km/h : 0.18 km
+   30 km/h : 0.13 km
+Nouvelle demande servie depuis le cache : 4 ms
+Requêtes Overpass : 3

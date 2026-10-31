@@ -1,0 +1,5 @@
+job=ios
+sha=518878f3b1cc940bfb00a75ddf639f269153c806
+ref=refs/heads/feature/voice-share
+run=https://github.com/hempreur/VIGIROAD/actions/runs/41231069110
+status=success

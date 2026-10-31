@@ -67,6 +67,7 @@ class VoiceTrainingController extends Notifier<VoiceTrainingState> {
   Future<VoiceSampleStore> get _store => ref.read(voiceSampleStoreProvider.future);
 
   Future<void> refresh() async {
+    if (!ref.mounted) return; // écran fermé avant la mise à jour différée
     final counts = await (await _store).counts();
     if (ref.mounted) state = state.copyWith(counts: counts);
   }

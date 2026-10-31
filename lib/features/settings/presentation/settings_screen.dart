@@ -221,7 +221,7 @@ class SettingsScreen extends ConsumerWidget {
         const _Section('À PROPOS'),
         _Panel([
           InfoRow(label: 'Environnement', value: config.environment.name),
-          const InfoRow(label: 'Version', value: '1.0.1'),
+          const InfoRow(label: 'Version', value: '1.1.0'),
           const InfoRow(label: 'Éditeur', value: 'VIGIROAD INC (CODEX HEMPREUR)'),
           const InfoRow(label: 'Données cartographiques', value: '© contributeurs OpenStreetMap, style © CARTO'),
           _Action('Réinitialiser les réglages', Icons.restart_alt_rounded, () async {

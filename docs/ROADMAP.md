@@ -15,9 +15,20 @@
 | 9 | Qualité | `feature/phase9-hardening` | Couverture de tests, profilage CPU/batterie/température, accessibilité | Rapport de tests |
 | 10 | Livraison | `release/1.0.0` | APK signé, archive iOS, documentation complète, captures finales | — |
 
-## Limitations connues (version 1.0)
+## Version 1.1 (livrée)
 
-Voir aussi le tableau de [`RELEASE_NOTES_1.0.md`](RELEASE_NOTES_1.0.md).
+Trafic officiel, limitations de vitesse, guidage en arrière-plan, logo et signature VIGIROAD INC :
+voir [`RELEASE_NOTES_1.1.md`](RELEASE_NOTES_1.1.md).
+
+## Version 1.2 (prévue)
+
+- **Mot d'activation « Sentrix »** : écran d'enregistrement de « Sentrix » prononcés par
+  l'utilisateur, réentraînement (`tools/wakeword`, branche `feature/wakeword`) et mesure. Intégré
+  seulement s'il atteint ≤ 0,5 fausse activation par heure avec une détection satisfaisante.
+
+## Limitations connues
+
+Voir aussi [`RELEASE_NOTES_1.0.md`](RELEASE_NOTES_1.0.md) et [`RELEASE_NOTES_1.1.md`](RELEASE_NOTES_1.1.md).
 
 - **Trafic temps réel** : perturbations officielles via le serveur VigiRoadTrafficAggregator
   (incidents, travaux, fermetures), pas de mesure de vitesse de circulation. Hors des zones

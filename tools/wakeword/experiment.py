@@ -17,8 +17,42 @@ import numpy as np
 import torch
 import torch.nn as nn
 
-from train_sentrix import false_accepts, scores
-from features import N_EMB, SR, STEP, windows
+from train_sentrix import scores
+
+
+def false_accepts(stream_scores, thr: float, patience: int = 1, refractory: int = 25) -> int:
+    """Activations : [patience] trames consécutives au-dessus du seuil, puis 2 s de garde."""
+    n = 0
+    for s in stream_scores:
+        run, i = 0, 0
+        while i < len(s):
+            run = run + 1 if s[i] >= thr else 0
+            if run >= patience:
+                n += 1
+                run = 0
+                i += refractory
+            else:
+                i += 1
+    return n
+
+
+def detected(s: np.ndarray, thr: float, patience: int) -> bool:
+    run = 0
+    for v in s:
+        run = run + 1 if v >= thr else 0
+        if run >= patience:
+            return True
+    return False
+from numpy.lib.stride_tricks import sliding_window_view
+
+from features import N_EMB, SR, STEP
+
+
+def windows(e: np.ndarray) -> np.ndarray:
+    """Fenêtres glissantes sans copie (mémoire limitée)."""
+    if len(e) < N_EMB:
+        return np.zeros((0, N_EMB, 96), e.dtype)
+    return sliding_window_view(e, (N_EMB, 96))[:, 0]
 
 
 def mlp(hidden: int, layers: int, dropout: float) -> nn.Module:
@@ -40,18 +74,21 @@ VARIANTS = {
     "small_dropout_wneg50": dict(hidden=64, layers=2, dropout=0.3, wneg_max=50, steps=20000, acav_frac=0.4, wd=1e-3),
     "tiny": dict(hidden=32, layers=1, dropout=0.2, wneg_max=30, steps=20000, acav_frac=0.4, wd=1e-3),
     "mid_acav": dict(hidden=96, layers=2, dropout=0.3, wneg_max=30, steps=30000, acav_frac=0.6, wd=1e-3),
+    # Avec seconde passe sur les négatifs qui trompent le modèle.
+    "small_mined": dict(hidden=64, layers=2, dropout=0.3, wneg_max=20, steps=20000, acav_frac=0.4, wd=1e-3, mine=10000),
+    "mid_mined": dict(hidden=96, layers=2, dropout=0.3, wneg_max=30, steps=25000, acav_frac=0.5, wd=1e-3, mine=15000),
 }
 
 
 def load(path: str):
     d = np.load(path, allow_pickle=True)
-    f = lambda k: [np.asarray(x, np.float32) for x in d[k]]  # noqa: E731
+    f = lambda k: [np.asarray(x, np.float16) for x in d[k]]  # noqa: E731
     return {
-        "x_pos": np.asarray(d["x_pos"], np.float32),
-        "x_adv": np.asarray(d["x_adv"], np.float32),
-        "x_speech": np.asarray(d["x_speech"], np.float32),
-        "acav": np.asarray(d["acav"], np.float32),
-        "oww_val": np.asarray(d["oww_val"], np.float32),
+        "x_pos": d["x_pos"],
+        "x_adv": d["x_adv"],
+        "x_speech": d["x_speech"],
+        "acav": d["acav"],
+        "oww_val": d["oww_val"],
         "val_pos": f("val_pos"),
         "test_pos": f("test_pos"),
         "val_streams": f("val_streams"),
@@ -60,18 +97,20 @@ def load(path: str):
     }
 
 
-def measure(model, pos, streams, hours, thr):
-    pm = np.array([scores(model, w).max() if len(w) else 0.0 for w in pos])
-    ss = [scores(model, windows(e)) for e in streams]
-    return float((pm >= thr).mean()), false_accepts(ss, thr) / max(hours, 1e-9), pm, ss
+def pos_scores(model, pos):
+    return [scores(model, w) if len(w) else np.zeros(1) for w in pos]
 
 
-def best_threshold(pm, ss, hours, max_fa=0.5):
+def recall(ps, thr, patience):
+    return float(np.mean([detected(s, thr, patience) for s in ps]))
+
+
+def best_threshold(ps, ss, hours, patience, max_fa=0.5):
     """Seuil le plus bas respectant la limite de fausses activations (validation)."""
     for t in np.round(np.arange(0.05, 1.0, 0.01), 2):
-        if false_accepts(ss, t) / hours <= max_fa:
-            return float(t), float((pm >= t).mean())
-    return 0.99, float((pm >= 0.99).mean())
+        if false_accepts(ss, t, patience) / hours <= max_fa:
+            return float(t), recall(ps, t, patience)
+    return 0.995, recall(ps, 0.995, patience)
 
 
 def run(data, name, cfg, seed=0):
@@ -80,39 +119,65 @@ def run(data, name, cfg, seed=0):
     model = mlp(cfg["hidden"], cfg["layers"], cfg["dropout"])
     opt = torch.optim.AdamW(model.parameters(), lr=1e-3, weight_decay=cfg["wd"])
     steps = cfg["steps"]
-    sched = torch.optim.lr_scheduler.OneCycleLR(opt, max_lr=1e-3, total_steps=steps)
     bce = nn.BCEWithLogitsLoss(reduction="none")
     xp, xa, xs, xc = data["x_pos"], data["x_adv"], data["x_speech"], data["acav"]
     t0 = time.time()
-    for step in range(1, steps + 1):
+    hard = None
+    mine = cfg.get("mine", 0)
+    total = steps + mine
+    sched = torch.optim.lr_scheduler.OneCycleLR(opt, max_lr=1e-3, total_steps=total)
+    for step in range(1, total + 1):
+        if step == steps + 1 and mine:
+            # Négatifs les plus trompeurs (3 % des scores les plus hauts).
+            pool = np.concatenate([xs, xc]) if len(xc) else xs
+            sc = scores(model, pool)
+            hard = pool[np.argsort(sc)[-max(1000, len(pool) * 3 // 100):]]
+            print(f"   {name} : {len(hard)} négatifs difficiles, score min {np.sort(sc)[-len(hard)]:.3f}", flush=True)
         bp, bn = 128, 384
         pos = xp[rng.integers(len(xp), size=bp)]
         n_ac = int(bn * cfg["acav_frac"]) if len(xc) else 0
         n_adv = bn // 8
         n_sp = bn - n_ac - n_adv
         parts = [xs[rng.integers(len(xs), size=n_sp)], xa[rng.integers(len(xa), size=n_adv)]]
+        if hard is not None:
+            parts[0] = parts[0][: n_sp // 2]
+            parts.append(hard[rng.integers(len(hard), size=n_sp - n_sp // 2)])
         if n_ac:
             parts.append(xc[rng.integers(len(xc), size=n_ac)])
         xb = np.concatenate([pos, *parts]).astype(np.float32)
         yb = np.concatenate([np.ones(bp), np.zeros(len(xb) - bp)]).astype(np.float32)
-        wneg = 1 + (cfg["wneg_max"] - 1) * min(1.0, step / (0.6 * steps))
+        wneg = 1 + (cfg["wneg_max"] - 1) * min(1.0, step / (0.6 * total))
         w = np.where(yb == 1, 1.0, wneg).astype(np.float32)
         loss = (bce(model(torch.from_numpy(xb))[:, 0], torch.from_numpy(yb)) * torch.from_numpy(w)).mean()
         opt.zero_grad()
         loss.backward()
         opt.step()
         sched.step()
+    return model, report(model, data, name, t0)
+
+
+def report(model, data, name, t0=None):
     vh, th = float(data["hours"][0]), float(data["hours"][1])
-    _, _, vpm, vss = measure(model, data["val_pos"], data["val_streams"], vh, 0.5)
-    thr, vrec = best_threshold(vpm, vss, vh)
-    trec, tfa, _, _ = measure(model, data["test_pos"], data["test_streams"], th, thr)
-    oww = None
-    if len(data["oww_val"]):
-        s = scores(model, windows(data["oww_val"]))
-        oww = false_accepts([s], thr) / (len(data["oww_val"]) * STEP / SR / 3600)
-    res = {"variant": name, "threshold": thr, "val_recall": vrec, "test_recall": trec, "test_fa_h": tfa, "oww_fa_h": oww, "seconds": round(time.time() - t0)}
-    print(json.dumps(res, ensure_ascii=False))
-    return model, res
+    vps, vss = pos_scores(model, data["val_pos"]), [scores(model, windows(e)) for e in data["val_streams"]]
+    tps, tss = pos_scores(model, data["test_pos"]), [scores(model, windows(e)) for e in data["test_streams"]]
+    oww_s = scores(model, windows(data["oww_val"])) if len(data["oww_val"]) else None
+    oww_h = len(data["oww_val"]) * STEP / SR / 3600
+    out = []
+    for patience in (1, 2, 3):
+        thr, vrec = best_threshold(vps, vss, vh, patience)
+        res = {
+            "variant": name,
+            "patience": patience,
+            "threshold": thr,
+            "val_recall": round(vrec, 3),
+            "test_recall": round(recall(tps, thr, patience), 3),
+            "test_fa_h": round(false_accepts(tss, thr, patience) / th, 2),
+            "oww_fa_h": round(false_accepts([oww_s], thr, patience) / oww_h, 2) if oww_s is not None else None,
+            "seconds": round(time.time() - t0) if t0 else None,
+        }
+        print(json.dumps(res, ensure_ascii=False), flush=True)
+        out.append(res)
+    return out
 
 
 if __name__ == "__main__":

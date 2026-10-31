@@ -65,7 +65,7 @@ class VoiceTrainingScreen extends ConsumerWidget {
           title: '1. Dites « Sentrix »',
           kind: SampleKind.sentrix,
           state: s,
-          detail: 'Appuyez, puis dites « Sentrix » une seule fois dans les 2 secondes.\n$tip',
+          detail: 'Appuyez, attendez « Parlez maintenant », puis dites « Sentrix » une seule fois.\n$tip',
           onRecord: () => c.record(SampleKind.sentrix),
           onUndo: () => c.deleteLast(SampleKind.sentrix),
         ),
@@ -192,7 +192,14 @@ class _Step extends StatelessWidget {
           Text(detail, style: VrText.caption.copyWith(color: VrColors.textSecondary)),
           const SizedBox(height: 10),
           if (mine) ...[
-            Text(kind == SampleKind.sentrix ? 'Parlez maintenant…' : 'Enregistrement…', style: VrText.caption.copyWith(color: VrColors.cyan)),
+            Text(
+              !state.live
+                  ? 'Préparation du micro… attendez'
+                  : kind == SampleKind.sentrix
+                  ? 'Parlez maintenant…'
+                  : 'Enregistrement…',
+              style: VrText.caption.copyWith(color: state.live ? VrColors.cyan : VrColors.textMuted),
+            ),
             const SizedBox(height: 6),
             ClipRRect(
               borderRadius: BorderRadius.circular(3),

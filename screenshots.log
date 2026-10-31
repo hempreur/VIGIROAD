@@ -1,0 +1,13 @@
+
+::group::✅ Passing tests
+✅ /home/runner/work/VIGIROAD/VIGIROAD/test/screenshots/screenshots_test.dart: 01 splash
+✅ /home/runner/work/VIGIROAD/VIGIROAD/test/screenshots/screenshots_test.dart: 02 autorisations
+✅ /home/runner/work/VIGIROAD/VIGIROAD/test/screenshots/screenshots_test.dart: 03 navigation
+✅ /home/runner/work/VIGIROAD/VIGIROAD/test/screenshots/screenshots_test.dart: 05 navigation avec alerte (données de test)
+✅ /home/runner/work/VIGIROAD/VIGIROAD/test/screenshots/screenshots_test.dart: 06 recherche
+✅ /home/runner/work/VIGIROAD/VIGIROAD/test/screenshots/screenshots_test.dart: 07_settings
+✅ /home/runner/work/VIGIROAD/VIGIROAD/test/screenshots/screenshots_test.dart: 08_plates
+✅ /home/runner/work/VIGIROAD/VIGIROAD/test/screenshots/screenshots_test.dart: 04 états SENTRIX
+::endgroup::
+
+🎉 8 tests passed.

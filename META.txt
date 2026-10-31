@@ -1,0 +1,5 @@
+job=quality
+sha=a0911407439b33bb5b1f2a570530729a94bd897c
+ref=refs/heads/chore/release-1.1.0
+run=https://github.com/hempreur/VIGIROAD/actions/runs/41168760674
+status=success

@@ -53,11 +53,22 @@ def trim_word(x: np.ndarray) -> np.ndarray:
     return x[a * frame : b * frame]
 
 
-def user_features(path: str, feats: Features, rng: np.random.Generator, reps: int = 20, test_every: int = 3):
+def truncated(x: np.ndarray) -> bool:
+    """Mot coupé au début (l'utilisateur a parlé avant le début réel de
+    l'enregistrement) : forte énergie dans les 50 premières ms."""
+    frame = 160
+    n = len(x) // frame
+    e = np.sqrt(np.mean(x[: n * frame].reshape(n, frame) ** 2, axis=1))
+    return bool(e[1:5].max() >= 0.5 * e.max())
+
+
+def user_features(path: str, feats: Features, rng: np.random.Generator, reps: int = 100, test_every: int = 3):
     """Positifs d'entraînement augmentés, positifs de test (jamais vus),
     négatifs (parole et bruit de l'utilisateur)."""
     d = load_zip(path)
-    words = [trim_word(x) for x in d["sentrix"]]
+    kept = [x for x in d["sentrix"] if not truncated(x)]
+    print(f"  « Sentrix » coupés au début écartés : {len(d['sentrix']) - len(kept)}")
+    words = [trim_word(x) for x in kept]
     test_idx = set(range(test_every - 1, len(words), test_every))
     train = [w for i, w in enumerate(words) if i not in test_idx]
     test = [w for i, w in enumerate(words) if i in test_idx]

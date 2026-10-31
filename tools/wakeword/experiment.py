@@ -190,7 +190,7 @@ def add_user(data, zip_path: str, work: str):
     feats = Features(f"{work}/melspectrogram.onnx", f"{work}/embedding_model.onnx")
     xp, test_pos, xn = user_features(zip_path, feats, np.random.default_rng(99))
     # Les « Sentrix » de l'utilisateur pèsent autant que toutes les voix de synthèse.
-    reps = max(1, len(data["x_pos"]) // max(1, len(xp)))
+    reps = max(1, len(data["x_pos"]) // max(1, len(xp)) // 2)
     data["x_pos"] = np.concatenate([np.asarray(data["x_pos"], np.float32), np.repeat(xp, reps, axis=0)])
     data["x_adv"] = np.concatenate([np.asarray(data["x_adv"], np.float32), xn])
     data["user_pos"] = test_pos

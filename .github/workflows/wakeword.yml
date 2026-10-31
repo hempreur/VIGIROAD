@@ -1,0 +1,67 @@
+name: Mot d'activation « Sentrix »
+
+# Entraîne et mesure le modèle openWakeWord « Sentrix » (CPU, ≈ 2 h).
+# Résultats (modèle ONNX, mesures, journal) publiés sur la branche ci-logs/wakeword.
+on:
+  push:
+    # Recalcul des caractéristiques (≈ 1 h 30) seulement sur les branches dédiées.
+    branches: ['feature/wakeword*']
+    paths: ['tools/wakeword/**', '.github/workflows/wakeword.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wakeword
+  cancel-in-progress: true
+
+jobs:
+  train:
+    name: Entraînement et mesure
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    steps:
+      - name: "Libérer de l'espace disque (négatifs openWakeWord, 17 Go)"
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup \
+            /usr/share/swift /usr/local/share/boost /opt/hostedtoolcache/CodeQL /usr/local/share/powershell
+          sudo docker image prune --all --force > /dev/null || true
+          df -h /
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: tools/wakeword/requirements.txt
+      - name: Dépendances (PyTorch CPU)
+        run: |
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install -r tools/wakeword/requirements.txt
+      - name: Entraînement et mesure
+        working-directory: tools/wakeword
+        env:
+          HF_HUB_ENABLE_HF_TRANSFER: '0'
+        run: |
+          mkdir -p ../../ci-out
+          set -o pipefail
+          python -u train_sentrix.py --out ../../ci-out --work "$RUNNER_TEMP/ww" --acav \
+            --dump "$RUNNER_TEMP/sentrix-features.npz" 2>&1 | tee ../../ci-out/train.log
+      # Caractéristiques calculées (≈ 1 Go), pour des essais d'entraînement
+      # rapides hors CI : pré-release « wakeword-data » (pas d'artefact Actions).
+      - name: Publier les caractéristiques
+        if: success() && github.event_name != 'pull_request'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release delete wakeword-data --cleanup-tag --yes || true
+          gh release create wakeword-data "$RUNNER_TEMP/sentrix-features.npz" --prerelease \
+            --target "$GITHUB_SHA" --title "Données d'entraînement « Sentrix » (caractéristiques)" \
+            --notes "Plongements openWakeWord calculés par la CI (commit ${GITHUB_SHA::8}). Données de travail, pas une version de l'application."
+
+      - name: Publier le modèle et les mesures
+        if: always() && github.event_name != 'pull_request'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          JOB_STATUS: ${{ job.status }}
+        run: .github/scripts/publish_logs.sh wakeword ci-out

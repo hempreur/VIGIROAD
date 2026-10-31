@@ -10,6 +10,7 @@ import 'package:vigiroad/features/navigation/application/navigation_session.dart
 import 'package:vigiroad/features/navigation/domain/geo_fix.dart';
 import 'package:vigiroad/features/navigation/presentation/widgets/traffic_legend.dart';
 import 'package:vigiroad/features/settings/application/settings_controller.dart';
+import 'package:vigiroad/features/traffic/application/speed_limit_controller.dart';
 import 'package:vigiroad/features/traffic/application/traffic_announcer.dart';
 import 'package:vigiroad/features/traffic/application/traffic_controller.dart';
 import 'package:vigiroad/features/traffic/application/traffic_summary.dart';
@@ -49,7 +50,9 @@ class FakeTrafficClient implements TrafficClient {
   TrafficSnapshot area = _snap(const []);
   TrafficSnapshot route = _snap(const []);
   TrafficException? error;
-  int boxCalls = 0, routeCalls = 0;
+  int boxCalls = 0, routeCalls = 0, speedCalls = 0;
+  List<int?> Function(int segments) limits = (n) => List.filled(n, 50);
+  bool limitsComplete = true;
 
   @override
   Future<TrafficSnapshot> inBox(BBox box) async {
@@ -63,6 +66,12 @@ class FakeTrafficClient implements TrafficClient {
     routeCalls++;
     if (error != null) throw error!;
     return route;
+  }
+
+  @override
+  Future<({List<int?> limits, bool complete})> speedLimits(List<LatLng> r) async {
+    speedCalls++;
+    return (limits: limits(r.length - 1), complete: limitsComplete);
   }
 }
 
@@ -85,6 +94,7 @@ class _Env {
     container.listen(positionProvider, (_, _) {});
     container.listen(trafficProvider, (_, _) {});
     container.listen(trafficAnnouncerProvider, (_, _) {});
+    container.listen(speedLimitProvider, (_, _) {});
   }
 
   final location = FakeLocationSource();
@@ -252,6 +262,63 @@ void main() {
       await env.fix(north(100));
       await pumpEventQueue();
       expect(env.speaker.spoken.where((t) => t.contains('accident')), isEmpty);
+    });
+  });
+
+  group('limitations de vitesse OpenStreetMap', () {
+    test('client : une valeur par segment, valeurs aberrantes écartées', () async {
+      final c = HttpTrafficClient(
+        baseUrl: 'https://t',
+        apiKey: 'k',
+        userAgent: 'u',
+        client: MockClient((r) async {
+          expect(r.url.path, '/v1/speedlimits');
+          return http.Response(jsonEncode({'limits': [50, null, 900], 'complete': true}), 200);
+        }),
+      );
+      final r = await c.speedLimits(const [LatLng(48, 2), LatLng(48.001, 2), LatLng(48.002, 2), LatLng(48.003, 2)]);
+      expect(r.limits, [50, null, null]);
+      expect(r.complete, isTrue);
+    });
+
+    test('chargées pour l\'itinéraire, segment par segment', () async {
+      final env = _Env();
+      addTearDown(env.container.dispose);
+      env.client.limits = (n) => [for (var i = 0; i < n; i++) i < 10 ? 50 : null];
+      await env.fix(north(0));
+      await env.go();
+      await env.fix(north(100));
+      await pumpEventQueue();
+      final s = env.container.read(speedLimitProvider);
+      expect(env.client.speedCalls, 1, reason: 'itinéraire court : une seule fenêtre');
+      expect(s.at(0), 50);
+      expect(s.at(12), isNull, reason: 'inconnue : jamais devinée');
+      await env.fix(north(200));
+      expect(env.client.speedCalls, 1);
+    });
+
+    test('réponse partielle : nouvel essai après une pause', () async {
+      final env = _Env();
+      addTearDown(env.container.dispose);
+      env.client.limitsComplete = false;
+      await env.fix(north(0));
+      await env.go();
+      await env.fix(north(100));
+      expect(env.client.speedCalls, 1);
+      env.now = env.now.add(const Duration(seconds: 50));
+      env.client.limitsComplete = true;
+      await env.fix(north(150));
+      await pumpEventQueue();
+      expect(env.client.speedCalls, 2);
+    });
+
+    test('sans serveur : rien n\'est demandé', () async {
+      final env = _Env(trafficOn: false);
+      addTearDown(env.container.dispose);
+      await env.fix(north(0));
+      await env.go();
+      await env.fix(north(100));
+      expect(env.container.read(speedLimitProvider).limits, isEmpty);
     });
   });
 

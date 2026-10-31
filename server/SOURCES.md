@@ -13,6 +13,8 @@ format a été confirmé sur le flux réel, pas seulement sur la documentation.
 | **AZ511** (511 API v2) | US | JSON | Clé développeur gratuite | Conditions AZ511 ; 10 appels/minute | 2 min | ❌ à confirmer avec une clé |
 | **Waze for Cities** | Mondial | JSON partenaire | **Programme partenaire uniquement** | Accord de partenariat Waze ; usage strictement selon l'accord | 2 min | ❌ pas d'accès |
 
+| **OpenStreetMap** via Overpass (limitations de vitesse) | Mondial | JSON Overpass | Public | ODbL — mention « © contributeurs OpenStreetMap » ; politique d'usage Overpass (≈ 10 000 requêtes/jour, 2 requêtes simultanées) | à la demande, tuiles de 2 km en cache 7 jours, une requête à la fois, pause d'1 min après refus | ✅ format Overpass standard |
+
 ## Obligations reprises dans l'application
 
 - **Bison Futé** : mention « Information fournie par Bison Futé » sans laisser croire à un soutien
@@ -20,6 +22,8 @@ format a été confirmé sur le flux réel, pas seulement sur la documentation.
   changer, pas le contenu) ; priorité aux déviations officielles. L'API renvoie la mention et
   chaque événement porte sa date de mise à jour source (`updatedAt`) et de collecte (`fetchedAt`).
 - **TfL** : mention « Powered by TfL Open Data ».
+- **OpenStreetMap** : mention « © contributeurs OpenStreetMap » (déjà affichée sur la carte).
+  Pour un usage soutenu, héberger sa propre instance Overpass (`VR_OVERPASS_URL`).
 - **Toutes sources** : la mention de chaque source utilisée est renvoyée avec les événements
   (`attributions`) et affichée par l'application.
 

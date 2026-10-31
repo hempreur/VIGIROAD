@@ -90,6 +90,11 @@ jobs:
           dart pub get 2>&1 | tee ../ci-out/server_pub_get.log
           dart analyze --fatal-warnings 2>&1 | tee ../ci-out/server_analyze.log
           dart test --reporter expanded 2>&1 | tee ../ci-out/server_test.log
+      - name: Contrôle réel des limitations (OSRM + Overpass, informatif)
+        working-directory: server
+        continue-on-error: true
+        timeout-minutes: 5
+        run: dart run tool/live_speed_check.dart 2>&1 | tee ../ci-out/live_speed_check.log
       - name: Image Docker
         if: success()
         run: |

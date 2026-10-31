@@ -13,7 +13,12 @@ Future<void> main() async {
     exit(64);
   }
   final aggregator = TrafficAggregator(chains: config.chains(), client: http.Client())..start();
-  final api = TrafficApi(aggregator, apiKeys: keys);
+  final overpass = config.overpassUrl;
+  final api = TrafficApi(
+    aggregator,
+    apiKeys: keys,
+    speedLimits: overpass == null ? null : SpeedLimitService(client: http.Client(), overpassUrl: overpass),
+  );
 
   final handler = const Pipeline().addMiddleware(logRequests()).addHandler(api.handler);
   final server = await io.serve(handler, InternetAddress.anyIPv4, config.port);

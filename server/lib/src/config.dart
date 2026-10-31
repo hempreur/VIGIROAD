@@ -21,6 +21,13 @@ class ServerConfig {
     for (final k in (env['VR_API_KEYS'] ?? '').split(',')) if (k.trim().length >= 16) k.trim(),
   };
 
+  /// Instance Overpass des limitations de vitesse (`VR_OVERPASS_URL`) ;
+  /// `VR_SPEEDLIMITS=off` désactive le service.
+  Uri? get overpassUrl {
+    if (env['VR_SPEEDLIMITS']?.trim().toLowerCase() == 'off') return null;
+    return Uri.parse(_key('VR_OVERPASS_URL') ?? 'https://overpass-api.de/api/interpreter');
+  }
+
   Set<String> get disabled => {for (final s in (env['VR_DISABLE_SOURCES'] ?? '').split(',')) if (s.trim().isNotEmpty) s.trim()};
 
   String? _key(String name) {

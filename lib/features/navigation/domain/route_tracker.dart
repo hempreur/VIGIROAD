@@ -15,6 +15,7 @@ class RouteProgress {
     required this.nextStepIndex,
     required this.toNextManeuverM,
     required this.speedLimitKmh,
+    this.segmentIndex = 0,
   });
 
   /// Position ramenée sur le tracé.
@@ -34,6 +35,9 @@ class RouteProgress {
 
   /// Limitation de vitesse du segment courant, si connue.
   final int? speedLimitKmh;
+
+  /// Segment de `route.geometry` sur lequel se trouve le véhicule.
+  final int segmentIndex;
 
   bool get arrived => remainingM < 25;
 }
@@ -140,6 +144,7 @@ class RouteTracker {
       nextStepIndex: next,
       toNextManeuverM: math.max(0, _stepAlong[next] - along),
       speedLimitKmh: limits.isEmpty ? null : limits[hit.segment],
+      segmentIndex: hit.segment,
     );
   }
 }

@@ -37,6 +37,13 @@ Ce que l'application affiche — **jamais de trafic simulé** :
   source et l'heure de mise à jour (obligations Bison Futé) ;
 - après 5 minutes sans réponse du serveur, plus aucune donnée n'est affichée.
 
+## Limitations de vitesse
+
+Fournies par le même serveur (`POST /v1/speedlimits`), à partir des données OpenStreetMap
+(© contributeurs OpenStreetMap, licence ODbL) interrogées via Overpass. L'application les demande
+par tronçons de 20 km devant le véhicule pendant le guidage. Une limitation inconnue n'est jamais
+devinée : le panneau disparaît. Voir [`server/SOURCES.md`](../server/SOURCES.md).
+
 ## Ajouter une clé secrète
 
 1. Créer `config/prod.local.env` (ignoré par git) avec la variable.

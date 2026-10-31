@@ -11,3 +11,7 @@ export 'src/connectors/waze_partner.dart';
 export 'src/connectors/wzdx.dart';
 export 'src/polyline.dart';
 export 'src/source.dart';
+export 'src/speed/matcher.dart';
+export 'src/speed/maxspeed.dart';
+export 'src/speed/osm_way.dart';
+export 'src/speed/speed_limit_service.dart';

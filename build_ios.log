@@ -1,0 +1,29 @@
+Resolving dependencies...
+Downloading packages...
+  cross_file 0.3.5+5 (0.4.0 available)
+  flutter_localizations 0.0.0 from sdk flutter (from transitive dependency to direct dependency)
+  geolocator 14.0.1 (14.1.2 available)
+  material_color_utilities 0.13.0 (0.13.1 available)
+  test_api 0.7.12 (0.7.15 available)
+These packages are no longer being depended on:
+- csv 8.0.0
+- cupertino_icons 1.0.9
+Changed 3 dependencies!
+4 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+Upgrading analysis_options.yaml to exclude build and platform directories.
+Warning: Building for device with codesigning disabled. You will have to manually codesign before deploying to device.
+Xcode is fetching Swift Package Manager dependencies. This may take several minutes...
+  Fetching from https://github.com/mattgallagher/CwlCatchException.git...     
+  Fetching from https://github.com/maplibre/maplibre-gl-native-distribution.git...     
+Building fr.vigiroad.vigiroad for device (ios-release)...
+The following plugins do not support Swift Package Manager for ios:
+  - flutter_tts
+  - google_mlkit_commons
+  - google_mlkit_text_recognition
+  - sqflite_sqlcipher
+This will become an error in a future version of Flutter. Please contact the plugin maintainers to request Swift Package Manager adoption.
+Running pod install...                                             39.8s
+Running Xcode build...                                          
+Xcode build done.                                           213.4s
+✓ Built build/ios/iphoneos/Runner.app (88.8MB)

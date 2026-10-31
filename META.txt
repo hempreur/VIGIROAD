@@ -1,0 +1,5 @@
+job=ios
+sha=992d27aa7d3a5c95247299bba96ea8dd36b3c106
+ref=refs/heads/feature/branding
+run=https://github.com/hempreur/VIGIROAD/actions/runs/41148734369
+status=success

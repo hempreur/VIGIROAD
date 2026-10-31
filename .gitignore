@@ -55,3 +55,7 @@ config/*.local.env
 *.keystore
 key.properties
 test_reports/
+
+# Enregistrements de voix de l'utilisateur : jamais dans le dépôt.
+*sentrix_voix*.zip
+tools/wakeword/work/

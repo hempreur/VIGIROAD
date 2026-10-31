@@ -1,0 +1,17 @@
+{
+  "model": "sentrix.onnx (openWakeWord : melspectrogram + embedding_model + classifieur VIGIROAD)",
+  "threshold": 0.9995,
+  "patience": 3,
+  "trained_with": "voix du propriétaire (28 « Sentrix » × 100 augmentations, 3 × 20 s de parole) + voix Piper françaises + parole MLS + négatifs openWakeWord",
+  "test": {
+    "recall": 0.904,
+    "recall_streaming": 0.904,
+    "user_test_evaluations": 52,
+    "user_test_clips": 13,
+    "fa_per_hour_fr_speech": 0.12,
+    "fr_speech_hours": 8.0,
+    "fa_per_hour_openwakeword_validation": 0.19,
+    "openwakeword_validation_hours": 10.7
+  },
+  "notes": "Mesures sur des données jamais vues à l'entraînement : 13 « Sentrix » du propriétaire mis de côté (4 positions et bruits chacun), 8 h de parole française (MLS test), 10,7 h de parole, musique et bruit (validation openWakeWord). Échantillon de la voix du propriétaire réduit : à confirmer à l'usage."
+}

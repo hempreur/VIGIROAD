@@ -17,6 +17,7 @@ import '../../plates/application/alert_service.dart';
 import '../../plates/application/watchlist_controller.dart';
 import '../../plates/domain/watchlist_import.dart';
 import '../../sentrix/application/sentrix_controller.dart';
+import '../../sentrix/application/wake_word_controller.dart';
 import '../application/settings_controller.dart';
 import '../domain/app_settings.dart';
 
@@ -71,6 +72,18 @@ class SettingsScreen extends ConsumerWidget {
       children: [
         const _Section('SENTRIX'),
         _Panel([
+          _Switch(
+            'Mot d\'activation « Sentrix »',
+            switch (ref.watch(wakeWordInfoProvider).value) {
+              final i? when i.recall != null && i.faPerHour != null && i.faPerHourMusic != null =>
+                'Dites « Sentrix » sur l\'écran de navigation. Écoute sur le téléphone, rien n\'est envoyé. '
+                    'Mesuré sur votre voix : ${(i.recall! * 100).round()} % de détection ; '
+                    '${_fr(i.faPerHour!)} fausse activation/h de parole, ${_fr(i.faPerHourMusic!)}/h de musique ou bruit.',
+              _ => 'Dites « Sentrix » sur l\'écran de navigation. Écoute sur le téléphone, rien n\'est envoyé.',
+            },
+            s.wakeWord,
+            (v) => set((x) => x.copyWith(wakeWord: v)),
+          ),
           _Action('Entraîner « Sentrix » avec ma voix', Icons.record_voice_over_rounded, () async {
             await context.push(Routes.voiceTraining);
           }),
@@ -230,7 +243,7 @@ class SettingsScreen extends ConsumerWidget {
         const _Section('À PROPOS'),
         _Panel([
           InfoRow(label: 'Environnement', value: config.environment.name),
-          const InfoRow(label: 'Version', value: '1.1.2'),
+          const InfoRow(label: 'Version', value: '1.2.0'),
           const InfoRow(label: 'Éditeur', value: 'VIGIROAD INC (CODEX HEMPREUR)'),
           const InfoRow(label: 'Données cartographiques', value: '© contributeurs OpenStreetMap, style © CARTO'),
           _Action('Réinitialiser les réglages', Icons.restart_alt_rounded, () async {
@@ -352,6 +365,8 @@ class _Choice<T> extends StatelessWidget {
     ),
   );
 }
+
+String _fr(double v) => v.toStringAsFixed(2).replaceAll('.', ',');
 
 class _Action extends StatelessWidget {
   const _Action(this.label, this.icon, this.onTap, {this.danger = false});

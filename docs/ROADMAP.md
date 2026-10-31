@@ -20,11 +20,11 @@
 Trafic officiel, limitations de vitesse, guidage en arrière-plan, logo et signature VIGIROAD INC :
 voir [`RELEASE_NOTES_1.1.md`](RELEASE_NOTES_1.1.md).
 
-## Version 1.2 (prévue)
+## Version 1.2 (livrée)
 
-- **Mot d'activation « Sentrix »** : écran d'enregistrement de « Sentrix » prononcés par
-  l'utilisateur, réentraînement (`tools/wakeword`, branche `feature/wakeword`) et mesure. Intégré
-  seulement s'il atteint ≤ 0,5 fausse activation par heure avec une détection satisfaisante.
+- **Mot d'activation « Sentrix »** entraîné avec la voix du propriétaire : 90 % de détection,
+  0,12 fausse activation/h de parole, 0,19/h de musique ou bruit. Voir
+  [`WAKE_WORD.md`](WAKE_WORD.md) et [`RELEASE_NOTES_1.2.md`](RELEASE_NOTES_1.2.md).
 
 ## Limitations connues
 

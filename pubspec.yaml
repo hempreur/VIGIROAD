@@ -2,7 +2,7 @@ name: vigiroad
 description: "VIGIROAD - GPS intelligent avec reconnaissance de plaques et assistant vocal SENTRIX."
 publish_to: 'none'
 
-version: 1.1.2+5
+version: 1.2.0+6
 
 environment:
   sdk: ^3.13.7
@@ -42,6 +42,8 @@ dependencies:
   speech_to_text: ^7.5.0
   # Enregistrements pour entraîner le mot « Sentrix » avec la voix de l'utilisateur.
   record: ^7.1.2
+  # Mot d'activation « Sentrix » (openWakeWord, analyse sur le téléphone).
+  flutter_onnxruntime: ^1.9.0
   # Envoi de l'archive d'enregistrements (menu de partage du système).
   share_plus: ^13.3.1
   cross_file: ^0.3.4
@@ -65,6 +67,8 @@ flutter:
   assets:
     # Son d'alerte de correspondance (généré pour VIGIROAD, libre de droits).
     - assets/sounds/alert.wav
+    # Modèles du mot d'activation « Sentrix » (tools/wakeword).
+    - assets/wakeword/
     # Logo officiel VIGIROAD (écran de démarrage).
     - assets/branding/vigiroad_logo.webp
 

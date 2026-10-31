@@ -267,6 +267,11 @@ jobs:
           set -o pipefail
           flutter build apk --release -t tool/ocr_smoke/main.dart --target-platform android-x64 \
             --dart-define-from-file=config/prod.env 2>&1 | tee ci-out/build_ocr_smoke.log
+          mv build/app/outputs/flutter-apk/app-release.apk "$RUNNER_TEMP/ocr-smoke.apk"
+          # Mot d'activation : modèles ONNX dans un APK release (R8).
+          flutter build apk --release -t tool/wakeword_smoke/main.dart --target-platform android-x64 \
+            --dart-define-from-file=config/prod.env 2>&1 | tee ci-out/build_wakeword_smoke.log
+          mv build/app/outputs/flutter-apk/app-release.apk "$RUNNER_TEMP/wakeword-smoke.apk"
           (cd android && ./gradlew --stop) || true
       - name: Lecture d'une plaque par ML Kit dans l'APK release
         uses: reactivecircus/android-emulator-runner@v2
@@ -276,7 +281,9 @@ jobs:
           target: google_apis
           disable-animations: true
           emulator-options: -no-window -no-audio -no-boot-anim -gpu swiftshader_indirect -camera-back none
-          script: .github/scripts/ocr_smoke.sh build/app/outputs/flutter-apk/app-release.apk ci-out
+          script: |
+            .github/scripts/ocr_smoke.sh "$RUNNER_TEMP/ocr-smoke.apk" ci-out VIGIROAD_OCR_SMOKE
+            .github/scripts/ocr_smoke.sh "$RUNNER_TEMP/wakeword-smoke.apk" ci-out VIGIROAD_WAKEWORD_SMOKE
       - name: Publier les journaux
         if: always() && github.event_name == 'push'
         env:

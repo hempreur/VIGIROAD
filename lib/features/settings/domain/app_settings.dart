@@ -40,6 +40,7 @@ class AppSettings {
     this.alertSound = true,
     this.alertVolume = 1.0,
     this.sentrixAnnounce = true,
+    this.wakeWord = false,
     this.voiceGuidance = true,
     this.drive3d = true,
     this.backgroundGuidance = true,
@@ -70,6 +71,9 @@ class AppSettings {
 
   /// Le guidage continue application masquée ou écran éteint.
   final bool backgroundGuidance;
+
+  /// Écoute du mot d'activation « Sentrix » (désactivée par défaut).
+  final bool wakeWord;
   final bool logHistory;
 
   /// Enregistrer la position GPS dans l'historique.
@@ -87,6 +91,7 @@ class AppSettings {
     bool? alertSound,
     double? alertVolume,
     bool? sentrixAnnounce,
+    bool? wakeWord,
     bool? voiceGuidance,
     bool? drive3d,
     bool? backgroundGuidance,
@@ -102,6 +107,7 @@ class AppSettings {
     alertSound: alertSound ?? this.alertSound,
     alertVolume: alertVolume ?? this.alertVolume,
     sentrixAnnounce: sentrixAnnounce ?? this.sentrixAnnounce,
+    wakeWord: wakeWord ?? this.wakeWord,
     voiceGuidance: voiceGuidance ?? this.voiceGuidance,
     drive3d: drive3d ?? this.drive3d,
     backgroundGuidance: backgroundGuidance ?? this.backgroundGuidance,
@@ -119,6 +125,7 @@ class AppSettings {
     'alertSound': alertSound,
     'alertVolume': alertVolume,
     'sentrixAnnounce': sentrixAnnounce,
+    'wakeWord': wakeWord,
     'voiceGuidance': voiceGuidance,
     'drive3d': drive3d,
     'backgroundGuidance': backgroundGuidance,
@@ -144,6 +151,7 @@ class AppSettings {
       alertSound: pick('alertSound', d.alertSound),
       alertVolume: clampD(pick<num>('alertVolume', d.alertVolume).toDouble(), 0, 1),
       sentrixAnnounce: pick('sentrixAnnounce', d.sentrixAnnounce),
+      wakeWord: pick('wakeWord', d.wakeWord),
       voiceGuidance: pick('voiceGuidance', d.voiceGuidance),
       drive3d: pick('drive3d', d.drive3d),
       backgroundGuidance: pick('backgroundGuidance', d.backgroundGuidance),

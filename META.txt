@@ -1,0 +1,5 @@
+job=android
+sha=c48f0f0e156b96490d4b896433e9afb2f1981fc9
+ref=refs/heads/release/v1.1.2
+run=https://github.com/hempreur/VIGIROAD/actions/runs/41232728553
+status=success

@@ -81,3 +81,30 @@ def augment(
     if peak > 0.98:
         out = out / peak * 0.98
     return (out * 32767).astype(np.int16)
+
+
+def augment_negative(audio: np.ndarray, rng: np.random.Generator) -> np.ndarray:
+    """Même chaîne que les positifs (habitacle, bruit de route, micro, niveau),
+    appliquée à la parole négative : le modèle ne doit pas pouvoir reconnaître
+    « Sentrix » au seul son du micro ou de la voiture."""
+    x = audio.astype(np.float64)
+    if rng.random() < 0.5:
+        x = signal.fftconvolve(x, room_ir(rng))[: len(x)]
+    x = _norm(x) * 10 ** (rng.uniform(-30, -12) / 20)
+    level = np.sqrt(np.mean(x**2))
+    if rng.random() < 0.7:
+        noise = car_noise(len(x), rng) if rng.random() < 0.7 else pink_noise(len(x), rng)
+        x = x + noise * level / 10 ** (rng.uniform(0, 20) / 20)
+    x = phone_mic(x, rng)
+    peak = np.max(np.abs(x)) + 1e-9
+    if peak > 0.98:
+        x = x / peak * 0.98
+    return (x * 32767).astype(np.int16)
+
+
+def noise_only(seconds: float, rng: np.random.Generator) -> np.ndarray:
+    """Bruit de route ou d'habitacle seul (sans parole)."""
+    n = int(seconds * SR)
+    x = car_noise(n, rng) if rng.random() < 0.7 else pink_noise(n, rng)
+    x = phone_mic(x * 10 ** (rng.uniform(-45, -15) / 20), rng)
+    return (np.clip(x, -0.98, 0.98) * 32767).astype(np.int16)

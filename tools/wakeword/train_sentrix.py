@@ -29,7 +29,7 @@ from pathlib import Path
 
 import numpy as np
 
-from augment import augment
+from augment import augment, augment_negative, noise_only
 from features import CLIP, N_EMB, SR, STEP, Features, windows
 
 FEATURE_MODELS = {
@@ -41,9 +41,9 @@ VOICES = [  # (chemin dans rhasspy/piper-voices, rôle)
     ("fr/fr_FR/mls/medium/fr_FR-mls-medium", "multi"),
     ("fr/fr_FR/upmc/medium/fr_FR-upmc-medium", "train"),
     ("fr/fr_FR/siwis/medium/fr_FR-siwis-medium", "train"),
-    ("fr/fr_FR/mls_1840/low/fr_FR-mls_1840-low", "val"),
     ("fr/fr_FR/tom/medium/fr_FR-tom-medium", "test"),
-    ("fr/fr_FR/gilles/low/fr_FR-gilles-low", "test"),
+    # mls_1840 et gilles (qualité « low ») ne prononcent pas le « en » nasal
+    # (« Missing phoneme ̃ ») : écartées, elles faussaient la mesure.
 ]
 
 # Prononciations : française (« sɑ̃tʁiks ») surtout, et à l'anglaise.
@@ -193,6 +193,14 @@ def mls_audio(split: str, max_hours: float, shard: int = 0):
     print(f"  MLS {split} : {total:.1f} h, {n} enregistrements  (mémoire {rss_gb():.1f} Go)")
 
 
+def objects(arrays) -> np.ndarray:
+    """Liste de tableaux de tailles différentes → tableau d'objets (npz)."""
+    out = np.empty(len(arrays), dtype=object)
+    for i, a in enumerate(arrays):
+        out[i] = a.astype(np.float16)
+    return out
+
+
 def rss_gb() -> float:
     try:
         import resource
@@ -275,6 +283,7 @@ def main():
     ap.add_argument("--per-speaker", type=int, default=40)
     ap.add_argument("--mls-hours", type=float, default=30.0)
     ap.add_argument("--acav", action="store_true", help="négatifs openWakeWord 2 000 h (17 Go)")
+    ap.add_argument("--dump", help="enregistre les caractéristiques (npz) pour des essais d'entraînement hors CI")
     args = ap.parse_args()
 
     out, work = Path(args.out), Path(args.work)
@@ -316,10 +325,16 @@ def main():
     for a in speech_train:
         if len(babble) < 200:
             babble.append(a[: SR * 15].copy())
-        g = 10 ** (rng.uniform(-20, 0) / 20)
-        e = feats.embed_long((a * 32767 * g).clip(-32767, 32767).astype(np.int16))
+        if rng.random() < 0.5:
+            pcm = augment_negative(a, rng)
+        else:
+            pcm = (a * 32767 * 10 ** (rng.uniform(-20, 0) / 20)).clip(-32767, 32767).astype(np.int16)
+        e = feats.embed_long(pcm)
         if len(e) >= N_EMB:
             speech_windows.append(windows(e, stride=4).astype(np.float16))
+    # Bruit de route seul : 40 min.
+    for _ in range(4 if args.selftest else 80):
+        speech_windows.append(windows(feats.embed_long(noise_only(30 if not args.selftest else 5, rng)), stride=4).astype(np.float16))
     x_speech = np.concatenate(speech_windows)
     del speech_windows
 
@@ -358,6 +373,29 @@ def main():
         acav = np.load(hf("davidscripka/openwakeword_features", "openwakeword_features_ACAV100M_2000_hrs_16bit.npy", "dataset"), mmap_mode="r")
         oww_val = np.load(hf("davidscripka/openwakeword_features", "validation_set_features.npy", "dataset"))
     print(f"   x_pos {x_pos.shape}, x_adv {x_adv.shape}, x_speech {x_speech.shape}  (mémoire {rss_gb():.1f} Go, {time.time()-t0:.0f} s)")
+
+    if acav is not None:
+        probe = np.asarray(acav[:2000], np.float32)
+        print(f"   ACAV : forme {acav.shape}, type {acav.dtype}, moyenne {probe.mean():.3f}, écart-type {probe.std():.3f}")
+        print(f"   parole MLS : moyenne {x_speech[:2000].astype(np.float32).mean():.3f}, écart-type {x_speech[:2000].astype(np.float32).std():.3f}")
+        print(f"   positifs : moyenne {x_pos.mean():.3f}, écart-type {x_pos.std():.3f}")
+    if args.dump:
+        f16 = np.float16
+        sub = np.sort(rng.choice(len(x_speech), size=min(150000, len(x_speech)), replace=False))
+        np.savez(
+            args.dump,
+            x_pos=x_pos.astype(f16),
+            x_adv=x_adv.astype(f16),
+            x_speech=x_speech[sub].astype(f16),
+            acav=np.asarray(acav[np.sort(rng.choice(len(acav), 200000, replace=False))], f16) if acav is not None else np.zeros((0, N_EMB, 96), f16),
+            oww_val=np.asarray(oww_val, f16) if oww_val is not None else np.zeros((0, 96), f16),
+            val_pos=objects(val_pos),
+            test_pos=objects(test_pos),
+            val_streams=objects(val_streams),
+            test_streams=objects(test_streams),
+            hours=np.array([val_h, test_h]),
+        )
+        print(f"   caractéristiques enregistrées : {args.dump} ({os.path.getsize(args.dump) / 1e6:.0f} Mo)")
 
     # 3. Entraînement -----------------------------------------------------------------
     import torch

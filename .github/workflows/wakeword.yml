@@ -44,7 +44,20 @@ jobs:
         run: |
           mkdir -p ../../ci-out
           set -o pipefail
-          python -u train_sentrix.py --out ../../ci-out --work "$RUNNER_TEMP/ww" --acav 2>&1 | tee ../../ci-out/train.log
+          python -u train_sentrix.py --out ../../ci-out --work "$RUNNER_TEMP/ww" --acav \
+            --dump "$RUNNER_TEMP/sentrix-features.npz" 2>&1 | tee ../../ci-out/train.log
+      # Caractéristiques calculées (≈ 1 Go), pour des essais d'entraînement
+      # rapides hors CI : pré-release « wakeword-data » (pas d'artefact Actions).
+      - name: Publier les caractéristiques
+        if: success() && github.event_name != 'pull_request'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release delete wakeword-data --cleanup-tag --yes || true
+          gh release create wakeword-data "$RUNNER_TEMP/sentrix-features.npz" --prerelease \
+            --target "$GITHUB_SHA" --title "Données d'entraînement « Sentrix » (caractéristiques)" \
+            --notes "Plongements openWakeWord calculés par la CI (commit ${GITHUB_SHA::8}). Données de travail, pas une version de l'application."
+
       - name: Publier le modèle et les mesures
         if: always() && github.event_name != 'pull_request'
         env:

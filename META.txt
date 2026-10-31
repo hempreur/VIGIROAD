@@ -1,0 +1,5 @@
+job=android
+sha=50315ef8fd2e82a91efb324bf7c7bf6e7a51f081
+ref=refs/heads/fix/recorder-start
+run=https://github.com/hempreur/VIGIROAD/actions/runs/41247609537
+status=success

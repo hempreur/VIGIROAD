@@ -4,6 +4,7 @@ name: Mot d'activation « Sentrix »
 # Résultats (modèle ONNX, mesures, journal) publiés sur la branche ci-logs/wakeword.
 on:
   push:
+    branches: [main, 'feature/**']
     paths: ['tools/wakeword/**', '.github/workflows/wakeword.yml']
   workflow_dispatch:
 

@@ -126,7 +126,8 @@ class Voice:
             x = resample_poly(x, SR // g, self.sr // g)
         # Retire les silences de début et de fin.
         idx = np.where(np.abs(x) > 0.02 * (np.max(np.abs(x)) + 1e-9))[0]
-        return x[idx[0] : idx[-1] + 1] if len(idx) else x
+        x = x[idx[0] : idx[-1] + 1] if len(idx) else x
+        return x.astype(np.float32)
 
 
 def speaker_split(n: int) -> dict[str, list[int]]:
@@ -164,29 +165,41 @@ def synth_set(voices, texts, weights, per_speaker, rng):
 # --------------------------------------------------------------------------- parole réelle
 
 
-def mls_audio(split: str, max_hours: float, shard: int = 0) -> list[np.ndarray]:
-    """Parole française réelle (Multilingual LibriSpeech, CC BY 4.0)."""
+def mls_audio(split: str, max_hours: float, shard: int = 0):
+    """Parole française réelle (Multilingual LibriSpeech, CC BY 4.0), lue au
+    fil de l'eau (float32) : 30 h en mémoire dépasseraient la RAM de la CI."""
     import pyarrow.parquet as pq
     import soundfile as sf
 
     name = f"french/{split}-{shard:05d}-of-{34 if split == 'train' else 1:05d}.parquet"
-    table = pq.read_table(hf("facebook/multilingual_librispeech", name, "dataset"), columns=["audio"])
-    out, total = [], 0.0
-    for cell in table.column("audio").to_pylist():
-        data, sr = sf.read(io.BytesIO(cell["bytes"]), dtype="float64")
-        if data.ndim > 1:
-            data = data.mean(axis=1)
-        if sr != SR:
-            from scipy.signal import resample_poly
+    pf = pq.ParquetFile(hf("facebook/multilingual_librispeech", name, "dataset"))
+    total, n = 0.0, 0
+    for batch in pf.iter_batches(batch_size=64, columns=["audio"]):
+        for cell in batch.column(0).to_pylist():
+            data, sr = sf.read(io.BytesIO(cell["bytes"]), dtype="float32")
+            if data.ndim > 1:
+                data = data.mean(axis=1)
+            if sr != SR:
+                from scipy.signal import resample_poly
 
-            g = np.gcd(sr, SR)
-            data = resample_poly(data, SR // g, sr // g)
-        out.append(data)
-        total += len(data) / SR / 3600
-        if total >= max_hours:
-            break
-    print(f"  MLS {split} : {total:.1f} h, {len(out)} enregistrements")
-    return out
+                g = np.gcd(sr, SR)
+                data = resample_poly(data, SR // g, sr // g).astype(np.float32)
+            yield data
+            n += 1
+            total += len(data) / SR / 3600
+            if total >= max_hours:
+                print(f"  MLS {split} : {total:.1f} h, {n} enregistrements  (mémoire {rss_gb():.1f} Go)")
+                return
+    print(f"  MLS {split} : {total:.1f} h, {n} enregistrements  (mémoire {rss_gb():.1f} Go)")
+
+
+def rss_gb() -> float:
+    try:
+        import resource
+
+        return resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1e6
+    except Exception:
+        return 0.0
 
 
 # --------------------------------------------------------------------------- modèle
@@ -281,22 +294,45 @@ def main():
 
         pos = {"train": fake(60, 400), "val": fake(15, 400), "test": fake(15, 400)}
         adv = {"train": fake(40, 900), "val": [], "test": []}
-        speech_train = [rng.standard_normal(SR * 20) * 0.1 for _ in range(3)]
-        speech_val = [rng.standard_normal(SR * 20) * 0.1 for _ in range(2)]
-        speech_test = [rng.standard_normal(SR * 20) * 0.1 for _ in range(2)]
+        def speech(n):
+            return (rng.standard_normal(SR * 20).astype(np.float32) * 0.1 for _ in range(n))
+
+        speech_train, speech_val, speech_test = speech(3), speech(2), speech(2)
     else:
         print("1. Synthèse des voix")
         pos = synth_set(VOICES, POSITIVE_TEXTS, POSITIVE_WEIGHTS, args.per_speaker, rng)
         adv = synth_set(VOICES[:3], ADVERSARIAL + APP_PHRASES + GENERAL, None, max(4, args.per_speaker // 4), rng)
-        print("   parole réelle MLS")
         speech_train = mls_audio("train", args.mls_hours)
         speech_val = mls_audio("dev", 4.0)
         speech_test = mls_audio("test", 8.0)
     print(f"   positifs : { {k: len(v) for k, v in pos.items()} }, adverses : {len(adv['train'])}  ({time.time()-t0:.0f} s)")
 
     # 2. Caractéristiques -------------------------------------------------------------
-    print("2. Augmentations et plongements")
-    babble = speech_train[:200]
+    print("2. Parole réelle et plongements (au fil de l'eau)")
+    # Négatifs : plongements de chaque enregistrement, audio aussitôt libéré ;
+    # quelques extraits gardés comme voix parasites pour les augmentations.
+    babble: list[np.ndarray] = []
+    speech_windows = []
+    for a in speech_train:
+        if len(babble) < 200:
+            babble.append(a[: SR * 15].copy())
+        g = 10 ** (rng.uniform(-20, 0) / 20)
+        e = feats.embed_long((a * 32767 * g).clip(-32767, 32767).astype(np.int16))
+        if len(e) >= N_EMB:
+            speech_windows.append(windows(e, stride=4).astype(np.float16))
+    x_speech = np.concatenate(speech_windows)
+    del speech_windows
+
+    def streams(audios):
+        out, secs = [], 0.0
+        for a in audios:
+            secs += len(a) / SR
+            out.append(feats.embed_long((a * 32767).clip(-32767, 32767).astype(np.int16)))
+        return out, secs / 3600
+
+    val_streams, val_h = streams(speech_val)
+    test_streams, test_h = streams(speech_test)
+    print(f"   x_speech {x_speech.shape}, validation {val_h:.2f} h, test {test_h:.2f} h  (mémoire {rss_gb():.1f} Go, {time.time()-t0:.0f} s)")
 
     def pos_feats(clips, reps):
         xs = []
@@ -314,23 +350,14 @@ def main():
 
     x_pos = pos_feats(pos["train"], 3)
     x_adv = np.concatenate([windows(feats.embed(augment(c, CLIP, rng, (0.5, 0.97), babble)))[-4:] for c in adv["train"]])
-    neg_speech = [feats.embed_long((s * 32767 * 10 ** (rng.uniform(-20, 0) / 20)).clip(-32767, 32767).astype(np.int16)) for s in speech_train]
-    x_speech = np.concatenate([windows(e, stride=4) for e in neg_speech if len(e) >= N_EMB])
     val_pos, test_pos = pos_eval(pos["val"]), pos_eval(pos["test"])
-
-    def streams(audios):
-        return [feats.embed_long((a * 32767).clip(-32767, 32767).astype(np.int16)) for a in audios]
-
-    val_streams, test_streams = streams(speech_val), streams(speech_test)
-    val_h = sum(len(a) for a in speech_val) / SR / 3600
-    test_h = sum(len(a) for a in speech_test) / SR / 3600
     acav = None
     oww_val = None
     if args.acav and not args.selftest:
         print("   négatifs openWakeWord (ACAV100M, 2 000 h) et validation openWakeWord")
         acav = np.load(hf("davidscripka/openwakeword_features", "openwakeword_features_ACAV100M_2000_hrs_16bit.npy", "dataset"), mmap_mode="r")
         oww_val = np.load(hf("davidscripka/openwakeword_features", "validation_set_features.npy", "dataset"))
-    print(f"   x_pos {x_pos.shape}, x_adv {x_adv.shape}, x_speech {x_speech.shape}, validation {val_h:.1f} h, test {test_h:.1f} h  ({time.time()-t0:.0f} s)")
+    print(f"   x_pos {x_pos.shape}, x_adv {x_adv.shape}, x_speech {x_speech.shape}  (mémoire {rss_gb():.1f} Go, {time.time()-t0:.0f} s)")
 
     # 3. Entraînement -----------------------------------------------------------------
     import torch

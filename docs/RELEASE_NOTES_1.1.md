@@ -8,6 +8,13 @@ par **VIGIROAD INC (CODEX HEMPREUR)** (empreinte SHA-256 `C5:A9:67:94:…:3D:B0:
 **exporter la liste de plaques** (écran Plaques), **désinstaller l'ancienne version**, installer la
 1.1.0 puis réimporter la liste. Les mises à jour suivantes s'installeront normalement.
 
+## 1.1.1
+
+- **Entraîner « Sentrix » avec sa voix** (Réglages → Commandes vocales) : enregistrer une
+  cinquantaine de « Sentrix », un peu de parole normale et le bruit de la voiture. Les
+  enregistrements restent sur le téléphone ; l'utilisateur les exporte lui-même (.zip) pour
+  l'entraînement du mot d'activation prévu en 1.2, et peut tout effacer.
+
 ## Nouveautés
 
 ### Trafic en temps réel (sources officielles)

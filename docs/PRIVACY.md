@@ -31,3 +31,10 @@ pour l'usage qu'il fait des alertes.
 - Tenir le registre des traitements et, si nécessaire, réaliser l'analyse d'impact (AIPD).
 - Fixer la durée de conservation dans les réglages de l'application.
 - Informer les personnes concernées selon les obligations applicables.
+
+## Enregistrements de voix (« Entraîner Sentrix », 1.1.1)
+
+Facultatifs. Les extraits (« Sentrix », lecture d'un texte, bruit de la voiture) sont enregistrés
+uniquement quand l'utilisateur appuie sur « Enregistrer », stockés dans l'espace privé de
+l'application, jamais envoyés automatiquement. L'export (.zip) est déclenché par l'utilisateur, qui
+choisit où l'enregistrer ; « Tout effacer » supprime les enregistrements du téléphone.

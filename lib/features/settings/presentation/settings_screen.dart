@@ -4,8 +4,10 @@ import 'dart:typed_data';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../app/providers.dart';
+import '../../../app/router.dart';
 import '../../../core/permissions/permission_service.dart';
 import '../../../core/theme/vr_colors.dart';
 import '../../../core/theme/vr_typography.dart';
@@ -202,6 +204,12 @@ class SettingsScreen extends ConsumerWidget {
         _Panel([
           for (final c in ref.watch(sentrixCommandsProvider)) InfoRow(label: c.label, value: '« ${c.phrases.first} »'),
         ]),
+        const SizedBox(height: 8),
+        _Panel([
+          _Action('Entraîner « Sentrix » avec ma voix', Icons.record_voice_over_rounded, () async {
+            await context.push(Routes.voiceTraining);
+          }),
+        ]),
 
         const _Section('SERVICES'),
         _Panel([
@@ -221,7 +229,7 @@ class SettingsScreen extends ConsumerWidget {
         const _Section('À PROPOS'),
         _Panel([
           InfoRow(label: 'Environnement', value: config.environment.name),
-          const InfoRow(label: 'Version', value: '1.1.0'),
+          const InfoRow(label: 'Version', value: '1.1.1'),
           const InfoRow(label: 'Éditeur', value: 'VIGIROAD INC (CODEX HEMPREUR)'),
           const InfoRow(label: 'Données cartographiques', value: '© contributeurs OpenStreetMap, style © CARTO'),
           _Action('Réinitialiser les réglages', Icons.restart_alt_rounded, () async {

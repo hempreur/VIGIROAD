@@ -49,7 +49,11 @@ class VoiceTrainingState {
     this.level = 0,
     this.message,
     this.exported = false,
+    this.live = false,
   });
+
+  /// Le micro enregistre réellement : on peut parler.
+  final bool live;
 
   final Map<SampleKind, int> counts;
 
@@ -71,12 +75,14 @@ class VoiceTrainingState {
     double? level,
     String? message,
     bool? exported,
+    bool? live,
   }) => VoiceTrainingState(
     counts: counts ?? this.counts,
     recording: clearRecording ? null : recording ?? this.recording,
     level: level ?? this.level,
     message: message,
     exported: exported ?? this.exported,
+    live: live ?? (clearRecording ? false : this.live),
   );
 }
 
@@ -111,11 +117,18 @@ class VoiceTrainingController extends Notifier<VoiceTrainingState> {
     }
     final store = await _store;
     final path = await store.nextPath(kind);
-    state = state.copyWith(recording: kind, level: 0);
+    state = state.copyWith(recording: kind, level: 0, live: false);
     try {
-      await ref.read(sampleRecorderProvider).record(path, kind.duration, onLevel: (l) {
-        if (ref.mounted) state = state.copyWith(level: l);
-      });
+      await ref.read(sampleRecorderProvider).record(
+        path,
+        kind.duration,
+        onLevel: (l) {
+          if (ref.mounted) state = state.copyWith(level: l);
+        },
+        onLive: () {
+          if (ref.mounted) state = state.copyWith(live: true);
+        },
+      );
     } on Object catch (e) {
       if (ref.mounted) state = state.copyWith(clearRecording: true, message: 'Enregistrement impossible : $e');
       return;

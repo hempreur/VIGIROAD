@@ -11,8 +11,8 @@ import 'stored_zip.dart';
 /// l'utilisateur. Ils restent dans le stockage privé de l'application tant
 /// que l'utilisateur ne les exporte pas lui-même, et s'effacent à la demande.
 enum SampleKind {
-  /// « Sentrix » prononcé une fois, extrait de 2 s.
-  sentrix(Duration(seconds: 2), 50, 30),
+  /// « Sentrix » prononcé une fois, extrait de 2,5 s.
+  sentrix(Duration(milliseconds: 2500), 50, 30),
 
   /// Parole normale sans le mot (lecture d'un texte), 20 s.
   speech(Duration(seconds: 20), 3, 1),
@@ -94,8 +94,10 @@ class VoiceSampleStore {
 
 /// Enregistrement d'un extrait de durée fixe (WAV 16 kHz mono).
 abstract interface class SampleRecorder {
-  /// [onLevel] reçoit le niveau (0–1) pendant l'enregistrement.
-  Future<void> record(String path, Duration duration, {void Function(double level)? onLevel});
+  /// [onLevel] reçoit le niveau (0–1) pendant l'enregistrement ;
+  /// [onLive] est appelé quand le micro enregistre réellement (le démarrage
+  /// prend un instant : parler avant couperait le début du mot).
+  Future<void> record(String path, Duration duration, {void Function(double level)? onLevel, void Function()? onLive});
   Future<void> cancel();
 }
 
@@ -104,12 +106,18 @@ class RecordSampleRecorder implements SampleRecorder {
   Completer<void>? _stop;
 
   @override
-  Future<void> record(String path, Duration duration, {void Function(double level)? onLevel}) async {
+  Future<void> record(String path, Duration duration, {void Function(double level)? onLevel, void Function()? onLive}) async {
     await _rec.start(const RecordConfig(encoder: AudioEncoder.wav, sampleRate: 16000, numChannels: 1), path: path);
-    final sub = _rec.onAmplitudeChanged(const Duration(milliseconds: 100)).listen((a) {
+    final live = Completer<void>();
+    final sub = _rec.onAmplitudeChanged(const Duration(milliseconds: 50)).listen((a) {
+      if (!live.isCompleted) live.complete();
       // dBFS (-60…0) → 0…1
       onLevel?.call(((a.current + 60) / 60).clamp(0.0, 1.0));
     });
+    // Premier niveau reçu = micro actif ; petite marge avant d'inviter à parler.
+    await Future.any([live.future, Future<void>.delayed(const Duration(milliseconds: 600))]);
+    await Future<void>.delayed(const Duration(milliseconds: 150));
+    onLive?.call();
     _stop = Completer<void>();
     await Future.any([Future<void>.delayed(duration), _stop!.future]);
     await sub.cancel();

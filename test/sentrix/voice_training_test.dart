@@ -20,8 +20,9 @@ class FakeRecorder implements SampleRecorder {
   Object? error;
 
   @override
-  Future<void> record(String path, Duration duration, {void Function(double level)? onLevel}) async {
+  Future<void> record(String path, Duration duration, {void Function(double level)? onLevel, void Function()? onLive}) async {
     if (error != null) throw error!;
+    onLive?.call();
     onLevel?.call(0.5);
     await File(path).writeAsBytes(Uint8List.fromList([82, 73, 70, 70, ...List.filled(40, 0)]));
     paths.add(path);

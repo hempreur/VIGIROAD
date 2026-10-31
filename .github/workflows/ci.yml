@@ -205,7 +205,10 @@ jobs:
             echo
             echo "Installation : [docs/INSTALL.md](https://github.com/${GITHUB_REPOSITORY}/blob/main/docs/INSTALL.md)"
             echo
-            tail -n +2 docs/RELEASE_NOTES_1.0.md
+            # Notes de la version (docs/RELEASE_NOTES_<majeure>.<mineure>.md).
+            NOTES="docs/RELEASE_NOTES_$(echo "$VER" | cut -d. -f1,2).md"
+            [ -f "$NOTES" ] || NOTES=docs/RELEASE_NOTES_1.0.md
+            tail -n +2 "$NOTES"
           } > "$RUNNER_TEMP/notes.md"
           # Crée la release (et l'étiquette sur ce commit) si elle n'existe pas encore.
           if ! gh release view "$TAG" > /dev/null 2>&1; then

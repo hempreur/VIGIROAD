@@ -1,0 +1,3 @@
+-rw-r--r-- 1 runner runner  42135365 Oct 31 19:34 ci-out/vigiroad-1.1.2-arm32.apk
+-rw-r--r-- 1 runner runner  53359823 Oct 31 19:34 ci-out/vigiroad-1.1.2-arm64.apk
+-rw-r--r-- 1 runner runner 186741919 Oct 31 19:29 ci-out/vigiroad-dev-debug.apk

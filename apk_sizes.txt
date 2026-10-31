@@ -1,0 +1,1 @@
+-rw-r--r-- 1 runner runner 186568549 Oct 31 05:43 ci-out/vigiroad-dev-debug.apk

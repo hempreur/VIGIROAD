@@ -173,6 +173,7 @@ def report(model, data, name, t0=None):
             "test_recall": round(recall(tps, thr, patience), 3),
             "test_fa_h": round(false_accepts(tss, thr, patience) / th, 2),
             "oww_fa_h": round(false_accepts([oww_s], thr, patience) / oww_h, 2) if oww_s is not None else None,
+            "user_recall": round(recall(pos_scores(model, data["user_pos"]), thr, patience), 3) if data.get("user_pos") else None,
             "seconds": round(time.time() - t0) if t0 else None,
         }
         print(json.dumps(res, ensure_ascii=False), flush=True)
@@ -180,12 +181,32 @@ def report(model, data, name, t0=None):
     return out
 
 
+def add_user(data, zip_path: str, work: str):
+    """Ajoute la voix de l'utilisateur : positifs d'entraînement, négatifs,
+    et un jeu de test séparé (`user_pos`)."""
+    from features import Features
+    from user_data import user_features
+
+    feats = Features(f"{work}/melspectrogram.onnx", f"{work}/embedding_model.onnx")
+    xp, test_pos, xn = user_features(zip_path, feats, np.random.default_rng(99))
+    # Les « Sentrix » de l'utilisateur pèsent autant que toutes les voix de synthèse.
+    reps = max(1, len(data["x_pos"]) // max(1, len(xp)))
+    data["x_pos"] = np.concatenate([np.asarray(data["x_pos"], np.float32), np.repeat(xp, reps, axis=0)])
+    data["x_adv"] = np.concatenate([np.asarray(data["x_adv"], np.float32), xn])
+    data["user_pos"] = test_pos
+    return data
+
+
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("npz")
     ap.add_argument("--variant", action="append")
+    ap.add_argument("--user-zip", help="archive « Entraîner Sentrix » de l'utilisateur")
+    ap.add_argument("--work", default="work", help="dossier des modèles melspectrogram/embedding")
     a = ap.parse_args()
     data = load(a.npz)
+    if a.user_zip:
+        data = add_user(data, a.user_zip, a.work)
     print({k: (v.shape if hasattr(v, "shape") else len(v)) for k, v in data.items()})
     for v in a.variant or list(VARIANTS):
         run(data, v, VARIANTS[v])

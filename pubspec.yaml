@@ -40,6 +40,9 @@ dependencies:
 
   # SENTRIX
   speech_to_text: ^7.5.0
+  # Mot d'activation « Sentrix » (openWakeWord, analyse sur le téléphone).
+  flutter_onnxruntime: ^1.9.0
+  record: ^7.1.2
   flutter_tts: ^4.2.5
   audioplayers: ^6.8.1
 
@@ -60,6 +63,8 @@ flutter:
   assets:
     # Son d'alerte de correspondance (généré pour VIGIROAD, libre de droits).
     - assets/sounds/alert.wav
+    # Modèles du mot d'activation « Sentrix » (tools/wakeword).
+    - assets/wakeword/
 
   fonts:
     # Rajdhani (SIL OFL 1.1) : titres, chiffres de navigation, plaques.

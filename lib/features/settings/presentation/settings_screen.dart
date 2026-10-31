@@ -15,6 +15,7 @@ import '../../plates/application/alert_service.dart';
 import '../../plates/application/watchlist_controller.dart';
 import '../../plates/domain/watchlist_import.dart';
 import '../../sentrix/application/sentrix_controller.dart';
+import '../../sentrix/application/wake_word_controller.dart';
 import '../application/settings_controller.dart';
 import '../domain/app_settings.dart';
 
@@ -195,9 +196,25 @@ class SettingsScreen extends ConsumerWidget {
 
         const _Section('COMMANDES VOCALES'),
         const Text(
-          'Touchez SENTRIX sur l\'écran de navigation puis parlez. Liste provisoire, à valider avec le propriétaire du projet.',
+          'Touchez SENTRIX sur l\'écran de navigation (ou dites « Sentrix » si l\'option est activée) puis parlez. '
+          'Liste provisoire, à valider avec le propriétaire du projet.',
           style: VrText.caption,
         ),
+        const SizedBox(height: 8),
+        _Panel([
+          _Switch(
+            'Mot d\'activation « Sentrix »',
+            switch (ref.watch(wakeWordInfoProvider).value) {
+              final i? when i.recall != null && i.faPerHour != null =>
+                'Expérimental. Écoute sur le téléphone, rien n\'est envoyé, uniquement sur l\'écran de navigation. '
+                    'Mesuré sur des voix de synthèse : détection ${(i.recall! * 100).round()} %, '
+                    '${i.faPerHour!.toStringAsFixed(1).replaceAll('.', ',')} fausse(s) activation(s) par heure de parole.',
+              _ => 'Expérimental. Écoute sur le téléphone, rien n\'est envoyé, uniquement sur l\'écran de navigation.',
+            },
+            s.wakeWord,
+            (v) => set((x) => x.copyWith(wakeWord: v)),
+          ),
+        ]),
         const SizedBox(height: 8),
         _Panel([
           for (final c in ref.watch(sentrixCommandsProvider)) InfoRow(label: c.label, value: '« ${c.phrases.first} »'),

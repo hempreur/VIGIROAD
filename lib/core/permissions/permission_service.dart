@@ -4,7 +4,7 @@ import 'package:permission_handler/permission_handler.dart';
 enum AppCapability {
   location('Position GPS', 'Afficher la carte et vous guider'),
   camera('Caméra arrière', 'Lire les plaques, analyse sur le téléphone'),
-  microphone('Microphone', 'Commandes vocales SENTRIX, à la demande');
+  microphone('Microphone', 'Commandes vocales SENTRIX, à la demande (ou mot « Sentrix » si activé)');
 
   const AppCapability(this.title, this.purpose);
   final String title;

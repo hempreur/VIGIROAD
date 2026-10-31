@@ -32,6 +32,7 @@ import 'widgets/map_view.dart';
 import 'widgets/position_puck.dart';
 import 'widgets/speed_gauge.dart';
 import 'widgets/traffic_legend.dart';
+import '../../sentrix/application/wake_word_controller.dart';
 import '../../traffic/application/traffic_announcer.dart';
 import '../../traffic/application/traffic_controller.dart';
 import '../../traffic/presentation/traffic_event_sheet.dart';
@@ -89,6 +90,8 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
     ref.watch(alertServiceProvider);
     final traffic = ref.watch(trafficProvider);
     ref.watch(trafficAnnouncerProvider);
+    // Mot d'activation « Sentrix » : écoute tant que cet écran est affiché (si activé).
+    ref.watch(wakeWordProvider);
     final locationGranted =
         ref.watch(permissionsProvider).value?[AppCapability.location] == CapabilityStatus.granted;
     final mapBuilder = ref.watch(mapViewBuilderProvider);

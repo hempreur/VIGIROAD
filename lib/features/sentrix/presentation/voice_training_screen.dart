@@ -10,7 +10,9 @@ import '../application/voice_training_controller.dart';
 import '../data/voice_samples.dart';
 
 /// Version affichée dans l'archive exportée.
-const _appVersion = '1.1.1';
+const _appVersion = '1.1.2';
+
+const _archive = VoiceTrainingController.archiveName;
 
 /// Conseils pour varier les « Sentrix » (un modèle robuste a besoin de
 /// prononciations, de volumes et de distances différents).
@@ -86,16 +88,42 @@ class VoiceTrainingScreen extends ConsumerWidget {
           onUndo: () => c.deleteLast(SampleKind.ambient),
         ),
         const SizedBox(height: 16),
+        Text('4. Envoyez les enregistrements', style: VrText.label),
+        const SizedBox(height: 6),
+        Text(
+          s.canExport
+              ? 'Touchez « Envoyer » puis choisissez l\'application Claude (ou e-mail, Drive…) : le fichier '
+                  '$_archive sera joint à votre message.'
+              : 'Disponible après au moins ${SampleKind.sentrix.minimum} « Sentrix » et 1 enregistrement de parole normale.',
+          style: VrText.caption.copyWith(color: VrColors.textSecondary),
+        ),
+        const SizedBox(height: 8),
         VrButton(
-          label: s.canExport
-              ? 'Exporter les enregistrements (.zip)'
-              : 'Exporter (au moins ${SampleKind.sentrix.minimum} « Sentrix » et 1 parole)',
-          icon: Icons.ios_share_rounded,
+          label: 'Envoyer les enregistrements',
+          icon: Icons.send_rounded,
           style: VrButtonStyle.primary,
           expanded: true,
           onPressed: s.canExport && s.recording == null ? () => c.export(appVersion: _appVersion) : null,
         ),
         const SizedBox(height: 8),
+        VrButton(
+          label: 'Enregistrer dans un fichier',
+          icon: Icons.save_alt_rounded,
+          expanded: true,
+          onPressed: s.canExport && s.recording == null ? () => c.export(appVersion: _appVersion, toFile: true) : null,
+        ),
+        if (s.exported) ...[
+          const SizedBox(height: 10),
+          GlowPanel(
+            padding: const EdgeInsets.all(14),
+            child: Text(
+              'Fichier prêt. Dans la conversation avec Claude, joignez $_archive (bouton « + » ou trombone) '
+              'et envoyez-le. Vous pourrez ensuite effacer les enregistrements de ce téléphone.',
+              style: VrText.caption.copyWith(color: VrColors.textPrimary),
+            ),
+          ),
+        ],
+        const SizedBox(height: 16),
         VrButton(
           label: 'Tout effacer',
           icon: Icons.delete_forever_rounded,

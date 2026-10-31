@@ -440,6 +440,13 @@ class _SentrixMenu extends StatelessWidget {
               const SizedBox(height: 8),
               VrButton(label: 'Historique des détections', icon: Icons.history_rounded, expanded: true, onPressed: () => go(Routes.history)),
               const SizedBox(height: 8),
+              VrButton(
+                label: 'Entraîner « Sentrix » avec ma voix',
+                icon: Icons.record_voice_over_rounded,
+                expanded: true,
+                onPressed: () => go(Routes.voiceTraining),
+              ),
+              const SizedBox(height: 8),
               VrButton(label: 'Réglages', icon: Icons.settings_rounded, expanded: true, onPressed: () => go(Routes.settings)),
             ],
           ),

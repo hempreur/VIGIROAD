@@ -8,6 +8,14 @@ par **VIGIROAD INC (CODEX HEMPREUR)** (empreinte SHA-256 `C5:A9:67:94:…:3D:B0:
 **exporter la liste de plaques** (écran Plaques), **désinstaller l'ancienne version**, installer la
 1.1.0 puis réimporter la liste. Les mises à jour suivantes s'installeront normalement.
 
+## 1.1.2
+
+- « Entraîner « Sentrix » avec ma voix » plus facile à trouver : en tête des Réglages et dans le
+  menu de SENTRIX (appui long sur sa tête).
+- Bouton **« Envoyer les enregistrements »** : ouvre le menu de partage du téléphone pour envoyer
+  l'archive directement dans l'application Claude (ou par e-mail, Drive…), avec la marche à suivre
+  affichée ensuite. « Enregistrer dans un fichier » reste disponible.
+
 ## 1.1.1
 
 - **Entraîner « Sentrix » avec sa voix** (Réglages → Commandes vocales) : enregistrer une

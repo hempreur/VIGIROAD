@@ -2,9 +2,11 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:cross_file/cross_file.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../../app/providers.dart';
 import '../../../core/permissions/permission_service.dart';
@@ -24,15 +26,35 @@ final zipSaverProvider = Provider<Future<bool> Function(String name, Uint8List b
       await FilePicker.saveFile(fileName: name, bytes: bytes, mimeType: 'application/zip') != null,
 );
 
+/// Envoi par le menu de partage du système (Claude, e-mail, Drive…) ;
+/// renvoie vrai si l'utilisateur a choisi une destination.
+final zipSharerProvider = Provider<Future<bool> Function(String name, Uint8List bytes)>((ref) {
+  return (name, bytes) async {
+    final dir = await getTemporaryDirectory();
+    final file = File('${dir.path}/$name');
+    await file.writeAsBytes(bytes, flush: true);
+    final result = await SharePlus.instance.share(ShareParams(
+      files: [XFile(file.path, mimeType: 'application/zip')],
+      subject: 'Enregistrements VIGIROAD « Sentrix »',
+      text: 'Enregistrements de ma voix pour entraîner le mot « Sentrix » (VIGIROAD).',
+    ));
+    return result.status != ShareResultStatus.dismissed;
+  };
+});
+
 class VoiceTrainingState {
   const VoiceTrainingState({
     this.counts = const {},
     this.recording,
     this.level = 0,
     this.message,
+    this.exported = false,
   });
 
   final Map<SampleKind, int> counts;
+
+  /// Archive envoyée ou enregistrée au moins une fois (affiche la suite).
+  final bool exported;
 
   /// Type en cours d'enregistrement (null : au repos).
   final SampleKind? recording;
@@ -42,13 +64,20 @@ class VoiceTrainingState {
   int count(SampleKind k) => counts[k] ?? 0;
   bool get canExport => SampleKind.values.every((k) => count(k) >= k.minimum);
 
-  VoiceTrainingState copyWith({Map<SampleKind, int>? counts, SampleKind? recording, bool clearRecording = false, double? level, String? message}) =>
-      VoiceTrainingState(
-        counts: counts ?? this.counts,
-        recording: clearRecording ? null : recording ?? this.recording,
-        level: level ?? this.level,
-        message: message,
-      );
+  VoiceTrainingState copyWith({
+    Map<SampleKind, int>? counts,
+    SampleKind? recording,
+    bool clearRecording = false,
+    double? level,
+    String? message,
+    bool? exported,
+  }) => VoiceTrainingState(
+    counts: counts ?? this.counts,
+    recording: clearRecording ? null : recording ?? this.recording,
+    level: level ?? this.level,
+    message: message,
+    exported: exported ?? this.exported,
+  );
 }
 
 final voiceTrainingProvider = NotifierProvider.autoDispose<VoiceTrainingController, VoiceTrainingState>(VoiceTrainingController.new);
@@ -105,11 +134,26 @@ class VoiceTrainingController extends Notifier<VoiceTrainingState> {
     await refresh();
   }
 
-  /// Exporte l'archive ; renvoie vrai si l'utilisateur l'a enregistrée.
-  Future<bool> export({required String appVersion}) async {
+  static const archiveName = 'vigiroad_sentrix_voix.zip';
+
+  /// Envoie l'archive (menu de partage) ou l'enregistre dans un fichier
+  /// ([toFile]) ; renvoie vrai si l'utilisateur est allé au bout.
+  Future<bool> export({required String appVersion, bool toFile = false}) async {
     final bytes = await (await _store).exportZip(appVersion: appVersion);
-    final ok = await ref.read(zipSaverProvider)('vigiroad_sentrix_voix.zip', bytes);
-    if (ref.mounted && ok) state = state.copyWith(message: 'Archive exportée (${(bytes.length / 1e6).toStringAsFixed(1)} Mo).');
+    final send = toFile ? ref.read(zipSaverProvider) : ref.read(zipSharerProvider);
+    final bool ok;
+    try {
+      ok = await send(archiveName, bytes);
+    } on Object catch (e) {
+      if (ref.mounted) state = state.copyWith(message: 'Envoi impossible : $e');
+      return false;
+    }
+    if (ref.mounted && ok) {
+      state = state.copyWith(
+        exported: true,
+        message: 'Archive prête (${(bytes.length / 1e6).toStringAsFixed(1)} Mo).',
+      );
+    }
     return ok;
   }
 }

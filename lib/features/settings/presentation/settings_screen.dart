@@ -69,6 +69,13 @@ class SettingsScreen extends ConsumerWidget {
     return VrPage(
       title: 'Réglages',
       children: [
+        const _Section('SENTRIX'),
+        _Panel([
+          _Action('Entraîner « Sentrix » avec ma voix', Icons.record_voice_over_rounded, () async {
+            await context.push(Routes.voiceTraining);
+          }),
+        ]),
+
         const _Section('LECTURE DES PLAQUES'),
         _Panel([
           _Switch(
@@ -204,12 +211,6 @@ class SettingsScreen extends ConsumerWidget {
         _Panel([
           for (final c in ref.watch(sentrixCommandsProvider)) InfoRow(label: c.label, value: '« ${c.phrases.first} »'),
         ]),
-        const SizedBox(height: 8),
-        _Panel([
-          _Action('Entraîner « Sentrix » avec ma voix', Icons.record_voice_over_rounded, () async {
-            await context.push(Routes.voiceTraining);
-          }),
-        ]),
 
         const _Section('SERVICES'),
         _Panel([
@@ -229,7 +230,7 @@ class SettingsScreen extends ConsumerWidget {
         const _Section('À PROPOS'),
         _Panel([
           InfoRow(label: 'Environnement', value: config.environment.name),
-          const InfoRow(label: 'Version', value: '1.1.1'),
+          const InfoRow(label: 'Version', value: '1.1.2'),
           const InfoRow(label: 'Éditeur', value: 'VIGIROAD INC (CODEX HEMPREUR)'),
           const InfoRow(label: 'Données cartographiques', value: '© contributeurs OpenStreetMap, style © CARTO'),
           _Action('Réinitialiser les réglages', Icons.restart_alt_rounded, () async {

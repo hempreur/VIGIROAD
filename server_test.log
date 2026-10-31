@@ -1,0 +1,37 @@
+00:00 +0: loading test/connectors_test.dart
+00:00 +0: test/speed_test.dart: balise maxspeed valeurs explicites et implicites légales
+00:00 +1: test/speed_test.dart: balise maxspeed valeurs ambiguës : inconnues
+00:00 +2: test/speed_test.dart: balise maxspeed sens de circulation
+00:00 +3: test/speed_test.dart: correspondance : bonne voie, bon sens, jamais la rue transversale ni la voie parallèle
+00:00 +4: test/speed_test.dart: voie la plus proche sans limitation : inconnue (pas celle de la voie voisine)
+00:00 +5: test/speed_test.dart: service Overpass tuiles en cache : une seule requête
+00:00 +6: test/speed_test.dart: service Overpass tuiles en cache : une seule requête
+00:00 +7: test/speed_test.dart: service Overpass tuiles en cache : une seule requête
+00:00 +8: test/speed_test.dart: service Overpass tuiles en cache : une seule requête
+00:00 +9: test/speed_test.dart: service Overpass tuiles en cache : une seule requête
+00:00 +10: test/connectors_test.dart: DATEX II (Bison Futé) lecture HTTP réelle via le client
+00:00 +11: test/connectors_test.dart: DATEX II (Bison Futé) lecture HTTP réelle via le client
+00:00 +12: test/connectors_test.dart: DATEX II (Bison Futé) lecture HTTP réelle via le client
+00:00 +13: test/speed_test.dart: API /v1/speedlimits limitations et mention OpenStreetMap
+00:00 +14: test/speed_test.dart: API /v1/speedlimits limitations et mention OpenStreetMap
+00:00 +15: test/speed_test.dart: API /v1/speedlimits limitations et mention OpenStreetMap
+00:00 +16: test/speed_test.dart: API /v1/speedlimits limitations et mention OpenStreetMap
+00:00 +17: test/connectors_test.dart: Waze for Cities (partenaire) alertes fiables seulement
+00:00 +18: test/speed_test.dart: API /v1/speedlimits service désactivé, tronçon trop long
+00:00 +19: test/connectors_test.dart: polyligne Google
+00:00 +20: test/aggregator_test.dart: fusion entre sources et respect de la fréquence autorisée
+00:00 +21: test/aggregator_test.dart: basculement vers la source de secours puis retour
+00:00 +22: test/aggregator_test.dart: attente exponentielle plafonnée après échecs
+00:00 +23: test/aggregator_test.dart: données obsolètes exclues et couverture inconnue sans collecte récente
+00:00 +24: test/aggregator_test.dart: zone connue seulement dans l'emprise d'une source à jour
+00:00 +25: test/aggregator_test.dart: événements le long d'un itinéraire, dans l'ordre
+00:00 +26: test/aggregator_test.dart: API santé sans clé
+00:00 +27: test/aggregator_test.dart: API clé obligatoire
+00:00 +28: test/aggregator_test.dart: API événements d'une zone avec mentions des sources
+00:00 +29: test/aggregator_test.dart: API zone sans source : état inconnu, aucun événement inventé
+00:00 +30: test/aggregator_test.dart: API zone couverte sans incident : connue, mention de la source tout de même
+00:00 +31: test/aggregator_test.dart: API zone invalide ou trop grande
+00:00 +32: test/aggregator_test.dart: API itinéraire
+00:00 +33: test/aggregator_test.dart: API limite de débit
+00:00 +34: test/aggregator_test.dart: configuration : sources selon les clés fournies, flux NAP additionnels
+00:00 +35: All tests passed!

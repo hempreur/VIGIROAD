@@ -24,13 +24,8 @@ Future<void> tapText(WidgetTester tester, String text) async {
   await tester.scrollUntilVisible(f, 200, scrollable: list);
   // Amène l'élément au milieu de la liste : tout juste visible, il peut être
   // masqué par l'en-tête ou le bas d'écran et ne pas recevoir le tap.
-  final box = tester.getRect(list);
-  for (var i = 0; i < 6; i++) {
-    final dy = tester.getCenter(f).dy - box.center.dy;
-    if (dy.abs() < 60 && tester.any(f.hitTestable())) break;
-    await tester.drag(list, Offset(0, -dy.clamp(-300.0, 300.0)));
-    await tester.pump();
-  }
+  await Scrollable.ensureVisible(tester.element(f), alignment: 0.5);
+  await tester.pump();
   await tester.tap(f);
   await tester.pump(const Duration(milliseconds: 300));
 }

@@ -58,7 +58,8 @@ final voiceTrainingProvider = NotifierProvider.autoDispose<VoiceTrainingControll
 class VoiceTrainingController extends Notifier<VoiceTrainingState> {
   @override
   VoiceTrainingState build() {
-    ref.onDispose(() => unawaited(ref.read(sampleRecorderProvider).cancel()));
+    final recorder = ref.read(sampleRecorderProvider);
+    ref.onDispose(() => unawaited(recorder.cancel()));
     unawaited(Future.microtask(refresh));
     return const VoiceTrainingState();
   }

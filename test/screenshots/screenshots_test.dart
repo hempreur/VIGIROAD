@@ -48,6 +48,13 @@ void main() {
     usePhoneSurface(tester);
     await pumpVigiroad(tester, FakePermissionService.allDenied());
     await tester.pump(const Duration(milliseconds: 1300));
+    // Le logo est une image : on attend son décodage réel avant la capture.
+    await tester.runAsync(() async {
+      for (final e in find.byType(Image).evaluate()) {
+        await precacheImage((e.widget as Image).image, e);
+      }
+    });
+    await tester.pump();
     await expectLater(find.byType(MaterialApp), matchesGoldenFile('goldens/01_splash.png'));
     await tester.pump(const Duration(seconds: 2));
   });

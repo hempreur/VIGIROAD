@@ -17,4 +17,8 @@ git config user.name "github-actions[bot]"
 git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 git add -A
 git commit -q -m "CI $job @ ${GITHUB_SHA::8} (${JOB_STATUS:-unknown})"
-git push -q -f "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "HEAD:refs/heads/ci-logs/$job"
+remote="https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+# Dernier journal du job (toutes branches) et journal propre à la branche,
+# pour que des exécutions simultanées ne s'écrasent pas.
+branch="$(printf '%s' "${GITHUB_REF_NAME:-local}" | tr '/' '-' | tr -cd 'A-Za-z0-9._-')"
+git push -q -f "$remote" "HEAD:refs/heads/ci-logs/$job" "HEAD:refs/heads/ci-logs/$job--$branch"

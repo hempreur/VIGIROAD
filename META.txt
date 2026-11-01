@@ -1,0 +1,5 @@
+job=server
+sha=04ce597f7a0246c1a76aedc1347cc31e0dbe7845
+ref=refs/heads/release/v1.2.1
+run=https://github.com/hempreur/VIGIROAD/actions/runs/41267145589
+status=success

@@ -1,0 +1,8 @@
+
+Building Windows application...                                    46.6s
+√ Built build\windows\x64\runner\Debug\vigiroad_admin_manager.exe
+::group::✅ Passing tests
+✅ ADMIN MANAGER : premier administrateur, TOTP, utilisateurs réels, actions
+::endgroup::
+
+🎉 1 test passed.

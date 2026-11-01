@@ -1,0 +1,5 @@
+job=quality
+sha=d368fbd0b9b41512b317820998aa64b49e44dc0d
+ref=refs/heads/release/v1.3.0
+run=https://github.com/hempreur/VIGIROAD/actions/runs/41273953156
+status=success

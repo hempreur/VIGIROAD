@@ -1,0 +1,1 @@
+{"status":"ok","service":"vigiroad-admin-api","version":"1.0.0"}{"hostname":"runnervm48cm3","os":"Ubuntu 24.04.5 LTS","kernel":"7.0.0-1017-azure","cpus":4,"cpuModel":"AMD EPYC 9V74 80-Core Processor","uptimeSeconds":285.55,"memTotal":16760344576,"gui":{"xfce":false,"xrdp":false,"serverControl":true},"docker":"28.0.4","project":"deploy"}

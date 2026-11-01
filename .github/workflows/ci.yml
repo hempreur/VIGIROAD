@@ -156,7 +156,7 @@ jobs:
         run: |
           mkdir -p ci-out
           set -o pipefail
-          .github/scripts/inject_traffic_config.sh config/dev.env
+          .github/scripts/inject_traffic_config.sh config/dev.env | tee -a ci-out/traffic_config.log
           flutter build apk --debug --target-platform android-arm64 --dart-define-from-file=config/dev.env 2>&1 | tee ci-out/build_apk.log
           cp build/app/outputs/flutter-apk/app-debug.apk ci-out/vigiroad-dev-debug.apk
           ls -la ci-out
@@ -184,7 +184,7 @@ jobs:
           VR_TRAFFIC_API_KEY: ${{ secrets.VR_TRAFFIC_API_KEY }}
         run: |
           set -o pipefail
-          .github/scripts/inject_traffic_config.sh config/prod.env
+          .github/scripts/inject_traffic_config.sh config/prod.env | tee -a ci-out/traffic_config.log
           if [ -n "$KEYSTORE_B64" ]; then
             echo "$KEYSTORE_B64" | base64 -d > "$RUNNER_TEMP/release.jks"
             export VR_KEYSTORE_PATH="$RUNNER_TEMP/release.jks"
@@ -221,6 +221,7 @@ jobs:
             echo
             echo "- \`vigiroad-$VER-arm64.apk\` : téléphones Android 64 bits (recommandé)"
             echo "- \`vigiroad-$VER-arm32.apk\` : anciens téléphones 32 bits"
+            echo "- \`vigiroad-$VER-ios-non-signe.ipa\` : iPhone (iOS 16 ou plus), à signer à l'installation — voir [docs/INSTALL_IOS.md](https://github.com/${GITHUB_REPOSITORY}/blob/main/docs/INSTALL_IOS.md)"
             echo
             echo "Installation : [docs/INSTALL.md](https://github.com/${GITHUB_REPOSITORY}/blob/main/docs/INSTALL.md)"
             echo
@@ -322,13 +323,40 @@ jobs:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           cache: true
       - name: Compilation iOS sans signature
+        env:
+          VR_TRAFFIC_API_URL: ${{ secrets.VR_TRAFFIC_API_URL }}
+          VR_TRAFFIC_API_KEY: ${{ secrets.VR_TRAFFIC_API_KEY }}
+          IS_RELEASE: ${{ github.event_name == 'push' && (startsWith(github.ref, 'refs/tags/v') || startsWith(github.ref, 'refs/heads/release/v')) }}
         run: |
           mkdir -p ci-out
           set -o pipefail
-          flutter build ios --release --no-codesign --dart-define-from-file=config/dev.env 2>&1 | tee ci-out/build_ios.log
+          # Release : configuration de production et serveur de trafic, comme l'APK.
+          ENVFILE=config/dev.env
+          if [ "$IS_RELEASE" = true ]; then ENVFILE=config/prod.env; fi
+          .github/scripts/inject_traffic_config.sh "$ENVFILE" | tee -a ci-out/traffic_config.log
+          flutter build ios --release --no-codesign --dart-define-from-file="$ENVFILE" 2>&1 | tee ci-out/build_ios.log
+          # IPA non signée (à signer à l'installation : docs/INSTALL_IOS.md).
+          VER="$(sed -n 's/^version: *\([^+]*\).*/\1/p' pubspec.yaml)"
+          rm -rf Payload && mkdir Payload && cp -R build/ios/iphoneos/Runner.app Payload/
+          zip -qry "ci-out/vigiroad-$VER-ios-non-signe.ipa" Payload
+          ls -la ci-out/*.ipa
+      - name: Ajouter l'IPA à la release (branche release/v* ou étiquette v*)
+        if: success() && github.event_name == 'push' && (startsWith(github.ref, 'refs/tags/v') || startsWith(github.ref, 'refs/heads/release/v'))
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="${GITHUB_REF_NAME#release/}"
+          # La release est créée par le job Android : on l'attend (40 min au plus).
+          for _ in $(seq 1 80); do
+            gh release view "$TAG" > /dev/null 2>&1 && break
+            sleep 30
+          done
+          gh release upload "$TAG" ci-out/*.ipa --clobber
       - name: Publier les journaux
         if: always() && github.event_name == 'push'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           JOB_STATUS: ${{ job.status }}
-        run: .github/scripts/publish_logs.sh ios ci-out
+        run: |
+          rm -f ci-out/*.ipa
+          .github/scripts/publish_logs.sh ios ci-out

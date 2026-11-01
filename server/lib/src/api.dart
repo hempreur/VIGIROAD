@@ -5,6 +5,7 @@ import 'package:shelf/shelf.dart';
 import 'package:vigiroad_traffic/vigiroad_traffic.dart';
 
 import 'aggregator.dart';
+import 'request_stats.dart';
 import 'speed/speed_limit_service.dart';
 
 /// Limiteur de débit par clé (seau à jetons).
@@ -44,6 +45,7 @@ bool _secureEquals(String a, String b) {
 ///
 /// - `GET  /health` : état du service (sans clé)
 /// - `GET  /v1/sources` : sources, licences, mentions et santé
+/// - `GET  /v1/metrics` : requêtes et latence par minute (supervision)
 /// - `GET  /v1/events?bbox=minLng,minLat,maxLng,maxLat` : événements d'une zone
 /// - `POST /v1/events/route` `{"route": [[lng,lat],…], "bufferMeters": 150}` :
 ///   perturbations sur un itinéraire, dans l'ordre de rencontre
@@ -51,8 +53,28 @@ bool _secureEquals(String a, String b) {
 /// Authentification par en-tête `X-Api-Key`, limite de débit par clé, zone
 /// interrogée plafonnée. Le transport HTTPS est assuré par l'hébergeur.
 class TrafficApi {
-  TrafficApi(this.aggregator, {required this.apiKeys, RateLimiter? limiter, this.maxBoxKm2 = 250000, this.speedLimits})
-    : limiter = limiter ?? RateLimiter();
+  TrafficApi(
+    this.aggregator, {
+    required this.apiKeys,
+    RateLimiter? limiter,
+    this.maxBoxKm2 = 250000,
+    this.speedLimits,
+    RequestStats? stats,
+  }) : limiter = limiter ?? RateLimiter(),
+       stats = stats ?? RequestStats();
+
+  /// Requêtes et latence par minute (lues par l'API d'administration).
+  final RequestStats stats;
+
+  /// Modèle de route pour les statistiques.
+  static String routeOf(Request req) {
+    final path = '/${req.url.path}';
+    const known = {'/health', '/v1/sources', '/v1/events', '/v1/events/route', '/v1/speedlimits', '/v1/metrics'};
+    return known.contains(path) ? path : 'autre';
+  }
+
+  /// Gestionnaire avec mesure des requêtes.
+  Handler get measuredHandler => const Pipeline().addMiddleware(stats.middleware(routeOf)).addHandler(handler);
 
   final TrafficAggregator aggregator;
 
@@ -82,6 +104,8 @@ class TrafficApi {
 
     try {
       switch ((req.method, path)) {
+        case ('GET', '/v1/metrics'):
+          return _ok({'minutes': stats.snapshot()});
         case ('GET', '/v1/sources'):
           final now = DateTime.now().toUtc();
           return _ok({'sources': [for (final s in aggregator.statuses) s.toJson(now)]});

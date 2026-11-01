@@ -4,3 +4,8 @@ analyzer:
   language:
     strict-casts: true
     strict-raw-types: true
+  # Paquets indépendants (analysés par leur propre job CI).
+  exclude:
+    - admin_api/**
+    - monitoring/**
+    - database/**

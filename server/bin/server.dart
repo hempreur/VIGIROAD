@@ -20,7 +20,7 @@ Future<void> main() async {
     speedLimits: overpass == null ? null : SpeedLimitService(client: http.Client(), overpassUrl: overpass),
   );
 
-  final handler = const Pipeline().addMiddleware(logRequests()).addHandler(api.handler);
+  final handler = const Pipeline().addMiddleware(logRequests()).addHandler(api.measuredHandler);
   final server = await io.serve(handler, InternetAddress.anyIPv4, config.port);
   stdout.writeln('VigiRoadTrafficAggregator : port ${server.port}, sources : '
       '${aggregator.statuses.map((s) => s.connector.info.id).join(', ')}');

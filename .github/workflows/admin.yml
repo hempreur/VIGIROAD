@@ -1,0 +1,144 @@
+name: Administration
+
+# VIGIROAD Control Center : API d'administration, agent de supervision,
+# base PostgreSQL et sauvegardes (puis applications Linux et Windows).
+on:
+  push:
+    branches: [main, 'feature/admin**', 'release/**']
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: admin-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write  # publication des journaux sur ci-logs/*
+
+jobs:
+  backend:
+    name: API d'administration, agent, base, sauvegardes
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U postgres" --health-interval 5s --health-timeout 5s --health-retries 20
+    env:
+      PGHOST: localhost
+      PGUSER: postgres
+      PGPASSWORD: postgres
+    steps:
+      - uses: actions/checkout@v5
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: stable
+      - name: Agent de supervision
+        working-directory: server/monitoring
+        run: |
+          mkdir -p ../../ci-out
+          set -o pipefail
+          dart pub get 2>&1 | tee ../../ci-out/agent_pub_get.log
+          dart analyze --fatal-warnings 2>&1 | tee ../../ci-out/agent_analyze.log
+          dart test --reporter expanded 2>&1 | tee ../../ci-out/agent_test.log
+      - name: API d'administration (unitaires + PostgreSQL réel)
+        if: success() || failure()
+        working-directory: server/admin_api
+        env:
+          VR_TEST_DB_HOST: localhost
+        run: |
+          set -o pipefail
+          dart pub get 2>&1 | tee ../../ci-out/api_pub_get.log
+          cp pubspec.lock ../../ci-out/api_pubspec.lock
+          dart analyze --fatal-warnings 2>&1 | tee ../../ci-out/api_analyze.log
+          dart test --reporter expanded 2>&1 | tee ../../ci-out/api_test.log
+      - name: Requêtes SQL préparées sur la base migrée
+        if: success() || failure()
+        run: |
+          set -o pipefail
+          createdb vigiroad_sql
+          psql -q -v ON_ERROR_STOP=1 -d vigiroad_sql -c 'CREATE TABLE schema_migrations (version integer PRIMARY KEY, name text NOT NULL, applied_at timestamptz NOT NULL DEFAULT now())' \
+            -f server/database/migrations/001_init.sql
+          python3 server/database/tools/check_sql.py "dbname=vigiroad_sql" server/admin_api/lib/src/*.dart 2>&1 | tee ci-out/sql_check.log
+
+      # Pile complète comme sur le VPS (certificat local au lieu de Let's Encrypt).
+      - name: Déploiement Docker Compose complet
+        if: success()
+        working-directory: server/deploy
+        run: |
+          set -o pipefail
+          cat > .env <<CONF
+          VR_API_KEYS=cle-de-test-ci-1234567890
+          VR_DB_NAME=vigiroad
+          VR_DB_USER=vigiroad
+          VR_DB_PASSWORD=$(openssl rand -hex 16)
+          VR_ADMIN_SECRET=$(openssl rand -hex 32)
+          VR_AGENT_TOKEN=$(openssl rand -hex 24)
+          VR_ADMIN_SETUP_TOKEN=jeton-installation-ci
+          VR_REGISTER_LIMIT=100000
+          VR_SPEEDLIMITS=off
+          CONF
+          printf 'VR_DOMAIN=localhost\n' > .domain
+          mkdir -p "$RUNNER_TEMP/run" "$RUNNER_TEMP/backups" "$RUNNER_TEMP/geoip"
+          printf '172.16.0.0,172.31.255.255,FR\n' | gzip > "$RUNNER_TEMP/geoip/dbip-country-lite.csv.gz"
+          echo "VR_RUN_DIR=$RUNNER_TEMP/run" >> "$GITHUB_ENV"
+          echo "VR_BACKUP_DIR=$RUNNER_TEMP/backups" >> "$GITHUB_ENV"
+          echo "VR_GEOIP_DIR=$RUNNER_TEMP/geoip" >> "$GITHUB_ENV"
+          export VR_RUN_DIR=$RUNNER_TEMP/run VR_BACKUP_DIR=$RUNNER_TEMP/backups VR_GEOIP_DIR=$RUNNER_TEMP/geoip VR_BACKUP_POLL=2
+          VR_DOMAIN=localhost docker compose --env-file .env --env-file .domain up -d --build 2>&1 | tail -15 | tee ../../ci-out/compose.log
+          for _ in $(seq 1 60); do curl -fsSk https://localhost/admin/health > /dev/null 2>&1 && break; sleep 3; done
+          curl -fsSk https://localhost/admin/health | tee -a ../../ci-out/compose.log; echo
+          docker compose --env-file .env --env-file .domain ps | tee -a ../../ci-out/compose.log
+          # Seul Caddy publie des ports.
+          docker ps --format '{{.Names}} {{.Ports}}' | tee -a ../../ci-out/compose.log
+          published=$(docker ps --format '{{.Names}} {{.Ports}}' | grep -v caddy | grep -c -- '->' || true)
+          echo "ports publiés hors Caddy : $published" | tee -a ../../ci-out/compose.log
+          [ "$published" = 0 ]
+      - name: Bout en bout (HTTPS, TOTP, comptes, Docker réel, sauvegarde, restauration, SSE)
+        if: success()
+        working-directory: server/admin_api
+        env:
+          VR_APP_KEY: cle-de-test-ci-1234567890
+          VR_SETUP_TOKEN: jeton-installation-ci
+          VR_TOKEN_FILE: ${{ runner.temp }}/admin_token
+          VR_BACKUP_POLL: '2'
+        run: |
+          set -o pipefail
+          dart run tool/e2e.dart https://localhost 2>&1 | tee ../../ci-out/e2e.log
+          sudo ls -la "$RUNNER_TEMP/backups" | tee -a ../../ci-out/e2e.log
+          sudo cat "$RUNNER_TEMP/run/deploy.request" | tee -a ../../ci-out/e2e.log
+      - name: Test de charge
+        if: success()
+        working-directory: server/admin_api
+        env:
+          VR_APP_KEY: cle-de-test-ci-1234567890
+        run: |
+          set -o pipefail
+          VR_ADMIN_TOKEN=$(cat "$RUNNER_TEMP/admin_token") dart run tool/load_test.dart https://localhost 60 20 2>&1 | tee ../../ci-out/load_test.log
+      - name: Restauration complète (restore.sh)
+        if: success()
+        run: |
+          set -o pipefail
+          TOKEN=$(cat "$RUNNER_TEMP/admin_token")
+          before=$(curl -fsSk -H "Authorization: Bearer $TOKEN" https://localhost/admin/dashboard | jq .usersTotal)
+          echo "comptes avant restauration (avec test de charge) : $before" | tee ci-out/restore.log
+          sudo -E env VR_DEPLOY_DIR="$PWD/server/deploy" VR_BACKUP_DIR="$RUNNER_TEMP/backups" bash server/database/backup/restore.sh 2>&1 | tee -a ci-out/restore.log
+          for _ in $(seq 1 40); do curl -fsSk https://localhost/admin/health > /dev/null 2>&1 && break; sleep 3; done
+          after=$(curl -fsSk -H "Authorization: Bearer $TOKEN" https://localhost/admin/dashboard | jq .usersTotal)
+          echo "comptes après restauration de la sauvegarde : $after" | tee -a ci-out/restore.log
+          [ "$after" = 3 ]
+      - name: Journaux des conteneurs
+        if: always()
+        working-directory: server/deploy
+        run: docker compose --env-file .env --env-file .domain logs --tail 150 > ../../ci-out/containers.log 2>&1 || true
+      - name: Publier les journaux
+        if: always() && github.event_name == 'push'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          JOB_STATUS: ${{ job.status }}
+        run: .github/scripts/publish_logs.sh admin-backend ci-out

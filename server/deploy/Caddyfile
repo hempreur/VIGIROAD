@@ -1,7 +1,28 @@
 # Certificat Let's Encrypt obtenu et renouvelé automatiquement pour {$VR_DOMAIN}.
 {$VR_DOMAIN} {
-	encode gzip
-	reverse_proxy traffic:8080
+	# Flux temps réel des applications d'administration : jamais compressé
+	# ni mis en mémoire tampon.
+	@sse path /admin/events
+	handle @sse {
+		reverse_proxy admin-api:8081 {
+			flush_interval -1
+		}
+	}
+
+	@admin path /admin/* /v1/account/*
+	handle @admin {
+		encode gzip
+		request_body {
+			max_size 1MB
+		}
+		reverse_proxy admin-api:8081
+	}
+
+	handle {
+		encode gzip
+		reverse_proxy traffic:8080
+	}
+
 	header {
 		Strict-Transport-Security "max-age=31536000"
 		X-Content-Type-Options nosniff

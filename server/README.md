@@ -13,6 +13,22 @@ VR_API_KEYS="une-cle-dau-moins-16-caracteres" dart run bin/server.dart
 curl -H "X-Api-Key: une-cle-dau-moins-16-caracteres" "http://localhost:8080/v1/events?bbox=1.5,48.3,3.2,49.2"
 ```
 
+## Installation sur un VPS (Debian / Ubuntu)
+
+Une commande installe Docker, le serveur, Caddy (HTTPS Let's Encrypt automatique), le pare-feu, et
+génère la clé d'accès :
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/hempreur/VIGIROAD/main/server/deploy/install.sh -o install.sh
+sudo bash install.sh                       # adresse https://<ip>.sslip.io (aucun nom de domaine requis)
+sudo bash install.sh trafic.mondomaine.fr  # ou votre domaine, DNS déjà pointé vers le VPS
+```
+
+Le script affiche à la fin les deux secrets GitHub à créer (`VR_TRAFFIC_API_URL`,
+`VR_TRAFFIC_API_KEY`). Relancer la même commande met à jour le serveur (clé et réglages conservés
+dans `/opt/vigiroad/server/deploy/.env`, où l'on ajoute aussi les clés TfL, 511…). Journaux :
+`cd /opt/vigiroad/server/deploy && docker compose logs -f`.
+
 ## Image Docker (tout hébergeur)
 
 ```bash

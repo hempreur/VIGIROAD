@@ -1,0 +1,25 @@
+{
+  "version": "1.5.0",
+  "build": 11,
+  "minBuild": 11,
+  "notes": [
+    "Bouton Chicken (tête de poulet au képi)",
+    "Annonce vocale quand un Chicken signalé est devant vous, à moins de 1,5 km, en précisant votre route ou la voie d'en face",
+    "Caméra stabilisée : stabilisation du téléphone activée, images prises entre deux vibrations (gyroscope) et images floues de bougé écartées",
+    "Zoom et mise au point automatiques sur la plaque repérée, retour au grand angle quand elle a disparu",
+    "Lecture multi-plaques",
+    "« Sentrix » ne se déclenche plus tout seul"
+  ],
+  "apks": {
+    "arm64-v8a": {
+      "url": "https://github.com/hempreur/VIGIROAD/releases/download/v1.5.0/vigiroad-1.5.0-arm64.apk",
+      "sha256": "9389b502496b87a4bde5c73c4d9b8f86857a6dad74a3c08e5da4377998e59d90",
+      "size": 84637534
+    },
+    "armeabi-v7a": {
+      "url": "https://github.com/hempreur/VIGIROAD/releases/download/v1.5.0/vigiroad-1.5.0-arm32.apk",
+      "sha256": "b60d838274dac23f1f4b04c8047b9bea8219a73735e8f99f2ff85a2d9802eeb9",
+      "size": 65221080
+    }
+  }
+}

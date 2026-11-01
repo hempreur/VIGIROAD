@@ -59,3 +59,7 @@ test_reports/
 # Enregistrements de voix de l'utilisateur : jamais dans le dépôt.
 *sentrix_voix*.zip
 tools/wakeword/work/
+
+# Déploiement VPS : secrets et domaine générés sur le serveur.
+server/deploy/.env
+server/deploy/.domain

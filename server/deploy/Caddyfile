@@ -1,0 +1,10 @@
+# Certificat Let's Encrypt obtenu et renouvelé automatiquement pour {$VR_DOMAIN}.
+{$VR_DOMAIN} {
+	encode gzip
+	reverse_proxy traffic:8080
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options nosniff
+		-Server
+	}
+}

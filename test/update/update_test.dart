@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
+import 'package:vigiroad/core/widgets/vr_button.dart';
 import 'package:vigiroad/features/update/application/update_controller.dart';
 import 'package:vigiroad/features/update/data/update_platform.dart';
 import 'package:vigiroad/features/update/data/update_source.dart';
@@ -196,6 +197,10 @@ void main() {
   });
 
   testWidgets('fenêtre centrée : versions, améliorations, boutons', (tester) async {
+    // Taille d'un smartphone (393 × 852 pt).
+    tester.view.physicalSize = const Size(393, 852) * 3;
+    tester.view.devicePixelRatio = 3;
+    addTearDown(tester.view.reset);
     final platform = FakePlatform();
     final tmp = Directory.systemTemp.createTempSync('vr_update_w');
     addTearDown(() => tmp.deleteSync(recursive: true));
@@ -226,10 +231,13 @@ void main() {
     await tester.pump();
     expect(find.text('Nouvelle mise à jour disponible !'), findsOneWidget);
 
-    await tester.runAsync(() async {
-      await tester.tap(find.text('Mettre à jour maintenant'));
-      await Future<void>.delayed(const Duration(milliseconds: 100));
-    });
+    final button = find.widgetWithText(VrButton, 'Mettre à jour maintenant');
+    await tester.ensureVisible(button);
+    await tester.pump();
+    await tester.tap(button);
+    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 200)));
+    await tester.pump();
+    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 200)));
     await tester.pump();
     expect(platform.installs, hasLength(1));
     expect(find.text('Installation…'), findsOneWidget);

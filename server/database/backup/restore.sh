@@ -15,11 +15,13 @@ FILE=${1:-$(ls -1t "$BACKUPS"/vigiroad-*.dump | head -1 | xargs basename)}
 
 dc() { docker compose --env-file .env --env-file .domain "$@"; }
 echo "▶ Sauvegarde de sécurité de la base actuelle"
-dc exec -T backup sh -c "pg_dump -Fc -f /backups/avant-restauration-$(date -u +%Y%m%d-%H%M%S).dump"
+# Connexion à PostgreSQL avec les variables du conteneur de sauvegarde.
+PG='export PGHOST="$VR_DB_HOST" PGUSER="$VR_DB_USER" PGPASSWORD="$VR_DB_PASSWORD";'
+dc exec -T backup sh -c "$PG pg_dump -Fc -d $DBNAME -f /backups/avant-restauration-$(date -u +%Y%m%d-%H%M%S).dump"
 echo "▶ Arrêt de l'API d'administration"
 dc stop admin-api
 echo "▶ Restauration de $FILE"
-dc exec -T backup sh -c "psql -X -q -d postgres -c 'DROP DATABASE IF EXISTS $DBNAME WITH (FORCE)' && createdb $DBNAME && pg_restore --no-owner -d $DBNAME /backups/$FILE"
+dc exec -T backup sh -c "$PG psql -X -q -d postgres -c 'DROP DATABASE IF EXISTS $DBNAME WITH (FORCE)' && createdb $DBNAME && pg_restore --no-owner -d $DBNAME /backups/$FILE"
 echo "▶ Redémarrage"
 dc start admin-api
 echo "✅ Base restaurée depuis $FILE"

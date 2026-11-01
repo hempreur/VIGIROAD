@@ -91,20 +91,18 @@ class StatusPill extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: c.withValues(alpha: 0.5)),
       ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          StatusDot(health, size: 6),
-          const SizedBox(width: 6),
-          Flexible(
-            child: Text(
-              label,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: VrText.caption.copyWith(color: c, fontWeight: FontWeight.w600),
-            ),
-          ),
-        ],
+      // Texte enrichi (pastille + libellé) : jamais de débordement de ligne.
+      child: Text.rich(
+        TextSpan(
+          children: [
+            WidgetSpan(alignment: PlaceholderAlignment.middle, child: StatusDot(health, size: 6)),
+            const WidgetSpan(child: SizedBox(width: 6)),
+            TextSpan(text: label),
+          ],
+        ),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: VrText.caption.copyWith(color: c, fontWeight: FontWeight.w600),
       ),
     );
   }

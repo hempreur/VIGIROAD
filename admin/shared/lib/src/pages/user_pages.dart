@@ -245,7 +245,10 @@ class _UsersPageState extends State<UsersPage> {
     final s = SessionScope.of(context);
     return PageBody(
       children: [
-        Row(
+        Wrap(
+          spacing: 12,
+          runSpacing: 10,
+          crossAxisAlignment: WrapCrossAlignment.center,
           children: [
             SearchField(
               hint: 'Pseudonyme, e-mail, nom ou identifiant…',
@@ -254,7 +257,6 @@ class _UsersPageState extends State<UsersPage> {
                 _offset = 0;
               }),
             ),
-            const SizedBox(width: 12),
             PeriodPicker(
               value: _status,
               options: const {'': 'Tous', 'active': 'Actifs', 'disabled': 'Désactivés'},
@@ -263,7 +265,6 @@ class _UsersPageState extends State<UsersPage> {
                 _offset = 0;
               }),
             ),
-            const SizedBox(width: 12),
             FilterChip(
               label: const Text('Connectés'),
               selected: _online,
@@ -272,7 +273,6 @@ class _UsersPageState extends State<UsersPage> {
                 _offset = 0;
               }),
             ),
-            const Spacer(),
             if (s.can('export'))
               VrButton(
                 label: 'Exporter (CSV)',
@@ -849,7 +849,10 @@ class _DevicesPageState extends State<DevicesPage> {
   @override
   Widget build(BuildContext context) => PageBody(
     children: [
-      Row(
+      Wrap(
+        spacing: 8,
+        runSpacing: 8,
+        crossAxisAlignment: WrapCrossAlignment.center,
         children: [
           SearchField(hint: 'Modèle, marque, utilisateur, identifiant…', onChanged: (q) => setState(() {
             _q = q;
@@ -956,14 +959,16 @@ class _SessionsPageState extends State<SessionsPage> {
   @override
   Widget build(BuildContext context) => PageBody(
     children: [
-      Row(
+      Wrap(
+        spacing: 16,
+        runSpacing: 8,
+        crossAxisAlignment: WrapCrossAlignment.center,
         children: [
           PeriodPicker(
             value: _state,
             options: const {'online': 'En ligne', 'open': 'Ouvertes', 'ended': 'Terminées', 'all': 'Toutes'},
             onChanged: (v) => setState(() => _state = v),
           ),
-          const Spacer(),
           Text(
             'Battement toutes les 60 s ; hors ligne après 2 min 30 sans signal ; fermeture automatique après inactivité prolongée.',
             style: VrText.caption,

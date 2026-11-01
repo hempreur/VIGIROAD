@@ -127,7 +127,7 @@ jobs:
           TOKEN=$(cat "$RUNNER_TEMP/admin_token")
           before=$(curl -fsSk -H "Authorization: Bearer $TOKEN" https://localhost/admin/dashboard | jq .usersTotal)
           echo "comptes avant restauration (avec test de charge) : $before" | tee ci-out/restore.log
-          sudo -E env VR_DEPLOY_DIR="$PWD/server/deploy" VR_BACKUP_DIR="$RUNNER_TEMP/backups" bash server/database/backup/restore.sh 2>&1 | tee -a ci-out/restore.log
+          sudo env VR_DEPLOY_DIR="$PWD/server/deploy" VR_BACKUP_DIR="$RUNNER_TEMP/backups" bash server/database/backup/restore.sh 2>&1 | tee -a ci-out/restore.log
           for _ in $(seq 1 40); do curl -fsSk https://localhost/admin/health > /dev/null 2>&1 && break; sleep 3; done
           after=$(curl -fsSk -H "Authorization: Bearer $TOKEN" https://localhost/admin/dashboard | jq .usersTotal)
           echo "comptes après restauration de la sauvegarde : $after" | tee -a ci-out/restore.log

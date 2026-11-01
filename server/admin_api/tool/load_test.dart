@@ -42,7 +42,7 @@ Future<void> main(List<String> args) async {
   final adminToken = Platform.environment['VR_ADMIN_TOKEN'];
   final client = IOClient(
     HttpClient()
-      ..badCertificateCallback = (c, h, p) => h == 'localhost'
+      ..badCertificateCallback = ((c, h, p) => h == 'localhost')
       ..maxConnectionsPerHost = 64,
   );
   final run = DateTime.now().millisecondsSinceEpoch.toRadixString(36);

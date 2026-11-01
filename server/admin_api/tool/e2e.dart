@@ -140,7 +140,7 @@ Future<void> main(List<String> args) async {
 
   (s, b) = await call('GET', '/admin/diagnostics', token: token);
   for (final c in (b['checks'] as List).cast<Map<String, dynamic>>()) {
-    stdout.writeln('   diagnostic ${c['ok'] ? '✓' : '·'} ${c['label']} : ${c['detail']}');
+    stdout.writeln('   diagnostic ${c['ok'] == true ? '✓' : '·'} ${c['label']} : ${c['detail']}');
   }
   final checks = {for (final c in b['checks'] as List) c['id']: c['ok']};
   check(checks['database'] == true && checks['agent'] == true && checks['containers'] == true, 'diagnostic');

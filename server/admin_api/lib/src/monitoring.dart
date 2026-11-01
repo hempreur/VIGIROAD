@@ -62,7 +62,7 @@ class TrafficProbe {
     final sw = Stopwatch()..start();
     try {
       final r = await _http
-          .get(base.replace(path: path), headers: {if (key != null) 'x-api-key': key!})
+          .get(base.replace(path: path), headers: {'x-api-key': ?key})
           .timeout(const Duration(seconds: 10));
       final ms = sw.elapsedMilliseconds;
       if (r.statusCode != 200) return (null, ms, 'HTTP ${r.statusCode}');

@@ -5,10 +5,14 @@ import 'package:postgres/postgres.dart';
 /// Accès PostgreSQL : requêtes paramétrées uniquement (jamais de
 /// concaténation de valeurs dans le SQL).
 class Db {
-  Db(this._session);
+  Db(this._session) : _executor = _session is SessionExecutor ? _session as SessionExecutor : null;
 
   /// Pool (production) ou connexion/transaction.
   final Session _session;
+
+  /// Pool ou connexion capable d'ouvrir des transactions (null dans une
+  /// transaction déjà ouverte).
+  final SessionExecutor? _executor;
 
   static Future<Db> connect({
     required String host,
@@ -47,14 +51,13 @@ class Db {
   }
 
   Future<T> tx<T>(Future<T> Function(Db db) body) async {
-    final s = _session;
-    if (s is SessionExecutor) return s.runTx((tx) => body(Db(tx)));
+    final e = _executor;
+    if (e != null) return e.runTx((tx) => body(Db(tx)));
     return body(this);
   }
 
   Future<void> close() async {
-    final s = _session;
-    if (s is SessionExecutor) await s.close();
+    await _executor?.close();
   }
 
   /// Applique dans l'ordre les fichiers `NNN_nom.sql` non encore appliqués,
@@ -63,9 +66,9 @@ class Db {
     final files = Directory(dir).listSync().whereType<File>().where((f) => f.path.endsWith('.sql')).toList()
       ..sort((a, b) => a.path.compareTo(b.path));
     final applied = <int>[];
-    final s = _session;
-    if (s is! SessionExecutor) throw StateError('migrate : pool ou connexion attendu');
-    await s.runTx((tx) async {
+    final e = _executor;
+    if (e == null) throw StateError('migrate : pool ou connexion attendu');
+    await e.runTx((tx) async {
       await tx.execute('SELECT pg_advisory_xact_lock(727274)');
       await tx.execute(
         'CREATE TABLE IF NOT EXISTS schema_migrations (version integer PRIMARY KEY, name text NOT NULL, '

@@ -52,9 +52,9 @@ class MonitoringAgent {
     res.headers.set('cache-control', 'no-store');
     try {
       final path = req.uri.path;
-      if (path == '/health') return _send(res, 200, {'status': 'ok'});
-      if (!_eq(req.headers.value('x-agent-token') ?? '', token)) return _send(res, 401, {'error': 'Jeton agent invalide'});
-      return _send(res, 200, await route(req.method, path, req.uri.queryParameters));
+      if (path == '/health') return await _send(res, 200, {'status': 'ok'});
+      if (!_eq(req.headers.value('x-agent-token') ?? '', token)) return await _send(res, 401, {'error': 'Jeton agent invalide'});
+      return await _send(res, 200, await route(req.method, path, req.uri.queryParameters));
     } on DockerException catch (e) {
       return _send(res, e.status == 404 ? 404 : 502, {'error': e.message});
     } on _HttpError catch (e) {

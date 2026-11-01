@@ -1,0 +1,5 @@
+job=desktop-tests
+sha=33774345d2e70a5d279c0a261d47d2accf9a8962
+ref=refs/heads/release/v1.4.1
+run=https://github.com/hempreur/VIGIROAD/actions/runs/41337149870
+status=success

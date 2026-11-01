@@ -1,0 +1,10 @@
+00:00 +0: loading /home/runner/work/VIGIROAD/VIGIROAD/admin/windows/test/app_test.dart
+00:00 +0: (setUpAll)
+00:00 +0: connexion : mot de passe puis code TOTP
+00:01 +1: premier administrateur : jeton, compte, QR code TOTP
+00:01 +2: toutes les pages : tableau de bord, utilisateurs, appareils, sessions, géographie, serveur…
+00:05 +3: alertes critiques notifiées en temps réel
+00:05 +4: rôle lecture seule : pas d'actions ni de page Administrateurs
+00:05 +5: verrouillage après inactivité
+00:05 +6: (tearDownAll)
+00:05 +6: All tests passed!

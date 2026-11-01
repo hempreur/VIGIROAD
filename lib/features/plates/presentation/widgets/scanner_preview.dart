@@ -38,7 +38,8 @@ class ScannerPreview extends ConsumerWidget {
   }
 }
 
-/// Cadres cyan lumineux, coordonnées normalisées 0–1.
+/// Cadres rouges lumineux autour des plaques dangereuses (les autres ne
+/// sont jamais encadrées), coordonnées normalisées 0–1.
 class PlateBoxesPainter extends CustomPainter {
   const PlateBoxesPainter(this.boxes);
 
@@ -53,7 +54,7 @@ class PlateBoxesPainter extends CustomPainter {
       canvas.drawRRect(
         rr,
         Paint()
-          ..color = VrColors.cyan.withValues(alpha: 0.6)
+          ..color = VrColors.alert.withValues(alpha: 0.65)
           ..style = PaintingStyle.stroke
           ..strokeWidth = size.width * 0.012
           ..maskFilter = MaskFilter.blur(BlurStyle.normal, size.width * 0.01),
@@ -61,7 +62,7 @@ class PlateBoxesPainter extends CustomPainter {
       canvas.drawRRect(
         rr,
         Paint()
-          ..color = VrColors.cyanBright
+          ..color = const Color(0xFFFF8A8E)
           ..style = PaintingStyle.stroke
           ..strokeWidth = size.width * 0.005,
       );

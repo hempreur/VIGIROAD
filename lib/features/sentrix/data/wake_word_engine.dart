@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math' as math;
 import 'dart:typed_data';
 
 import 'package:flutter/services.dart' show rootBundle;
@@ -133,6 +134,61 @@ class WakeWordDetector {
   }
 }
 
+/// Filtre de proximité : un vrai « Sentrix » est prononcé près du téléphone,
+/// nettement au-dessus du bruit de fond (route, ventilation, radio basse).
+///
+/// Niveau de chaque bloc de 80 ms en dBFS ; bruit de fond = 20e centile des
+/// ~10 dernières secondes. Une détection n'est acceptée que si le bloc le
+/// plus fort de la fenêtre analysée (1,3 s) dépasse ce bruit de fond de
+/// [marginDb] et le niveau absolu [minPeakDb].
+class SpeechGate {
+  SpeechGate({this.marginDb = 8, this.minPeakDb = -52, this.historyBlocks = 125, this.windowBlocks = 17});
+
+  final double marginDb;
+  final double minPeakDb;
+  final int historyBlocks;
+  final int windowBlocks;
+  final _levels = <double>[];
+
+  /// Niveau (dBFS) d'un bloc PCM 16 bits.
+  static double levelDb(Int16List block) {
+    if (block.isEmpty) return -120;
+    var sum = 0.0;
+    for (final v in block) {
+      sum += v * v;
+    }
+    final rms = math.sqrt(sum / block.length) / 32768;
+    return rms <= 0 ? -120 : 20 * math.log(rms) / math.ln10;
+  }
+
+  void addBlock(Int16List block) {
+    _levels.add(levelDb(block));
+    if (_levels.length > historyBlocks) _levels.removeAt(0);
+  }
+
+  double get noiseFloorDb {
+    if (_levels.isEmpty) return -120;
+    final sorted = [..._levels]..sort();
+    return sorted[(sorted.length * 0.2).floor().clamp(0, sorted.length - 1)];
+  }
+
+  double get recentPeakDb {
+    if (_levels.isEmpty) return -120;
+    return _levels.skip(math.max(0, _levels.length - windowBlocks)).reduce(math.max);
+  }
+
+  /// La voix entendue est-elle assez proche et distincte du bruit ?
+  bool get accepts {
+    // Moins de 3 s d'historique : bruit de fond inconnu, seul le niveau compte.
+    final peak = recentPeakDb;
+    if (peak < minPeakDb) return false;
+    if (_levels.length < 38) return true;
+    return peak - noiseFloorDb >= marginDb;
+  }
+
+  void reset() => _levels.clear();
+}
+
 /// Flux du micro en PCM 16 bits, 16 kHz, mono.
 abstract interface class MicStream {
   Future<Stream<Int16List>> start();
@@ -252,12 +308,18 @@ class WakeWordModelInfo {
 
 /// Écoute continue : micro → caractéristiques → décision.
 class WakeWordEngine {
-  WakeWordEngine({required this.models, required this.mic, required this.threshold, this.patience = 1});
+  WakeWordEngine({required this.models, required this.mic, required this.threshold, this.patience = 1, this.gate});
 
   final WakeWordModels models;
   final MicStream mic;
   final double threshold;
   final int patience;
+
+  /// Filtre de proximité de la voix (null = désactivé).
+  final SpeechGate? gate;
+
+  /// Détections écartées par le filtre de proximité (diagnostic, tests).
+  int rejected = 0;
 
   late final _features = WakeWordFeatures(models);
   late final _detector = WakeWordDetector(threshold: threshold, patience: patience);
@@ -278,6 +340,8 @@ class WakeWordEngine {
     if (_sub != null) return;
     _features.reset();
     _detector.reset();
+    gate?.reset();
+    _pendingGate.clear();
     final stream = await mic.start();
     _sub = stream.listen((samples) {
       // Traitement en série ; en cas de retard on saute des blocs plutôt
@@ -286,8 +350,15 @@ class WakeWordEngine {
       _backlog++;
       _queue = _queue.then((_) async {
         try {
+          _feedGate(samples);
           for (final s in await _features.push(samples)) {
-            if (_detector.add(s) && !_detections.isClosed) _detections.add(s);
+            if (!_detector.add(s) || _detections.isClosed) continue;
+            final g = gate;
+            if (g != null && !g.accepts) {
+              rejected++;
+              continue;
+            }
+            _detections.add(s);
           }
         } finally {
           _backlog--;
@@ -298,6 +369,18 @@ class WakeWordEngine {
     }, onError: (Object e) {
       if (!_errors.isClosed) _errors.add(e);
     });
+  }
+
+  final _pendingGate = <int>[];
+
+  void _feedGate(Int16List samples) {
+    final g = gate;
+    if (g == null) return;
+    _pendingGate.addAll(samples);
+    while (_pendingGate.length >= WakeWordFeatures.chunk) {
+      g.addBlock(Int16List.fromList(_pendingGate.sublist(0, WakeWordFeatures.chunk)));
+      _pendingGate.removeRange(0, WakeWordFeatures.chunk);
+    }
   }
 
   Future<void> stop() async {

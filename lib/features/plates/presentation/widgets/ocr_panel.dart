@@ -6,13 +6,20 @@ import '../../../../core/widgets/glow_panel.dart';
 import '../../../../core/widgets/plate_badge.dart';
 import '../../domain/plate_models.dart';
 
-/// Fenêtre « Lecture OCR » : dernière plaque lue + détails (confiance,
-/// pays, type), comme le bloc sous la caméra dans la référence.
+/// Fenêtre « Lecture OCR » : dernière plaque **dangereuse** lue (présente
+/// dans la liste de surveillance) + détails. Les plaques ordinaires sont
+/// lues et comparées mais jamais affichées.
 class OcrPanel extends StatelessWidget {
-  const OcrPanel({super.key, required this.reading});
+  const OcrPanel({super.key, required this.reading, this.category, this.tracked = 0});
 
-  /// `null` tant qu'aucune plaque n'a été lue avec une confiance suffisante.
+  /// `null` tant qu'aucune plaque dangereuse n'a été lue.
   final PlateReading? reading;
+
+  /// Catégorie de la plaque dans la liste.
+  final String? category;
+
+  /// Plaques lues sur la dernière image (aucune n'est affichée).
+  final int tracked;
 
   @override
   Widget build(BuildContext context) {
@@ -47,11 +54,16 @@ class OcrPanel extends StatelessWidget {
                   child: FittedBox(
                     fit: BoxFit.scaleDown,
                     alignment: Alignment.centerLeft,
-                    child: PlateBadge(
-                      text: r?.display,
-                      countryLetter: euBandLetter(r?.country ?? 'FR'),
-                      height: 46,
-                    ),
+                    child: r == null
+                        ? Text(
+                            tracked == 0 ? 'Aucune plaque dangereuse' : 'Aucune plaque dangereuse · $tracked lue${tracked > 1 ? 's' : ''}',
+                            style: VrText.caption,
+                          )
+                        : PlateBadge(
+                            text: r.display,
+                            countryLetter: euBandLetter(r.country),
+                            height: 46,
+                          ),
                   ),
                 ),
               ],
@@ -69,7 +81,7 @@ class OcrPanel extends StatelessWidget {
               children: [
                 _meta('Confiance', r == null ? '—' : '${r.confidencePercent} %'),
                 _meta('Pays', r == null ? '—' : countryName(r.country)),
-                _meta('Type', r?.vehicleType ?? '—'),
+                _meta('Liste', r == null ? '—' : category ?? r.vehicleType ?? '—'),
               ],
             ),
           ),

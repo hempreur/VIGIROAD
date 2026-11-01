@@ -6,6 +6,7 @@ import 'package:maplibre_gl/maplibre_gl.dart';
 import 'package:vigiroad_traffic/vigiroad_traffic.dart' as tr;
 
 import '../../../traffic/domain/traffic_labels.dart';
+import '../../../reports/presentation/report_sheets.dart';
 import '../../domain/geo_fix.dart';
 
 /// Paramètres transmis à la vue carte par l'écran de navigation.
@@ -22,6 +23,8 @@ class MapViewArgs {
     required this.onUserGesture,
     this.traffic = const [],
     this.onTrafficTap,
+    this.reports = const [],
+    this.onReportTap,
   });
 
   final String styleUrl;
@@ -48,6 +51,10 @@ class MapViewArgs {
   /// Perturbations signalées par les sources officielles.
   final List<tr.TrafficEvent> traffic;
   final void Function(tr.TrafficEvent event)? onTrafficTap;
+
+  /// Signalements « Chicken » des conducteurs (marqueurs 🍗).
+  final List<tr.ChickenReport> reports;
+  final void Function(tr.ChickenReport report)? onReportTap;
 }
 
 /// Carte MapLibre sombre (données OpenStreetMap).
@@ -68,6 +75,10 @@ class _VrMapViewState extends State<VrMapView> {
   List<Line> _trafficLines = const [];
   List<Circle> _trafficCircles = const [];
   final _circleEvents = <String, tr.TrafficEvent>{};
+  List<Symbol> _reportSymbols = const [];
+  final _symbolReports = <String, tr.ChickenReport>{};
+  bool _markerImage = false;
+  static const _chickenImage = 'vr-chicken';
 
   /// Centre de la France métropolitaine, avant le premier point GPS.
   static const _initial = CameraPosition(target: LatLng(46.6, 2.4), zoom: 5);
@@ -93,6 +104,45 @@ class _VrMapViewState extends State<VrMapView> {
     if (!identical(a.traffic, old.args.traffic)) {
       unawaited(_syncTraffic());
     }
+    if (!identical(a.reports, old.args.reports)) {
+      unawaited(_syncReports());
+    }
+  }
+
+  /// Marqueurs 🍗 des signalements, visibles 2 h.
+  Future<void> _syncReports() async {
+    final c = _controller;
+    if (c == null || !_styleReady) return;
+    if (!_markerImage) {
+      try {
+        await c.addImage(_chickenImage, await renderChickenMarker());
+        _markerImage = true;
+      } on Object {
+        return;
+      }
+    }
+    if (_reportSymbols.isNotEmpty) await c.removeSymbols(_reportSymbols);
+    _reportSymbols = const [];
+    _symbolReports.clear();
+    final reports = widget.args.reports;
+    if (reports.isEmpty) return;
+    _reportSymbols = await c.addSymbols([
+      for (final r in reports)
+        SymbolOptions(
+          geometry: LatLng(r.position.lat, r.position.lng),
+          iconImage: _chickenImage,
+          iconSize: 0.55,
+          iconAnchor: 'center',
+        ),
+    ]);
+    for (var i = 0; i < _reportSymbols.length && i < reports.length; i++) {
+      _symbolReports[_reportSymbols[i].id] = reports[i];
+    }
+  }
+
+  void _onSymbolTapped(Symbol symbol) {
+    final r = _symbolReports[symbol.id];
+    if (r != null) widget.args.onReportTap?.call(r);
   }
 
   /// Perturbations : tronçon concerné (trait coloré selon la gravité) et
@@ -142,6 +192,7 @@ class _VrMapViewState extends State<VrMapView> {
   @override
   void dispose() {
     _controller?.onCircleTapped.remove(_onCircleTapped);
+    _controller?.onSymbolTapped.remove(_onSymbolTapped);
     super.dispose();
   }
 
@@ -223,6 +274,7 @@ class _VrMapViewState extends State<VrMapView> {
         onMapCreated: (c) {
           _controller = c;
           c.onCircleTapped.add(_onCircleTapped);
+          c.onSymbolTapped.add(_onSymbolTapped);
         },
         onStyleLoadedCallback: () {
           _styleReady = true;
@@ -230,6 +282,8 @@ class _VrMapViewState extends State<VrMapView> {
           unawaited(_syncDestination());
           unawaited(_syncRoute());
           unawaited(_syncTraffic());
+          _markerImage = false;
+          unawaited(_syncReports());
           if (widget.args.following) unawaited(_follow());
         },
       ),

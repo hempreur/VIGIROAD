@@ -11,7 +11,7 @@ import '../data/account_api.dart';
 import '../data/account_store.dart';
 
 /// Version affichée au serveur (statistiques des versions).
-const accountAppVersion = '1.4.1';
+const accountAppVersion = '1.5.0';
 
 enum AccountStatus { unavailable, loading, signedOut, signedIn }
 

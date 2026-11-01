@@ -318,6 +318,7 @@ class FakeSpeechInput implements SpeechInput {
   String? next;
   SpeechUnavailable? error;
   int cancels = 0;
+  int listens = 0;
 
   @override
   Future<String?> listenOnce({
@@ -325,6 +326,7 @@ class FakeSpeechInput implements SpeechInput {
     Duration listenFor = const Duration(seconds: 8),
     Duration pauseFor = const Duration(seconds: 2),
   }) async {
+    listens++;
     if (error != null) throw error!;
     if (next != null) onPartial(next!);
     return next;

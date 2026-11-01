@@ -42,8 +42,17 @@ class VoiceQueue {
 
   final _pending = ListQueue<_Utterance>();
   _Utterance? _current;
+  final _speakingChanges = StreamController<bool>.broadcast(sync: true);
+  DateTime? _lastEnd;
 
   bool get speaking => _current != null;
+
+  /// `true` quand l'application commence à parler, `false` quand elle se tait
+  /// (file vide). Sert à couper le mot d'activation pendant ses propres annonces.
+  Stream<bool> get speakingChanges => _speakingChanges.stream;
+
+  /// Fin de la dernière annonce (null si aucune).
+  DateTime? get lastEnd => _lastEnd;
   VoicePriority? get currentPriority => _current?.priority;
   int get pendingCount => _pending.length;
 
@@ -83,6 +92,7 @@ class VoiceQueue {
   }
 
   Future<void> _pump() async {
+    if (_pending.isNotEmpty && _current == null) _speakingChanges.add(true);
     while (_pending.isNotEmpty && _current == null) {
       final u = _pending.removeFirst();
       if (_clock().difference(u.queuedAt) > maxWait) {
@@ -110,6 +120,10 @@ class VoiceQueue {
         continue;
       }
       if (!u.done.isCompleted) u.done.complete(completed && !interrupted);
+    }
+    if (_current == null) {
+      _lastEnd = _clock();
+      _speakingChanges.add(false);
     }
   }
 

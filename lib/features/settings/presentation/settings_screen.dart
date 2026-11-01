@@ -105,6 +105,17 @@ class SettingsScreen extends ConsumerWidget {
           ),
         ]),
 
+        const _Section('SIGNALEMENTS CHICKEN'),
+        _Panel([
+          _Switch(
+            'Afficher les signalements des autres conducteurs',
+            'Marqueurs 🍗 visibles 2 h sur la carte et annonce à l\'approche. '
+                'Un signalement n\'envoie que sa position et son sens, sans compte ni identifiant.',
+            s.chickenReports,
+            (v) => set((x) => x.copyWith(chickenReports: v)),
+          ),
+        ]),
+
         const _Section('LECTURE DES PLAQUES'),
         _Panel([
           _Switch(
@@ -112,6 +123,13 @@ class SettingsScreen extends ConsumerWidget {
             'Active la caméra arrière à l\'ouverture de la navigation',
             s.autoStartDetection,
             (v) => set((x) => x.copyWith(autoStartDetection: v)),
+          ),
+          _Switch(
+            'Zoom et mise au point automatiques',
+            'Zoome sur une plaque lointaine et fait la mise au point dessus ; '
+                'images stabilisées et prises entre deux vibrations',
+            s.autoZoom,
+            (v) => set((x) => x.copyWith(autoZoom: v)),
           ),
           _Choice<PerformanceMode>(
             'Performance',
@@ -259,7 +277,7 @@ class SettingsScreen extends ConsumerWidget {
         const _Section('À PROPOS'),
         _Panel([
           InfoRow(label: 'Environnement', value: config.environment.name),
-          const InfoRow(label: 'Version', value: '1.4.1'),
+          const InfoRow(label: 'Version', value: '1.5.0'),
           const InfoRow(label: 'Éditeur', value: 'VIGIROAD INC (CODEX HEMPREUR)'),
           const InfoRow(label: 'Données cartographiques', value: '© contributeurs OpenStreetMap, style © CARTO'),
           _Action('Réinitialiser les réglages', Icons.restart_alt_rounded, () async {

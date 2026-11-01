@@ -11,6 +11,7 @@ import '../data/plate_scanner.dart';
 import '../domain/plate_models.dart';
 import '../domain/plate_voter.dart';
 import 'plates_providers.dart';
+import 'watchlist_controller.dart';
 
 enum ScanStatus { off, starting, running, paused, error }
 
@@ -24,14 +25,23 @@ class ScanState {
     this.analysisMs,
     this.lowLight = false,
     this.ocrError,
+    this.tracked = 0,
+    this.zoom = 1,
   });
 
   final ScanStatus status;
   final String? message;
 
-  /// Plaques candidates de la dernière image, en coordonnées normalisées
-  /// (0–1) dans l'image remise à l'endroit.
+  /// Plaques **dangereuses** (présentes dans la liste de surveillance) de la
+  /// dernière image, en coordonnées normalisées (0–1) dans l'image remise à
+  /// l'endroit. Les autres plaques sont lues mais jamais affichées.
   final List<Rect> boxes;
+
+  /// Nombre de plaques lues sur la dernière image (toutes, listées ou non).
+  final int tracked;
+
+  /// Zoom automatique de la caméra.
+  final double zoom;
   final double? sharpness;
   final int? analysisMs;
 
@@ -46,7 +56,8 @@ class ScanState {
 
 final plateScannerProvider = Provider<PlateScanner>((ref) {
   final mode = ref.watch(appSettingsProvider.select((s) => s.performance));
-  final scanner = MlKitPlateScanner(minInterval: mode.minInterval);
+  final autoZoom = ref.watch(appSettingsProvider.select((s) => s.autoZoom));
+  final scanner = MlKitPlateScanner(minInterval: mode.minInterval, autoZoom: autoZoom);
   ref.onDispose(() => unawaited(scanner.dispose()));
   return scanner;
 });
@@ -168,19 +179,23 @@ class PlateScanningController extends Notifier<ScanState> {
     if (f.analyzed) _errorStreak = 0;
     final now = ref.read(scanClockProvider)();
     final w = f.uprightSize.width, h = f.uprightSize.height;
+    final listed = ref.read(watchlistIndexProvider);
     state = ScanState(
       status: ScanStatus.running,
       boxes: [
         for (final o in f.observations)
-          if (o.box != null && w > 0 && h > 0)
+          if (o.box != null && w > 0 && h > 0 && listed.containsKey(o.candidate.normalized))
             Rect.fromLTRB(o.box!.left / w, o.box!.top / h, o.box!.right / w, o.box!.bottom / h),
       ],
+      tracked: {for (final o in f.observations) o.candidate.normalized}.length,
       sharpness: f.sharpness,
       analysisMs: f.took.inMilliseconds,
       lowLight: f.brightness < 35,
+      zoom: f.zoom,
     );
+    // Toutes les plaques de l'image sont votées et comparées à la liste
+    // (lecture multi-plaques) ; seules les dangereuses seront affichées.
     for (final reading in _voter.add(f.observations, now)) {
-      ref.read(lastReadingProvider.notifier).update(reading);
       _confirmed.add(reading);
     }
   }

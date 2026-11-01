@@ -16,6 +16,9 @@ services:
     env_file: .env
     environment:
       PORT: "8080"
+      VR_REPORTS_FILE: /data/reports.json
+    volumes:
+      - reports_data:/data
     restart: unless-stopped
     expose:
       - "8080"
@@ -125,6 +128,7 @@ networks:
     internal: true
 
 volumes:
+  reports_data:
   pg_data:
   caddy_data:
   caddy_config:

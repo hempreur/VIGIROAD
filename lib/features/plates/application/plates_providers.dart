@@ -2,8 +2,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../domain/plate_models.dart';
 
-/// Dernière lecture OCR confirmée. Alimentée par le module caméra (phase 4) ;
-/// reste vide tant que la lecture n'est pas active.
+/// Dernière plaque **dangereuse** confirmée (présente dans la liste de
+/// surveillance). Les plaques ordinaires ne sont jamais affichées.
 final lastReadingProvider = NotifierProvider<LastReadingController, PlateReading?>(
   LastReadingController.new,
 );
@@ -28,4 +28,33 @@ class ActiveAlertController extends Notifier<PlateAlert?> {
 
   void raise(PlateAlert alert) => state = alert;
   void dismiss() => state = null;
+}
+
+/// Plaques dangereuses vues récemment (lecture multi-plaques) : la plus
+/// prioritaire est dans [activeAlertProvider], les autres sont signalées
+/// sur l'encadré (« +1 »).
+final recentAlertsProvider = NotifierProvider<RecentAlertsController, List<PlateAlert>>(RecentAlertsController.new);
+
+class RecentAlertsController extends Notifier<List<PlateAlert>> {
+  /// Durée pendant laquelle une alerte compte parmi les plaques simultanées.
+  static const window = Duration(seconds: 45);
+
+  @override
+  List<PlateAlert> build() => const [];
+
+  /// Ajoute (ou rafraîchit) une alerte ; renvoie la plus prioritaire.
+  PlateAlert add(PlateAlert alert) {
+    final kept = [
+      for (final a in state)
+        if (a.reading.normalized != alert.reading.normalized && alert.at.difference(a.at) < window) a,
+      alert,
+    ]..sort((a, b) {
+      final p = b.priority.index.compareTo(a.priority.index);
+      return p != 0 ? p : b.at.compareTo(a.at);
+    });
+    state = kept;
+    return kept.first;
+  }
+
+  void clear() => state = const [];
 }

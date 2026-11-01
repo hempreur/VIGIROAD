@@ -134,6 +134,56 @@ void main() {
     expect(hits.last, isTrue);
   });
 
+  group('filtre de proximité de la voix', () {
+    Int16List tone(int amplitude) => Int16List.fromList([for (var i = 0; i < 1280; i++) i.isEven ? amplitude : -amplitude]);
+
+    test('niveau en dBFS', () {
+      expect(SpeechGate.levelDb(tone(32767)), closeTo(0, 0.01));
+      expect(SpeechGate.levelDb(tone(328)), closeTo(-40, 0.1));
+      expect(SpeechGate.levelDb(Int16List(1280)), -120);
+    });
+
+    test('voix proche acceptée, bruit ou radio lointaine refusés', () {
+      final g = SpeechGate();
+      for (var i = 0; i < 60; i++) {
+        g.addBlock(tone(160)); // ≈ -46 dBFS : bruit de roulage
+      }
+      expect(g.accepts, isFalse, reason: 'rien au-dessus du bruit de fond');
+      for (var i = 0; i < 3; i++) {
+        g.addBlock(tone(260)); // +4 dB seulement
+      }
+      expect(g.accepts, isFalse);
+      for (var i = 0; i < 5; i++) {
+        g.addBlock(tone(1600)); // +20 dB : quelqu'un parle au téléphone
+      }
+      expect(g.accepts, isTrue);
+    });
+
+    test('voix trop faible refusée même dans le silence', () {
+      final g = SpeechGate();
+      for (var i = 0; i < 20; i++) {
+        g.addBlock(tone(40)); // ≈ -58 dBFS
+      }
+      expect(g.accepts, isFalse);
+    });
+
+    test('moteur : détection écartée si la voix est trop faible', () async {
+      final models = FakeModels()..score = 0.95;
+      final mic = FakeMic();
+      final engine = WakeWordEngine(models: models, mic: mic, threshold: 0.6, gate: SpeechGate());
+      final hits = <double>[];
+      engine.detections.listen(hits.add);
+      await engine.start();
+      mic.ctrl!.add(Int16List(1280 * 20));
+      for (var i = 0; i < 6; i++) {
+        await pumpEventQueue();
+      }
+      expect(hits, isEmpty);
+      expect(engine.rejected, greaterThan(0));
+      await engine.dispose();
+    });
+  });
+
   group('écoute', () {
     late FakeModels models;
     late FakeMic mic;
@@ -162,6 +212,8 @@ void main() {
           speechInputProvider.overrideWithValue(speech),
           speakerProvider.overrideWithValue(speaker),
           sentrixBubbleDurationProvider.overrideWithValue(Duration.zero),
+          wakeWordVoiceTailProvider.overrideWithValue(const Duration(milliseconds: 80)),
+          wakeWordFalseTriggerPauseProvider.overrideWithValue(const Duration(milliseconds: 200)),
         ],
       );
       c.listen(wakeWordProvider, (_, _) {});
@@ -177,26 +229,53 @@ void main() {
       mic.push(15);
       await settle();
       expect(speech.cancels, 0);
+      speech.next = 'aide';
       models.score = 0.95;
       mic.push(2);
       await settle();
-      // SENTRIX a écouté (rien entendu) puis l'écoute du mot a repris.
+      expect(speech.listens, 1);
+      // SENTRIX a répondu (voix de l'application) puis l'écoute du mot reprend.
+      await Future<void>.delayed(const Duration(milliseconds: 120));
+      await settle();
       expect(mic.stops, greaterThanOrEqualTo(1));
       expect(mic.starts, greaterThanOrEqualTo(2));
       expect(c.read(wakeWordProvider).status, WakeWordStatus.listening);
     });
 
-    test('la voix de l\'application ne déclenche pas SENTRIX', () async {
+    test('micro coupé pendant la voix de l\'application, puis 1,5 s de silence', () async {
       speaker.holding = Completer<void>();
       unawaited(c.read(voiceQueueProvider).say('Dans 300 mètres, tournez à droite.', VoicePriority.guidance));
       await settle();
       expect(c.read(voiceQueueProvider).speaking, isTrue);
+      expect(c.read(wakeWordProvider).status, WakeWordStatus.paused);
+      expect(mic.stops, 1, reason: 'le modèle n\'entend jamais la voix de l\'application');
       models.score = 0.95;
       mic.push(17);
       await settle();
-      expect(mic.stops, 0, reason: 'détection ignorée pendant une annonce');
-      expect(c.read(wakeWordProvider).status, WakeWordStatus.listening);
+      expect(speech.listens, 0);
       speaker.holding!.complete();
+      await settle();
+      // Toujours coupé juste après l'annonce (écho, fin de phrase dans le tampon).
+      expect(c.read(wakeWordProvider).status, WakeWordStatus.paused);
+      expect(mic.starts, 1);
+      await Future<void>.delayed(const Duration(milliseconds: 120));
+      await settle();
+      expect(c.read(wakeWordProvider).status, WakeWordStatus.listening);
+      expect(mic.starts, 2);
+    });
+
+    test('activation sans commande : rien d\'affiché, pause de quelques secondes', () async {
+      mic.push(15);
+      await settle();
+      models.score = 0.95;
+      mic.push(2);
+      await settle();
+      expect(speech.listens, 1);
+      expect(c.read(sentrixProvider).reply, isNull, reason: 'pas de « Je n\'ai rien entendu »');
+      expect(c.read(wakeWordProvider).status, WakeWordStatus.paused);
+      await Future<void>.delayed(const Duration(milliseconds: 250));
+      await settle();
+      expect(c.read(wakeWordProvider).status, WakeWordStatus.listening);
     });
 
     test('option désactivée : micro coupé', () async {

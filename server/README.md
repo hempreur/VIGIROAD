@@ -66,6 +66,8 @@ Toutes les routes `/v1/*` exigent l'en-tête `X-Api-Key`. Limite : 120 requêtes
 | `GET /v1/sources` | Sources, licences, mentions, santé, basculement |
 | `GET /v1/events?bbox=minLng,minLat,maxLng,maxLat` | Événements d'une zone (≤ 250 000 km²) |
 | `POST /v1/speedlimits` | `{"route": [[lng,lat],…]}` (≤ 60 km) → `{"limits": [50, null, …], "complete": true}`, une valeur par segment, `null` = inconnue |
+| `GET /v1/reports?bbox=minLng,minLat,maxLng,maxLat` | signalements « Chicken » actifs de la zone (2 h après le dernier signalement au même endroit) |
+| `POST /v1/reports` | `{"position": [lng,lat], "heading": 87.5 \| null, "side": "mine" \| "opposite"}` → `201 {"report": …}` ; même endroit (200 m) et même sens = confirmation ; 1/min et 12/h par connexion |
 | `POST /v1/events/route` | `{"route": [[lng,lat],…], "bufferMeters": 150}` → événements sur l'itinéraire, avec distance depuis le départ |
 
 Réponse type :

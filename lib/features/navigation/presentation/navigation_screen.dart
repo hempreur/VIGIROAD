@@ -14,6 +14,7 @@ import '../../plates/application/plates_providers.dart';
 import '../../plates/presentation/widgets/alert_banner.dart';
 import '../../plates/application/alert_service.dart';
 import '../../plates/application/plate_scanning_controller.dart';
+import '../../plates/application/watchlist_controller.dart';
 import '../../plates/presentation/widgets/camera_panel.dart';
 import '../../plates/presentation/widgets/scanner_preview.dart';
 import '../../plates/presentation/widgets/ocr_panel.dart';
@@ -37,6 +38,9 @@ import '../../traffic/application/traffic_announcer.dart';
 import '../../traffic/application/speed_limit_controller.dart';
 import '../../traffic/application/traffic_controller.dart';
 import '../../traffic/presentation/traffic_event_sheet.dart';
+import '../../reports/application/reports_controller.dart';
+import '../../reports/presentation/chicken_button.dart';
+import '../../reports/presentation/report_sheets.dart';
 
 /// Écran GPS principal — composition de l'image de référence :
 /// cartouche de guidage et boutons en haut, carte au centre, compteur,
@@ -91,11 +95,14 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
         ? progress.speedLimitKmh ?? osmLimits.at(progress.segmentIndex)
         : null;
     final alert = ref.watch(activeAlertProvider);
+    final others = ref.watch(recentAlertsProvider).length - 1;
     final reading = ref.watch(lastReadingProvider);
+    final readingCategory = reading == null ? null : ref.watch(watchlistIndexProvider)[reading.normalized]?.category;
     final scan = ref.watch(plateScanningProvider);
     // Garde actif le moteur de correspondance tant que l'écran est affiché.
     ref.watch(alertServiceProvider);
     final traffic = ref.watch(trafficProvider);
+    final reports = ref.watch(reportsProvider);
     ref.watch(trafficAnnouncerProvider);
     // Mot d'activation « Sentrix » : écoute tant que cet écran est affiché (si activé).
     ref.watch(wakeWordProvider);
@@ -139,6 +146,8 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
                 },
                 traffic: traffic.visible,
                 onTrafficTap: (e) => showTrafficEvent(context, e, ref.read(trafficProvider).attributions),
+                reports: reports.available ? reports.reports : const [],
+                onReportTap: (r) => openChickenReport(context, ref, r, ref.read(clockProvider)()),
               ),
             ),
           ),
@@ -252,6 +261,8 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
                         SpeedLimitSign(limitKmh: speedLimit),
                       ],
                       const Spacer(),
+                      ChickenButton(onPressed: () => showChickenReportSheet(context, ref)),
+                      const SizedBox(width: 10),
                       SentrixButton(onLongPress: _openMenu),
                     ],
                   ),
@@ -269,23 +280,31 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
                       _ => 'Lecture des plaques arrêtée',
                     },
                     inactiveDetail: 'Touchez pour activer la caméra arrière',
+                    zoom: scan.zoom,
                     diagnostic: config.isProduction || scan.analysisMs == null
                         ? null
-                        : '${scan.analysisMs} ms · net. ${scan.sharpness?.round()}',
+                        : '${scan.analysisMs} ms · net. ${scan.sharpness?.round()} · ${scan.tracked} pl.',
                     warning: scan.status != ScanStatus.running
                         ? null
                         : scan.ocrError ?? (scan.lowLight ? 'Luminosité faible : lecture moins fiable' : null),
                   ),
                 ),
                 const SizedBox(height: _gap),
-                SizedBox(height: ocrH, child: OcrPanel(reading: reading)),
+                SizedBox(
+                  height: ocrH,
+                  child: OcrPanel(reading: reading, category: readingCategory, tracked: scan.active ? scan.tracked : 0),
+                ),
                 if (alert != null) ...[
                   const SizedBox(height: _gap),
                   SizedBox(
                     height: alertH,
                     child: AlertBanner(
                       alert: alert,
-                      onDismiss: ref.read(activeAlertProvider.notifier).dismiss,
+                      others: others < 0 ? 0 : others,
+                      onDismiss: () {
+                        ref.read(activeAlertProvider.notifier).dismiss();
+                        ref.read(recentAlertsProvider.notifier).clear();
+                      },
                     ),
                   ),
                 ],

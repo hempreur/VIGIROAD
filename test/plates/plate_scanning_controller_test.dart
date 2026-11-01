@@ -4,6 +4,8 @@ import 'package:vigiroad/app/providers.dart';
 import 'package:vigiroad/core/permissions/permission_service.dart';
 import 'package:vigiroad/features/plates/application/plate_scanning_controller.dart';
 import 'package:vigiroad/features/plates/application/plates_providers.dart';
+import 'package:vigiroad/features/plates/application/watchlist_controller.dart';
+import 'package:vigiroad/features/plates/domain/watch_entry.dart';
 import 'package:vigiroad/features/plates/data/plate_scanner.dart';
 import 'package:vigiroad/features/plates/domain/plate_models.dart';
 
@@ -17,8 +19,9 @@ void main() {
   late ProviderContainer c;
   var now = DateTime(2026, 10, 30, 15);
 
-  setUp(() {
+  setUp(() async {
     scanner = FakePlateScanner();
+    final watchlist = MemoryWatchlist()..map['CC456DD'] = const WatchEntry(plate: 'CC456DD');
     perms = FakePermissionService.allGranted();
     now = DateTime(2026, 10, 30, 15);
     c = ProviderContainer(
@@ -26,9 +29,12 @@ void main() {
         plateScannerProvider.overrideWithValue(scanner),
         permissionServiceProvider.overrideWithValue(perms),
         scanClockProvider.overrideWithValue(() => now),
+        watchlistRepositoryProvider.overrideWith((ref) async => watchlist),
       ],
     );
     c.listen(plateScanningProvider, (_, _) {});
+    c.listen(watchlistIndexProvider, (_, _) {});
+    await c.read(watchlistProvider.future);
   });
   tearDown(() => c.dispose());
 
@@ -47,9 +53,26 @@ void main() {
       await pumpEventQueue();
     }
     expect(confirmed.single.normalized, 'AA123BB');
-    expect(c.read(lastReadingProvider)?.display, 'AA-123-BB');
-    final box = c.read(plateScanningProvider).boxes.single;
-    expect(box.left, closeTo(200 / 720, 1e-9));
+    // Plaque ordinaire : lue et transmise, mais jamais affichée ni encadrée.
+    expect(c.read(lastReadingProvider), isNull);
+    expect(c.read(plateScanningProvider).boxes, isEmpty);
+    expect(c.read(plateScanningProvider).tracked, 1);
+  });
+
+  test('plusieurs plaques sur la même image : toutes lues, seule la dangereuse encadrée', () async {
+    final confirmed = <PlateReading>[];
+    ctrl().confirmed.listen(confirmed.add);
+    await ctrl().start();
+    for (var i = 0; i < 3; i++) {
+      now = now.add(const Duration(milliseconds: 250));
+      scanner.push(['AA-123-BB', 'CC-456-DD', 'EE-789-FF'], at: now);
+      await pumpEventQueue();
+    }
+    expect(confirmed.map((r) => r.normalized), unorderedEquals(['AA123BB', 'CC456DD', 'EE789FF']));
+    final state = c.read(plateScanningProvider);
+    expect(state.tracked, 3);
+    expect(state.boxes, hasLength(1), reason: 'seule CC-456-DD est dans la liste');
+    expect(state.boxes.single.left, closeTo(200 / 720, 1e-9));
   });
 
   test('deux lectures ne suffisent pas', () async {

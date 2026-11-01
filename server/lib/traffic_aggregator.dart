@@ -10,6 +10,7 @@ export 'src/connectors/us511.dart';
 export 'src/connectors/waze_partner.dart';
 export 'src/connectors/wzdx.dart';
 export 'src/polyline.dart';
+export 'src/reports.dart';
 export 'src/request_stats.dart';
 export 'src/source.dart';
 export 'src/speed/matcher.dart';

@@ -11,6 +11,7 @@ import android.provider.Settings
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
+import androidx.core.content.FileProvider
 import java.io.File
 
 /**
@@ -50,7 +51,12 @@ class MainActivity : FlutterActivity() {
                             install(File(path))
                             result.success(true)
                         } catch (e: Exception) {
-                            result.error("install", e.message ?: e.toString(), null)
+                            // Session impossible : installateur du système en secours.
+                            if (legacyInstall()) {
+                                result.success(true)
+                            } else {
+                                result.error("install", e.message ?: e.toString(), null)
+                            }
                         }
                     }
                 }
@@ -84,6 +90,7 @@ class MainActivity : FlutterActivity() {
         Build.VERSION.SDK_INT < Build.VERSION_CODES.O || packageManager.canRequestPackageInstalls()
 
     private fun install(apk: File) {
+        lastApk = apk
         val installer = packageManager.packageInstaller
         val params = PackageInstaller.SessionParams(PackageInstaller.SessionParams.MODE_FULL_INSTALL)
         params.setAppPackageName(packageName)
@@ -105,10 +112,31 @@ class MainActivity : FlutterActivity() {
         }
     }
 
+    /**
+     * Secours : certains systèmes (Xiaomi MIUI / HyperOS…) refusent
+     * l'installation par session (« Permission Denied »). L'APK, déjà vérifié
+     * (SHA-256), est alors confié à l'installateur du système.
+     */
+    fun legacyInstall(): Boolean {
+        val apk = lastApk ?: return false
+        if (!apk.exists()) return false
+        return try {
+            val uri = FileProvider.getUriForFile(this, "$packageName.updates", apk)
+            val view = Intent(Intent.ACTION_VIEW)
+                .setDataAndType(uri, "application/vnd.android.package-archive")
+                .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(view)
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
+
     companion object {
         const val CHANNEL = "fr.vigiroad/updater"
         var channel: MethodChannel? = null
         var current: MainActivity? = null
+        var lastApk: File? = null
     }
 }
 
@@ -133,9 +161,19 @@ class InstallResultReceiver : BroadcastReceiver() {
                 }
             }
             PackageInstaller.STATUS_SUCCESS -> Unit // l'application est remplacée et relancée par l'utilisateur
+            PackageInstaller.STATUS_FAILURE_ABORTED -> {
+                val message = intent.getStringExtra(PackageInstaller.EXTRA_STATUS_MESSAGE) ?: "installation annulée"
+                MainActivity.channel?.invokeMethod("installFailed", mapOf("status" to status, "message" to message))
+            }
             else -> {
                 val message = intent.getStringExtra(PackageInstaller.EXTRA_STATUS_MESSAGE) ?: "code $status"
-                MainActivity.channel?.invokeMethod("installFailed", mapOf("status" to status, "message" to message))
+                // Session refusée par le système (MIUI, HyperOS…) : installateur classique.
+                val blocked = status == PackageInstaller.STATUS_FAILURE ||
+                    message.contains("Permission Denied", ignoreCase = true) ||
+                    message.contains("INTERNAL_ERROR", ignoreCase = true)
+                if (!(blocked && MainActivity.current?.legacyInstall() == true)) {
+                    MainActivity.channel?.invokeMethod("installFailed", mapOf("status" to status, "message" to message))
+                }
             }
         }
     }

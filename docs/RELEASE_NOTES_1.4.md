@@ -1,5 +1,11 @@
 # VIGIROAD 1.4 — comptes et VIGIROAD Control Center
 
+## 1.4.1
+
+- Mise à jour automatique : si le téléphone refuse l'installation directe (« INSTALL_FAILED_INTERNAL_ERROR: Permission Denied », fréquent sur Xiaomi, Redmi, POCO avec MIUI / HyperOS), l'installateur du système s'ouvre avec le fichier déjà vérifié
+
+Depuis une version 1.3.x ou 1.4.0 qui affiche cette erreur : installer la 1.4.1 une fois à la main (fichier `vigiroad-1.4.1-arm64.apk` de cette page) ; les mises à jour suivantes passeront.
+
 ## 1.4.0
 
 - Compte VIGIROAD facultatif (Réglages → Compte VIGIROAD) : créer un compte, se connecter, retrouver ses appareils et ses sessions

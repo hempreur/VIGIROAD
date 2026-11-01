@@ -1,0 +1,161 @@
+00:00 +0: loading test/integration_test.dart
+00:00 +0: test/integration_test.dart: (setUpAll)
+00:00 +0: test/integration_test.dart: installation santé
+00:00 +1: test/integration_test.dart: installation premier administrateur : jeton d'installation puis TOTP obligatoire
+00:00 +2: test/integration_test.dart: installation secret TOTP chiffré en base, mot de passe haché
+00:00 +3: test/integration_test.dart: installation connexion : mauvais mot de passe, code réutilisé refusé, verrouillage
+00:00 +4: test/integration_test.dart: application mobile inscription : clé de l'application exigée, pseudonyme unique
+00:00 +4 -1: test/integration_test.dart: application mobile inscription : clé de l'application exigée, pseudonyme unique [E]
+  Expected: <201>
+    Actual: <500>
+  {error: Erreur interne du serveur, code: internal}
+  
+  package:matcher                   expect
+  test/integration_test.dart 131:7  main.<fn>.<fn>
+  
+00:00 +4 -1: test/integration_test.dart: application mobile aucun pays sans consentement
+00:00 +4 -2: test/integration_test.dart: application mobile aucun pays sans consentement [E]
+  LateInitializationError: Local 'userId' has not been initialized.
+  dart:_internal              LateError._throwLocalNotInitialized
+  test/integration_test.dart  main.<fn>.<fn>
+  
+00:00 +4 -2: test/integration_test.dart: application mobile connexion par pseudonyme ou e-mail, échecs journalisés
+00:00 +4 -3: test/integration_test.dart: application mobile connexion par pseudonyme ou e-mail, échecs journalisés [E]
+  Expected: <1>
+    Actual: <2>
+  
+  package:matcher                   expect
+  test/integration_test.dart 163:7  main.<fn>.<fn>
+  
+00:00 +4 -3: test/integration_test.dart: application mobile temps d'utilisation réel par battements de cœur
+00:00 +4 -4: test/integration_test.dart: application mobile temps d'utilisation réel par battements de cœur [E]
+  LateInitializationError: Local 'token' has not been initialized.
+  dart:_internal              LateError._throwLocalNotInitialized
+  test/integration_test.dart  main.<fn>.<fn>
+  
+00:00 +4 -4: test/integration_test.dart: application mobile localisation : refusée par défaut, arrondie avec consentement, effacée au retrait
+00:00 +4 -5: test/integration_test.dart: application mobile localisation : refusée par défaut, arrondie avec consentement, effacée au retrait [E]
+  LateInitializationError: Local 'token' has not been initialized.
+  dart:_internal              LateError._throwLocalNotInitialized
+  test/integration_test.dart  main.<fn>.<fn>
+  
+00:00 +4 -5: test/integration_test.dart: application mobile export des données personnelles
+00:00 +4 -6: test/integration_test.dart: application mobile export des données personnelles [E]
+  LateInitializationError: Local 'token' has not been initialized.
+  dart:_internal              LateError._throwLocalNotInitialized
+  test/integration_test.dart  main.<fn>.<fn>
+  
+00:00 +4 -6: test/integration_test.dart: application mobile administration (application Windows) tableau de bord
+00:00 +4 -7: test/integration_test.dart: application mobile administration (application Windows) tableau de bord [E]
+  Expected: <1>
+    Actual: <0>
+  
+  package:matcher                   expect
+  test/integration_test.dart 229:9  main.<fn>.<fn>.<fn>
+  
+00:00 +4 -7: test/integration_test.dart: application mobile administration (application Windows) statistiques 24 h, 7 j, 30 j
+00:00 +4 -8: test/integration_test.dart: application mobile administration (application Windows) statistiques 24 h, 7 j, 30 j [E]
+  Expected: <2>
+    Actual: <1>
+  
+  package:matcher                    expect
+  test/integration_test.dart 241:11  main.<fn>.<fn>.<fn>
+  
+00:00 +4 -8: test/integration_test.dart: application mobile administration (application Windows) recherche, fiche détaillée, sessions simultanées
+00:00 +4 -9: test/integration_test.dart: application mobile administration (application Windows) recherche, fiche détaillée, sessions simultanées [E]
+  Expected: <1>
+    Actual: <null>
+  
+  package:matcher                   expect
+  test/integration_test.dart 248:9  main.<fn>.<fn>.<fn>
+  
+00:00 +4 -9: test/integration_test.dart: application mobile administration (application Windows) rôle « lecture seule » : consultation oui, actions non (et journalisées)
+00:00 +4 -10: test/integration_test.dart: application mobile administration (application Windows) rôle « lecture seule » : consultation oui, actions non (et journalisées) [E]
+  Expected: <200>
+    Actual: <500>
+  
+  package:matcher                   expect
+  test/integration_test.dart 275:9  main.<fn>.<fn>.<fn>
+  
+00:00 +4 -10: test/integration_test.dart: application mobile administration (application Windows) il reste toujours un propriétaire
+00:00 +5 -10: test/integration_test.dart: application mobile administration (application Windows) désactiver un compte ferme ses sessions
+00:00 +5 -11: test/integration_test.dart: application mobile administration (application Windows) désactiver un compte ferme ses sessions [E]
+  LateInitializationError: Local 'userId' has not been initialized.
+  dart:_internal              LateError._throwLocalNotInitialized
+  test/integration_test.dart  main.<fn>.<fn>.<fn>
+  
+00:00 +5 -11: test/integration_test.dart: application mobile administration (application Windows) réinitialisation sécurisée de l'accès par code à usage unique
+00:00 +5 -12: test/integration_test.dart: application mobile administration (application Windows) réinitialisation sécurisée de l'accès par code à usage unique [E]
+  LateInitializationError: Local 'userId' has not been initialized.
+  dart:_internal              LateError._throwLocalNotInitialized
+  test/integration_test.dart  main.<fn>.<fn>.<fn>
+  
+00:00 +5 -12: test/integration_test.dart: application mobile administration (application Windows) révocation d'un appareil
+00:00 +5 -13: test/integration_test.dart: application mobile administration (application Windows) révocation d'un appareil [E]
+  LateInitializationError: Local 'token' has not been initialized.
+  dart:_internal              LateError._throwLocalNotInitialized
+  test/integration_test.dart  main.<fn>.<fn>.<fn>
+  
+00:00 +5 -13: test/integration_test.dart: application mobile administration (application Windows) export CSV sans formules exécutables
+00:00 +6 -13: test/integration_test.dart: application mobile administration (application Windows) journal d'audit des actions sensibles
+00:00 +6 -14: test/integration_test.dart: application mobile administration (application Windows) journal d'audit des actions sensibles [E]
+  Expected: <200>
+    Actual: <500>
+  
+  package:matcher                   expect
+  test/integration_test.dart 368:9  main.<fn>.<fn>.<fn>
+  
+00:00 +6 -14: test/integration_test.dart: application mobile administration (application Windows) réglages : bornes vérifiées côté serveur
+00:00 +7 -14: test/integration_test.dart: application mobile administration (application Windows) conservation : anciennes données supprimées
+00:00 +8 -14: test/integration_test.dart: application mobile administration (application Windows) suppression : confirmation exigée, puis données effacées en cascade
+00:00 +8 -15: test/integration_test.dart: application mobile administration (application Windows) suppression : confirmation exigée, puis données effacées en cascade [E]
+  LateInitializationError: Local 'userId' has not been initialized.
+  dart:_internal              LateError._throwLocalNotInitialized
+  test/integration_test.dart  main.<fn>.<fn>.<fn>
+  
+00:00 +8 -15: test/integration_test.dart: suppression du compte par l'utilisateur (mot de passe demandé)
+00:00 +9 -15: test/integration_test.dart: supervision et maintenance (application Linux) vue d'ensemble du VPS et alertes
+00:00 +9 -16: test/integration_test.dart: supervision et maintenance (application Linux) vue d'ensemble du VPS et alertes [E]
+  Expected: contains 'disk'
+    Actual: ['traffic', 'backup']
+     Which: does not contain 'disk'
+  disque à 90 %
+  
+  package:matcher                   expect
+  test/integration_test.dart 428:7  main.<fn>.<fn>
+  
+00:00 +9 -16: test/integration_test.dart: supervision et maintenance (application Linux) collecte : métriques, flux routiers, requêtes
+00:00 +10 -16: test/integration_test.dart: supervision et maintenance (application Linux) Docker : actions autorisées seulement, journalisées
+00:00 +11 -16: test/integration_test.dart: supervision et maintenance (application Linux) agent arrêté : erreur claire, alerte critique
+00:00 +12 -16: test/integration_test.dart: supervision et maintenance (application Linux) sauvegardes : demande mise en file, une seule à la fois
+00:00 +13 -16: test/integration_test.dart: supervision et maintenance (application Linux) diagnostic complet
+00:00 +14 -16: test/integration_test.dart: supervision et maintenance (application Linux) flux temps réel (SSE)
+00:00 +15 -16: test/integration_test.dart: supervision et maintenance (application Linux) déconnexion administrateur
+00:00 +16 -16: test/integration_test.dart: (tearDownAll)
+00:00 +16 -16: loading test/security_test.dart
+00:00 +16 -16: test/security_test.dart: TOTP (RFC 6238) vecteurs officiels (6 derniers chiffres)
+00:00 +17 -16: test/security_test.dart: TOTP (RFC 6238) tolérance d'un pas, code à usage unique
+00:00 +18 -16: test/security_test.dart: TOTP (RFC 6238) URI otpauth pour les applications d'authentification
+00:00 +19 -16: test/security_test.dart: TOTP (RFC 6238) base32 aller-retour
+00:00 +20 -16: test/security_test.dart: mots de passe Argon2id : vérification, sel aléatoire, format PHC
+00:01 +21 -16: test/security_test.dart: mots de passe paramètres lus depuis l'empreinte (changement de coût sans casse)
+00:01 +22 -16: test/security_test.dart: mots de passe règles minimales
+00:01 +23 -16: test/security_test.dart: chiffrement des secrets (AES-256-GCM)
+00:01 +24 -16: test/security_test.dart: adresses IP réduites au réseau
+00:01 +25 -16: test/security_test.dart: jetons : longs, aléatoires, empreinte stable
+00:01 +26 -16: test/security_test.dart: GeoIP pays des adresses IPv4 et IPv6
+00:01 +27 -16: test/security_test.dart: GeoIP inconnu hors plages, pour ZZ et sans base
+00:01 +28 -16: test/security_test.dart: routeur paramètres et modèle de route
+00:01 +29 -16: test/security_test.dart: routeur 405 si la méthode ne correspond pas
+00:01 +30 -16: test/security_test.dart: statistiques de requêtes par minute
+00:01 +31 -16: Some tests failed.
+
+Failing tests:
+  test/integration_test.dart: application mobile administration (application Windows) désactiver un compte ferme ses sessions
+  test/integration_test.dart: application mobile administration (application Windows) journal d'audit des actions sensibles
+  test/integration_test.dart: application mobile administration (application Windows) recherche, fiche détaillée, sessions simultanées
+  test/integration_test.dart: application mobile administration (application Windows) réinitialisation sécurisée de l'accès par code à usage unique
+  ... and 12 more
+
+Consider enabling the flag chain-stack-traces to receive more detailed exceptions.
+For example, 'dart test --chain-stack-traces'.

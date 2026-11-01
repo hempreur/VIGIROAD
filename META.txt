@@ -1,0 +1,5 @@
+job=quality
+sha=caa092463b7aeda0f752b0be77408e2e5133e80b
+ref=refs/heads/feature/chicken-camera-voice
+run=https://github.com/hempreur/VIGIROAD/actions/runs/41349690187
+status=success

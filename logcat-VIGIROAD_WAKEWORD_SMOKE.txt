@@ -1,0 +1,918 @@
+--------- beginning of main
+11-01 00:24:38.884  1609  2182 I A       : incrementApaDataDownloadStoreStatusNotFound(appVersion = 13.17.16.23, locale = *, groupName = apa_head_suggest, accountScoped = false, foundGroups = 0, status = 0, localGroupsAvailable = false)
+11-01 00:24:38.887  1609  2150 E HotwordModelPopulator: Failed to add hotword file group for 'hotword_model_en-US_okg' from location: https://www.gstatic.com/android-search/hotword/x_google/975058821313279e27b2c3f04de0beef/hotword.data
+11-01 00:24:38.890  1609  2156 E HotwordModelPopulator: Failed to add hotword file group for 'hotword_model_en-US_okhey' from location: https://www.gstatic.com/android-search/hotword/x_google/975058821313279e27b2c3f04de0beef/hotword.data
+11-01 00:24:38.899  1609  2146 E HotwordModelPopulator: Failed to add hotword file group for 'hotword_model_en-US_okhey' from location: https://www.gstatic.com/android-search/hotword/x_google/975058821313279e27b2c3f04de0beef/hotword.data
+11-01 00:24:38.899  1609  2184 I A       : incrementApaDataDownloadStoreStatusNotFound(appVersion = 13.17.16.23, locale = *, groupName = apa_head_suggest, accountScoped = false, foundGroups = 0, status = 0, localGroupsAvailable = false)
+11-01 00:24:38.899  1609  2470 D t       : Starting download: https://www.gstatic.com/android-search/hotword/x_google/975058821313279e27b2c3f04de0beef/hotword.data
+11-01 00:24:38.899  1609  2470 V t       : Is http uri, downloading (uri: https://www.gstatic.com/android-search/hotword/x_google/975058821313279e27b2c3f04de0beef/hotword.data)
+--------- beginning of system
+11-01 00:24:38.909   520   536 W ActivityTaskManager: callingPackage for (uid=2000, pid=4576) has no WPC
+11-01 00:24:38.910   520   536 D CompatibilityChangeReporter: Compat change id reported: 265464455; UID 10192; state: DISABLED
+11-01 00:24:38.910   520   536 D CompatibilityChangeReporter: Compat change id reported: 265452344; UID 10192; state: DISABLED
+11-01 00:24:38.910   520   536 D CompatibilityChangeReporter: Compat change id reported: 266124927; UID 10192; state: DISABLED
+11-01 00:24:38.910   520   536 D CompatibilityChangeReporter: Compat change id reported: 265451093; UID 10192; state: DISABLED
+11-01 00:24:38.910   520   536 D CompatibilityChangeReporter: Compat change id reported: 265456536; UID 10192; state: DISABLED
+11-01 00:24:38.910   520   536 D CompatibilityChangeReporter: Compat change id reported: 255940284; UID 10192; state: DISABLED
+11-01 00:24:38.910   520   536 D CompatibilityChangeReporter: Compat change id reported: 236283604; UID 10192; state: DISABLED
+11-01 00:24:38.910   520   536 D CompatibilityChangeReporter: Compat change id reported: 263959004; UID 10192; state: DISABLED
+11-01 00:24:38.911   520   536 D CompatibilityChangeReporter: Compat change id reported: 264304459; UID 10192; state: DISABLED
+11-01 00:24:38.911   520   536 D CompatibilityChangeReporter: Compat change id reported: 264301586; UID 10192; state: DISABLED
+11-01 00:24:38.911   520   536 D CompatibilityChangeReporter: Compat change id reported: 254631730; UID 10192; state: DISABLED
+11-01 00:24:38.911   520   536 D CompatibilityChangeReporter: Compat change id reported: 273509367; UID 10192; state: DISABLED
+11-01 00:24:38.911   520   536 D CompatibilityChangeReporter: Compat change id reported: 263259275; UID 10192; state: DISABLED
+11-01 00:24:38.911   520   536 D CompatibilityChangeReporter: Compat change id reported: 174042980; UID 10192; state: DISABLED
+11-01 00:24:38.911   520   536 D CompatibilityChangeReporter: Compat change id reported: 174042936; UID 10192; state: DISABLED
+11-01 00:24:38.911   520   536 D CompatibilityChangeReporter: Compat change id reported: 181136395; UID 10192; state: DISABLED
+11-01 00:24:38.912   520   536 D CompatibilityChangeReporter: Compat change id reported: 194480991; UID 10192; state: ENABLED
+11-01 00:24:38.919   520   536 D CompatibilityChangeReporter: Compat change id reported: 184838306; UID 10192; state: DISABLED
+11-01 00:24:38.919   520   536 D CompatibilityChangeReporter: Compat change id reported: 185004937; UID 10192; state: DISABLED
+11-01 00:24:38.920   520   536 D CompatibilityChangeReporter: Compat change id reported: 205907456; UID 10192; state: ENABLED
+11-01 00:24:38.925   827   860 V WindowManagerShell: Transition requested: android.os.BinderProxy@9ba0818 TransitionRequestInfo { type = OPEN, triggerTask = TaskInfo{userId=0 taskId=9 displayId=0 isRunning=true baseIntent=Intent { flg=0x10000000 cmp=fr.vigiroad.vigiroad/.MainActivity } baseActivity=ComponentInfo{fr.vigiroad.vigiroad/fr.vigiroad.vigiroad.MainActivity} topActivity=ComponentInfo{fr.vigiroad.vigiroad/fr.vigiroad.vigiroad.MainActivity} origActivity=null realActivity=ComponentInfo{fr.vigiroad.vigiroad/fr.vigiroad.vigiroad.MainActivity} numActivities=1 lastActiveTime=54187 supportsMultiWindow=true resizeMode=1 isResizeable=true minWidth=-1 minHeight=-1 defaultMinSize=220 token=WCT{android.window.IWindowContainerToken$Stub$Proxy@d3cf271} topActivityType=1 pictureInPictureParams=null shouldDockBigOverlays=false launchIntoPipHostTaskId=-1 lastParentTaskIdBeforePip=-1 displayCutoutSafeInsets=null topActivityInfo=ActivityInfo{937d856 fr.vigiroad.vigiroad.MainActivity} launchCookies=[] positionInParent=Point(0, 0) parentTaskId=-1 isFocused=false isVisible=false isVisibleRequested=false isSleeping=false topActivityInSizeCompat=false topActivityEligibleForLetterboxEducation= false topActivityLetterboxed= false isFromDoubleTap= false topActivityLetterboxVerticalPosition= -1 topActivityLetterboxHorizontalPosition= -1 topActivityLetterboxWidth=-1 topActivityLetterboxHeight=-1 locusId=null displayAreaFeatureId=1 cameraCompatControlState=hidden}, remoteTransition = null, displayChange = null }
+11-01 00:24:38.926   520   536 I ActivityTaskManager: START u0 {flg=0x10000000 cmp=fr.vigiroad.vigiroad/.MainActivity} with LAUNCH_SINGLE_TOP from uid 2000 (BAL_ALLOW_PERMISSION) result code=0
+11-01 00:24:38.927   827   882 D SplashScreenView: Build android.window.SplashScreenView{fddc230 V.E...... ......ID 0,0-0,0}
+11-01 00:24:38.927   827   882 D SplashScreenView: Icon: view: android.widget.ImageView{3b67ea9 V.ED..... ......I. 0,0-0,0 #10204f0 android:id/splashscreen_icon_view} drawable: com.android.wm.shell.startingsurface.SplashscreenIconDrawableFactory$ImmobileIconDrawable@f019c2e size: 192
+11-01 00:24:38.927   827   882 D SplashScreenView: Branding: view: android.view.View{ad9b3cf G.ED..... ......I. 0,0-0,0 #10204ef android:id/splashscreen_branding_view} drawable: null size w: 0 h: 0
+11-01 00:24:38.930   520   542 D CompatibilityChangeReporter: Compat change id reported: 135634846; UID 10192; state: DISABLED
+11-01 00:24:38.932   520   551 D CompatibilityChangeReporter: Compat change id reported: 143937733; UID 10192; state: ENABLED
+11-01 00:24:38.938   337   337 D Zygote  : Forked child process 4579
+11-01 00:24:38.941   520   551 I ActivityManager: Start proc 4579:fr.vigiroad.vigiroad/u0a192 for next-top-activity {fr.vigiroad.vigiroad/fr.vigiroad.vigiroad.MainActivity}
+11-01 00:24:38.952   520  3552 D CoreBackPreview: Window{9213638 u0 Splash Screen fr.vigiroad.vigiroad}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@8a89d77, mPriority=0, mIsAnimationCallback=false}
+11-01 00:24:38.955   400   400 I BpBinder: onLastStrongRef automatically unlinking death recipients: 
+--------- beginning of kernel
+11-01 00:24:39.166     0     0 I logd    : logdr: UID=2000 GID=2000 PID=4581 n tail=0 logMask=99 pid=0 start=0ns deadline=0ns
+11-01 00:24:38.982   827   860 V WindowManagerShell: onTransitionReady android.os.BinderProxy@9ba0818: {id=8 t=OPEN f=0x0 trk=0 r=[0@Point(0, 0)] c=[{WCT{android.window.IWindowContainerToken$Stub$Proxy@36e4992} m=OPEN f=NONE leash=Surface(name=Task=9)/@0x1824dc7 sb=Rect(0, 0 - 320, 640) eb=Rect(0, 0 - 320, 640) d=0},{WCT{android.window.IWindowContainerToken$Stub$Proxy@94bff63} m=TO_BACK f=SHOW_WALLPAPER leash=Surface(name=Task=1)/@0x717eff4 sb=Rect(0, 0 - 320, 640) eb=Rect(0, 0 - 320, 640) d=0}]}
+11-01 00:24:38.982   827   860 V WindowManagerShell: Playing animation for (#8)android.os.BinderProxy@9ba0818@0
+11-01 00:24:38.982   827   860 V WindowManagerShell:  try handler com.android.wm.shell.transition.DefaultMixedHandler@da75b5a
+11-01 00:24:38.982   827   860 V WindowManagerShell:  try handler com.android.wm.shell.keyguard.KeyguardTransitionHandler@fb3818b
+11-01 00:24:38.982   827   860 V WindowManagerShell:  try handler com.android.wm.shell.activityembedding.ActivityEmbeddingController@d68b268
+11-01 00:24:38.982   827   860 V WindowManagerShell:  try handler com.android.wm.shell.recents.RecentsTransitionHandler@5fd681
+11-01 00:24:38.982   827   860 V ShellRecents: RecentsTransitionHandler.startAnimation: no controller found
+11-01 00:24:38.982   827   860 V WindowManagerShell:  try handler com.android.wm.shell.pip.PipTransition@4efd326
+11-01 00:24:38.982   827   860 V WindowManagerShell:  try handler com.android.wm.shell.splitscreen.StageCoordinator@1d6ab67
+11-01 00:24:38.982   827   860 V WindowManagerShell:  try handler com.android.wm.shell.transition.RemoteTransitionHandler@94a8d14
+11-01 00:24:38.982   827   860 V WindowManagerShell: Transition doesn't have explicit remote, search filters for match for {id=8 t=OPEN f=0x0 trk=0 r=[0@Point(0, 0)] c=[{WCT{android.window.IWindowContainerToken$Stub$Proxy@36e4992} m=OPEN f=NONE leash=Surface(name=Task=9)/@0x1824dc7 sb=Rect(0, 0 - 320, 640) eb=Rect(0, 0 - 320, 640) d=0},{WCT{android.window.IWindowContainerToken$Stub$Proxy@94bff63} m=TO_BACK f=SHOW_WALLPAPER leash=Surface(name=Task=1)/@0x717eff4 sb=Rect(0, 0 - 320, 640) eb=Rect(0, 0 - 320, 640) d=0}]}
+11-01 00:24:38.982   827   860 V WindowManagerShell:  Checking filter Pair{{types=[] flags=0x0] notFlags=0x0 checks=[{atype=dream independent=true modes=[OPEN,TO_FRONT] flags=NONE mustBeTask=false order=ANY topActivity=null},{atype=home independent=true modes=[CLOSE,TO_BACK] flags=NONE mustBeTask=false order=ANY topActivity=null}]} RemoteTransition { remoteTransition = android.window.IRemoteTransition$Stub$Proxy@d3259bd, appThread = android.app.IApplicationThread$Stub$Proxy@af5fbb2, debugName = LauncherToDream }}
+11-01 00:24:38.982   827   860 V WindowManagerShell:  Checking filter Pair{{types=[] flags=0x0] notFlags=0x100 checks=[{atype=home independent=true modes=[OPEN,TO_FRONT] flags=NONE mustBeTask=false order=TOP topActivity=ComponentInfo{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity}},{atype=standard independent=true modes=[CLOSE,TO_BACK] flags=NONE mustBeTask=false order=ANY topActivity=null}]} RemoteTransition { remoteTransition = android.window.IRemoteTransition$Stub$Proxy@b189703, appThread = android.app.IApplicationThread$Stub$Proxy@6cd6680, debugName = QuickstepLaunchHome }}
+11-01 00:24:38.982   827   860 V WindowManagerShell:  Delegate animation for #8 to null
+11-01 00:24:38.982   827   860 V WindowManagerShell:  try handler com.android.wm.shell.transition.DefaultTransitionHandler@1afd4b9
+11-01 00:24:38.982   827   860 V WindowManagerShell: start default transition animation, info = {id=8 t=OPEN f=0x0 trk=0 r=[0@Point(0, 0)] c=[{WCT{android.window.IWindowContainerToken$Stub$Proxy@36e4992} m=OPEN f=NONE leash=Surface(name=Task=9)/@0x1824dc7 sb=Rect(0, 0 - 320, 640) eb=Rect(0, 0 - 320, 640) d=0},{WCT{android.window.IWindowContainerToken$Stub$Proxy@94bff63} m=TO_BACK f=SHOW_WALLPAPER leash=Surface(name=Task=1)/@0x717eff4 sb=Rect(0, 0 - 320, 640) eb=Rect(0, 0 - 320, 640) d=0}]}
+11-01 00:24:38.982   827   860 V WindowManagerShell: loadAnimation: anim=android.view.animation.AnimationSet@e4f6419 animAttr=0x13 type=OPEN isEntrance=false
+11-01 00:24:38.984  4579  4579 I giroad.vigiroad: Using CollectorTypeCC GC.
+11-01 00:24:38.986   827   860 V WindowManagerShell: loadAnimation: anim=android.view.animation.AnimationSet@2e928d5 animAttr=0x12 type=OPEN isEntrance=true
+11-01 00:24:38.987   520   539 V WindowManager: Sent Transition #8 createdAt=11-01 00:24:38.912 via request=TransitionRequestInfo { type = OPEN, triggerTask = TaskInfo{userId=0 taskId=9 displayId=0 isRunning=true baseIntent=Intent { flg=0x10000000 cmp=fr.vigiroad.vigiroad/.MainActivity } baseActivity=ComponentInfo{fr.vigiroad.vigiroad/fr.vigiroad.vigiroad.MainActivity} topActivity=ComponentInfo{fr.vigiroad.vigiroad/fr.vigiroad.vigiroad.MainActivity} origActivity=null realActivity=ComponentInfo{fr.vigiroad.vigiroad/fr.vigiroad.vigiroad.MainActivity} numActivities=1 lastActiveTime=54187 supportsMultiWindow=true resizeMode=1 isResizeable=true minWidth=-1 minHeight=-1 defaultMinSize=220 token=WCT{RemoteToken{ef89450 Task{4fa514c #9 type=standard I=fr.vigiroad.vigiroad/.MainActivity}}} topActivityType=1 pictureInPictureParams=null shouldDockBigOverlays=false launchIntoPipHostTaskId=-1 lastParentTaskIdBeforePip=-1 displayCutoutSafeInsets=null topActivityInfo=ActivityInfo{2e7b649 fr.vigiroad.vigiroad.MainActivity} launchCookies=[] positionInParent=Point(0, 0) parentTaskId=-1 isFocused=false isVisible=false isVisibleRequested=false isSleeping=false topActivityInSizeCompat=false topActivityEligibleForLetterboxEducation= false topActivityLetterboxed= false isFromDoubleTap= false topActivityLetterboxVerticalPosition= -1 topActivityLetterboxHorizontalPosition= -1 topActivityLetterboxWidth=-1 topActivityLetterboxHeight=-1 locusId=null displayAreaFeatureId=1 cameraCompatControlState=hidden}, remoteTransition = null, displayChange = null }
+11-01 00:24:38.987   827   860 V WindowManagerShell:  animated by com.android.wm.shell.transition.DefaultTransitionHandler@1afd4b9
+11-01 00:24:38.987   520   539 V WindowManager:     startWCT=WindowContainerTransaction { changes = {} hops = [] errorCallbackToken=null taskFragmentOrganizer=null }
+11-01 00:24:38.988   520   539 V WindowManager:     info={id=8 t=OPEN f=0x0 trk=0 r=[0@Point(0, 0)] c=[{WCT{RemoteToken{ef89450 Task{4fa514c #9 type=standard I=fr.vigiroad.vigiroad/.MainActivity}}} m=OPEN f=NONE leash=Surface(name=Task=9)/@0xcf7de4 sb=Rect(0, 0 - 320, 640) eb=Rect(0, 0 - 320, 640) d=0},{WCT{RemoteToken{58f5075 Task{c82d4ee #1 type=home}}} m=TO_BACK f=SHOW_WALLPAPER leash=Surface(name=Task=1)/@0x9619bfc sb=Rect(0, 0 - 320, 640) eb=Rect(0, 0 - 320, 640) d=0}]}
+11-01 00:24:38.989   827   860 V WindowManagerShell: Transition animation finished (aborted=false), notifying core (#8)android.os.BinderProxy@9ba0818@0
+11-01 00:24:38.989  4579  4579 W giroad.vigiroad: Unexpected CPU variant for x86: x86_64.
+11-01 00:24:38.989  4579  4579 W giroad.vigiroad: Known variants: atom, sandybridge, silvermont, goldmont, goldmont-plus, tremont, kabylake, default
+11-01 00:24:38.994   520   539 V WindowManager: Finish Transition #8: created at 11-01 00:24:38.912 collect-started=0.014ms request-sent=11.715ms started=32.414ms ready=63.962ms sent=68.677ms finished=81.231ms
+11-01 00:24:38.996  4579  4579 E giroad.vigiroad: Not starting debugger since process cannot load the jdwp agent.
+11-01 00:24:38.996   827   860 V WindowManagerShell: Track 0 became idle
+11-01 00:24:38.996   827   860 V WindowManagerShell: All active transition animations finished
+11-01 00:24:39.003  1523  2602 W AiAiAutofill: Failed to set whitelist for augmented autofill service.
+11-01 00:24:39.003  1523  2602 W AiAiAutofill: java.lang.SecurityException: caller is not user's Augmented Autofill Service
+11-01 00:24:39.003  1523  2602 W AiAiAutofill: 	at android.view.autofill.AutofillManager.setAugmentedAutofillWhitelist(AutofillManager.java:2676)
+11-01 00:24:39.003  1523  2602 W AiAiAutofill: 	at cjj.c(PG:7)
+11-01 00:24:39.003  1523  2602 W AiAiAutofill: 	at cju.g(PG:8)
+11-01 00:24:39.003  1523  2602 W AiAiAutofill: 	at ckd.c(PG:18)
+11-01 00:24:39.003  1523  2602 W AiAiAutofill: 	at eoz.g(PG:3)
+11-01 00:24:39.003  1523  2602 W AiAiAutofill: 	at fde.a(PG:3)
+11-01 00:24:39.003  1523  2602 W AiAiAutofill: 	at jen.t(PG:18)
+11-01 00:24:39.003  1523  2602 W AiAiAutofill: 	at jen.c(PG:35)
+11-01 00:24:39.003  1523  2602 W AiAiAutofill: 	at gfo.run(PG:14)
+11-01 00:24:39.003  1523  2602 W AiAiAutofill: 	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:487)
+11-01 00:24:39.003  1523  2602 W AiAiAutofill: 	at java.util.concurrent.FutureTask.run(FutureTask.java:264)
+11-01 00:24:39.003  1523  2602 W AiAiAutofill: 	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:307)
+11-01 00:24:39.003  1523  2602 W AiAiAutofill: 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+11-01 00:24:39.003  1523  2602 W AiAiAutofill: 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:644)
+11-01 00:24:39.003  1523  2602 W AiAiAutofill: 	at dgq.run(PG:67)
+11-01 00:24:39.003  1523  2602 W AiAiAutofill: 	at java.lang.Thread.run(Thread.java:1012)
+11-01 00:24:39.021   520   601 D CompatibilityChangeReporter: Compat change id reported: 265195908; UID 10118; state: ENABLED
+11-01 00:24:39.023  4579  4579 D CompatibilityChangeReporter: Compat change id reported: 171979766; UID 10192; state: ENABLED
+11-01 00:24:39.023  4579  4579 D CompatibilityChangeReporter: Compat change id reported: 242716250; UID 10192; state: ENABLED
+11-01 00:24:39.025   520  3389 D CompatibilityChangeReporter: Compat change id reported: 170503758; UID 10192; state: ENABLED
+11-01 00:24:39.027  4579  4579 D ApplicationLoaders: Returning zygote-cached class loader: /system_ext/framework/androidx.window.extensions.jar
+11-01 00:24:39.027  4579  4579 D ApplicationLoaders: Returning zygote-cached class loader: /system_ext/framework/androidx.window.sidecar.jar
+11-01 00:24:39.030  4579  4579 I giroad.vigiroad: Failed to add image file: Failed to find OatDexFile for DexFile /data/app/~~eeSRduAPQZvddcHD_sNMMA==/fr.vigiroad.vigiroad-tqcaLyS5C2MiY7fHvVchwQ==/base.apk (canonical path /data/app/~~eeSRduAPQZvddcHD_sNMMA==/fr.vigiroad.vigiroad-tqcaLyS5C2MiY7fHvVchwQ==/base.apk) in OatFile /data/app/~~JEDBua5oeTkVjSh4bvsctA==/fr.vigiroad.vigiroad-edlHtGHDQWN4aSJMxxcTDA==/oat/x86_64/base.odex
+11-01 00:24:39.031  4579  4579 D nativeloader: Configuring clns-6 for other apk /data/app/~~JEDBua5oeTkVjSh4bvsctA==/fr.vigiroad.vigiroad-edlHtGHDQWN4aSJMxxcTDA==/base.apk. target_sdk_version=36, uses_libraries=, library_path=/data/app/~~JEDBua5oeTkVjSh4bvsctA==/fr.vigiroad.vigiroad-edlHtGHDQWN4aSJMxxcTDA==/lib/x86_64:/data/app/~~JEDBua5oeTkVjSh4bvsctA==/fr.vigiroad.vigiroad-edlHtGHDQWN4aSJMxxcTDA==/base.apk!/lib/x86_64, permitted_path=/data:/mnt/expand:/data/user/0/fr.vigiroad.vigiroad
+11-01 00:24:39.036  4101  4194 W AllowlistedPackageIdentifiers: Is debuggable: false
+11-01 00:24:39.050  4579  4579 V GraphicsEnvironment: Currently set values for:
+11-01 00:24:39.050  4579  4579 V GraphicsEnvironment:   angle_gl_driver_selection_pkgs=[]
+11-01 00:24:39.050  4579  4579 V GraphicsEnvironment:   angle_gl_driver_selection_values=[]
+11-01 00:24:39.050  4579  4579 V GraphicsEnvironment: ANGLE GameManagerService for fr.vigiroad.vigiroad: false
+11-01 00:24:39.050  4579  4579 V GraphicsEnvironment: fr.vigiroad.vigiroad is not listed in per-application setting
+11-01 00:24:39.050  4579  4579 V GraphicsEnvironment: Neither updatable production driver nor prerelease driver is supported.
+11-01 00:24:39.057   520  3388 I ActivityManager: Flag disabled. Ignoring finishAttachApplication from uid: 10192. pid: 4579
+11-01 00:24:39.063  4579  4603 D libEGL  : loaded /vendor/lib64/egl/libEGL_emulation.so
+11-01 00:24:39.067  4579  4603 D libEGL  : loaded /vendor/lib64/egl/libGLESv1_CM_emulation.so
+11-01 00:24:39.072  1718  1718 I NearbySharing: SharingTileService destroyed [CONTEXT service_id=194 ]
+11-01 00:24:39.074  4579  4603 D libEGL  : loaded /vendor/lib64/egl/libGLESv2_emulation.so
+11-01 00:24:39.113  4579  4605 D skia    : [SkFontMgr Android Parser] '/product/etc/fonts_customization.xml' could not be opened
+11-01 00:24:39.135   520   520 D FlashNotifController: requestStartFlashNotification
+11-01 00:24:39.135   520   520 I FlashNotifController: startFlashNotification: type=1, tag=android
+11-01 00:24:39.135   520   520 D FlashNotifController: Flash notification is disabled
+11-01 00:24:39.138   520   520 W NotificationHistory: Attempted to add notif for locked/gone/disabled user 0
+11-01 00:24:39.139  1523  1856 W AiAiEcho: LyftNotificationParser Ridesharing ETA not enabled
+11-01 00:24:39.140  1523  1856 W AiAiEcho: SmartspaceNotificationPredictor no parser can handle this notification or notification is invalid
+11-01 00:24:39.117  4579  4579 W giroad.vigiroad: type=1400 audit(0.0:33): avc:  denied  { read } for  name="max_map_count" dev="proc" ino=61932 scontext=u:r:untrusted_app:s0:c192,c256,c512,c768 tcontext=u:object_r:proc_max_map_count:s0 tclass=file permissive=0 app=fr.vigiroad.vigiroad
+11-01 00:24:39.158  1609  2156 I A       : Using proto config with mendel
+11-01 00:24:39.158  1609  2156 I A       : Using proto config with mendel
+11-01 00:24:39.159  1609  2156 I A       : Using proto config with mendel
+11-01 00:24:39.159  1609  2156 I A       : Using proto config with mendel
+11-01 00:24:39.159  1609  2156 I A       : Using proto config with mendel
+11-01 00:24:39.162  1609  2156 I A       : Using proto config with mendel
+11-01 00:24:39.163  1609  2156 I A       : Merging legacy hotword config map with new proto.
+11-01 00:24:39.163  1609  2156 I A       : Skipping. Expected model: 1 Found: 2
+11-01 00:24:39.163  1609  2156 I A       : Skipping. Expected model: 1 Found: 2
+11-01 00:24:39.163  1609  2156 I A       : Skipping. Expected model: 1 Found: 2
+11-01 00:24:39.163  1609  2156 I A       : Adding from config to map. Locale: ro-RO modelPrefix: okgoogle Location:b051c93dce7bb4dcb5d9ddcbbb2ca760Test isSpeakerIdSupported: false
+11-01 00:24:39.163  1609  2156 I A       : Skipping. Expected model: 1 Found: 2
+11-01 00:24:39.170   520   520 D CompatibilityChangeReporter: Compat change id reported: 175319604; UID 1000; state: ENABLED
+11-01 00:24:39.171   520   520 D CompatibilityChangeReporter: Compat change id reported: 195579280; UID 1000; state: ENABLED
+11-01 00:24:39.173  4579  4606 I flutter : [IMPORTANT:flutter/shell/platform/android/android_context_gl_impeller.cc(104)] Using the Impeller rendering backend (OpenGLES).
+11-01 00:24:39.178  1609  2156 I A       : Using proto config with mendel
+11-01 00:24:39.178  1609  2156 I ModelDownloadController: Hotword model update tasks finished.
+11-01 00:24:39.181  1609  2213 I MicroDetectionWorker: Initializing MicroDataManager InitializeType-2, isForced-true, isActivePhoneEnrollment-false isActiveGoogleHomeEnrollment-false
+11-01 00:24:39.188  1609  2213 I A       : Using proto config with mendel
+11-01 00:24:39.188   520  3388 W JobScheduler: Job didn't exist in JobStore: 3137f26 #u0a132/-183 com.google.android.googlequicksearchbox/com.google.android.apps.gsa.tasks.BackgroundTasksJobService
+11-01 00:24:39.189  1609  2213 I A       : Using proto config with mendel
+11-01 00:24:39.193  4101  4194 W CursorConverter: Cannot get icon, pkg/id :com.android.settings/2130837916
+11-01 00:24:39.194  4101  4194 W CursorConverter: Cannot get icon, pkg/id :com.android.settings/2130837985
+11-01 00:24:39.194  4101  4194 W CursorConverter: Cannot get icon, pkg/id :com.android.settings/2130838179
+11-01 00:24:39.194  4101  4194 W CursorConverter: Cannot get icon, pkg/id :com.android.settings/2130837907
+11-01 00:24:39.194  4101  4194 W CursorConverter: Cannot get icon, pkg/id :com.android.settings/2130838300
+11-01 00:24:39.194  4101  4194 W CursorConverter: Cannot get icon, pkg/id :com.android.settings/2130838299
+11-01 00:24:39.194  4101  4194 W CursorConverter: Cannot get icon, pkg/id :com.android.settings/2130838322
+11-01 00:24:39.194  4101  4194 W CursorConverter: Cannot get icon, pkg/id :com.android.settings/2130838089
+11-01 00:24:39.194  4101  4194 W CursorConverter: Cannot get icon, pkg/id :com.android.settings/2130837972
+11-01 00:24:39.194  4101  4194 W CursorConverter: Cannot get icon, pkg/id :com.android.settings/2130838186
+11-01 00:24:39.194  4101  4194 W CursorConverter: Cannot get icon, pkg/id :com.android.settings/2130837941
+11-01 00:24:39.194  4101  4194 W CursorConverter: Cannot get icon, pkg/id :com.android.settings/2130838032
+11-01 00:24:39.195  4101  4194 W CursorConverter: Cannot get icon, pkg/id :com.android.settings/2130838049
+11-01 00:24:39.195  4101  4194 W CursorConverter: Cannot get icon, pkg/id :com.android.settings/2130837940
+11-01 00:24:39.203  4101  4194 W CursorConverter: Cannot get icon, pkg/id :com.android.settings/2130838115
+11-01 00:24:39.203  1609  2156 I A       : Using proto config with mendel
+11-01 00:24:39.203  1609  2156 I A       : Merging legacy hotword config map with new proto.
+11-01 00:24:39.207   827   904 D EGL_emulation: app_time_stats: avg=6436.47ms min=6436.47ms max=6436.47ms count=1
+11-01 00:24:39.208  1609  2156 I A       : Adding from config to map. Locale: cmn-Hant-TW modelPrefix: x_google Location:4e7cae00daee30ec565c34e3aa67a51f isSpeakerIdSupported: true
+11-01 00:24:39.208  1609  2156 I A       : Adding from config to map. Locale: id-ID modelPrefix: x_google Location:cfffcc1a4c1c084c003c8eb27f73d770 isSpeakerIdSupported: true
+11-01 00:24:39.209  1609  2156 I A       : Adding from config to map. Locale: ko-KR modelPrefix: x_google Location:0b132163a2eb2c1194b202067475724b isSpeakerIdSupported: true
+11-01 00:24:39.210  4101  4194 W CursorConverter: Cannot get icon, pkg/id :com.android.settings/2130837993
+11-01 00:24:39.210  4101  4194 W CursorConverter: Cannot get icon, pkg/id :com.android.settings/2130837988
+11-01 00:24:39.210  4101  4194 W CursorConverter: Cannot get icon, pkg/id :com.android.settings/2130837994
+11-01 00:24:39.210  1609  2156 I A       : Skipping. Expected model: 2 Found: 1
+11-01 00:24:39.210  4101  4194 W CursorConverter: Cannot get icon, pkg/id :com.android.settings/2130837905
+11-01 00:24:39.211  1609  2156 I A       : Adding from config to map. Locale: zh-TW modelPrefix: x_google Location:4e7cae00daee30ec565c34e3aa67a51f isSpeakerIdSupported: true
+11-01 00:24:39.212  1609  2156 I MicroDataManager: Location for model with model type: 2 and locale: en-US, is : https://www.gstatic.com/android-search/hotword/x_google/975058821313279e27b2c3f04de0beef/hotword.data
+11-01 00:24:39.213  1609  2156 I MicroModelsUtil: #getHotwordModel [locale: en-US, modelType: 2]
+11-01 00:24:39.219  1609  2146 I MicroModelsUtil: #getHotwordModelFromMobstore [mobstoreUri: android://com.google.android.googlequicksearchbox/files/datadownload/shared/public/datadownloadfile_1793492678799]
+11-01 00:24:39.243   520   591 E ActivityManager: Cannot find package for uid: 1013
+11-01 00:24:39.244   466  2903 E MediaPlayerService: Couldn't open fd for content://settings/system/notification_sound
+11-01 00:24:39.245   827  4612 E MediaPlayerNative: Unable to create media player
+11-01 00:24:39.246   827  4612 V MediaPlayer: resetDrmState:  mDrmInfo=null mDrmProvisioningThread=null mPrepareDrmInProgress=false mActiveDrmScheme=false
+11-01 00:24:39.246   827  4612 V MediaPlayer: cleanDrmObj: mDrmObj=null mDrmSessionId=null
+11-01 00:24:39.248   827  4612 W RingtonePlayer: error loading sound for content://settings/system/notification_sound
+11-01 00:24:39.248   827  4612 W RingtonePlayer: java.io.IOException: setDataSource failed.: status=0x80000000
+11-01 00:24:39.248   827  4612 W RingtonePlayer: 	at android.media.MediaPlayer.nativeSetDataSource(Native Method)
+11-01 00:24:39.248   827  4612 W RingtonePlayer: 	at android.media.MediaPlayer.setDataSource(MediaPlayer.java:1226)
+11-01 00:24:39.248   827  4612 W RingtonePlayer: 	at android.media.MediaPlayer.setDataSource(MediaPlayer.java:1213)
+11-01 00:24:39.248   827  4612 W RingtonePlayer: 	at android.media.MediaPlayer.setDataSource(MediaPlayer.java:1117)
+11-01 00:24:39.248   827  4612 W RingtonePlayer: 	at android.media.MediaPlayer.setDataSource(MediaPlayer.java:1049)
+11-01 00:24:39.248   827  4612 W RingtonePlayer: 	at com.android.systemui.media.NotificationPlayer$CreationAndCompletionThread.run(go/retraceme 19693c2b0a8439b7183751b64d60893829dbf56dc1e08e0669fc0cfc55754948:71)
+11-01 00:24:39.249   827  4611 W RingtonePlayer: STOP command without a player
+11-01 00:24:39.254  1041  1067 D SlicesDatabaseHelper: Created databases
+11-01 00:24:39.258  1609  2182 I MicroDataManager: MicroDataManager InitializationTask. googleHotwordData is null: true, hotwordModel is null: false , sourceLocationOfCurrentHotwordModel https://www.gstatic.com/android-search/hotword/x_google/975058821313279e27b2c3f04de0beef/hotword.data
+11-01 00:24:39.258  1609  2213 I A       : Using proto config with mendel
+11-01 00:24:39.259  1609  2213 I A       : Using proto config with mendel
+11-01 00:24:39.259  1041  1067 D SlicesDatabaseHelper: Created databases
+11-01 00:24:39.260  1609  2213 I A       : Using proto config with mendel
+11-01 00:24:39.260  1609  2213 I A       : Merging legacy hotword config map with new proto.
+11-01 00:24:39.261  1609  2213 I A       : Adding from config to map. Locale: cmn-Hant-TW modelPrefix: x_google Location:4e7cae00daee30ec565c34e3aa67a51f isSpeakerIdSupported: true
+11-01 00:24:39.261  1609  2213 I A       : Adding from config to map. Locale: id-ID modelPrefix: x_google Location:cfffcc1a4c1c084c003c8eb27f73d770 isSpeakerIdSupported: true
+11-01 00:24:39.262  1609  2213 I A       : Adding from config to map. Locale: ko-KR modelPrefix: x_google Location:0b132163a2eb2c1194b202067475724b isSpeakerIdSupported: true
+11-01 00:24:39.263  1609  2213 I A       : Skipping. Expected model: 2 Found: 1
+11-01 00:24:39.263  1609  2213 I A       : Adding from config to map. Locale: zh-TW modelPrefix: x_google Location:4e7cae00daee30ec565c34e3aa67a51f isSpeakerIdSupported: true
+11-01 00:24:39.266  1609  2213 I MicroDetectionState: Should stop hotword detection immediately - true
+11-01 00:24:39.266  1609  2213 I A       : Using proto config with mendel
+11-01 00:24:39.267  1609  2213 I A       : Using proto config with mendel
+11-01 00:24:39.288  1041  1067 W SliceData: Highlight menu key res is empty: com.android.settings.deviceinfo.firmwareversion.FirmwareVersionDetailPreferenceController
+11-01 00:24:39.292  1041  1067 D CustomizableLockScreenUtils: is_custom_lock_screen_quick_affordances_feature_enabled=1
+11-01 00:24:39.294  1041  1067 D CustomizableLockScreenUtils: is_custom_lock_screen_quick_affordances_feature_enabled=1
+11-01 00:24:39.296  1041  1067 D CustomizableLockScreenUtils: is_custom_lock_screen_quick_affordances_feature_enabled=1
+11-01 00:24:39.297  1041  1067 W libc    : Access denied finding property "ro.vendor.aware_available"
+11-01 00:24:39.298  1041  1067 D AssistGesture: mAssistOnly:false, isSupported:false, isSensorAvailable:false
+11-01 00:24:39.298  1041  1067 D AssistGesture: mAssistOnly:false, isSupported:false, isSensorAvailable:false
+11-01 00:24:39.300  1041  1067 E ScreenResolutionController: No support
+11-01 00:24:39.300  1041  1067 D RefreshRatePrefCtr: DEFAULT_REFRESH_RATE : 60.0 mPeakRefreshRate : 60.0
+11-01 00:24:39.309  1041  1067 W libc    : Access denied finding property "ro.vendor.aware_available"
+11-01 00:24:39.309  1041  1067 D RTTSettingsCtr: init controller
+11-01 00:24:39.312  1041  1067 W SliceDataConverter: Get slice data from XML failed 
+11-01 00:24:39.312  1041  1067 W SliceDataConverter: java.lang.IllegalStateException: Invalid preference controller: com.android.settings.applications.credentials.CredentialManagerPreferenceController
+11-01 00:24:39.312  1041  1067 W SliceDataConverter: 	at com.android.settings.core.BasePreferenceController.createInstance(BasePreferenceController.java:146)
+11-01 00:24:39.312  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SliceBuilderUtils.getPreferenceController(SliceBuilderUtils.java:354)
+11-01 00:24:39.312  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SliceDataConverter.getSliceDataFromXML(SliceDataConverter.java:204)
+11-01 00:24:39.312  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SliceDataConverter.getSliceDataFromProvider(SliceDataConverter.java:149)
+11-01 00:24:39.312  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SliceDataConverter.getSliceData(SliceDataConverter.java:119)
+11-01 00:24:39.312  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SlicesIndexer.getSliceData(SlicesIndexer.java:94)
+11-01 00:24:39.312  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SlicesIndexer.indexSliceData(SlicesIndexer.java:75)
+11-01 00:24:39.312  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SlicesFeatureProviderImpl.indexSliceData(SlicesFeatureProviderImpl.java:63)
+11-01 00:24:39.312  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SlicesDatabaseAccessor.verifyIndexing(SlicesDatabaseAccessor.java:194)
+11-01 00:24:39.312  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SlicesDatabaseAccessor.getSliceUris(SlicesDatabaseAccessor.java:96)
+11-01 00:24:39.312  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SettingsSliceProvider.onGetSliceDescendants(SettingsSliceProvider.java:337)
+11-01 00:24:39.312  1041  1067 W SliceDataConverter: 	at androidx.slice.compat.SliceProviderWrapperContainer$SliceProviderWrapper.onGetSliceDescendants(SliceProviderWrapperContainer.java:166)
+11-01 00:24:39.312  1041  1067 W SliceDataConverter: 	at android.app.slice.SliceProvider.handleGetDescendants(SliceProvider.java:425)
+11-01 00:24:39.312  1041  1067 W SliceDataConverter: 	at android.app.slice.SliceProvider.call(SliceProvider.java:406)
+11-01 00:24:39.312  1041  1067 W SliceDataConverter: 	at androidx.slice.compat.SliceProviderWrapperContainer$SliceProviderWrapper.call(SliceProviderWrapperContainer.java:123)
+11-01 00:24:39.312  1041  1067 W SliceDataConverter: 	at android.content.ContentProvider.call(ContentProvider.java:2679)
+11-01 00:24:39.312  1041  1067 W SliceDataConverter: 	at android.content.ContentProvider$Transport.call(ContentProvider.java:628)
+11-01 00:24:39.312  1041  1067 W SliceDataConverter: 	at android.content.ContentProviderNative.onTransact(ContentProviderNative.java:307)
+11-01 00:24:39.312  1041  1067 W SliceDataConverter: 	at android.os.Binder.execTransactInternal(Binder.java:1339)
+11-01 00:24:39.312  1041  1067 W SliceDataConverter: 	at android.os.Binder.execTransact(Binder.java:1275)
+11-01 00:24:39.312  1041  1067 W SliceDataConverter: Caused by: java.lang.reflect.InvocationTargetException
+11-01 00:24:39.312  1041  1067 W SliceDataConverter: 	at java.lang.reflect.Constructor.newInstance0(Native Method)
+11-01 00:24:39.312  1041  1067 W SliceDataConverter: 	at java.lang.reflect.Constructor.newInstance(Constructor.java:343)
+11-01 00:24:39.312  1041  1067 W SliceDataConverter: 	at com.android.settings.core.BasePreferenceController.createInstance(BasePreferenceController.java:143)
+11-01 00:24:39.312  1041  1067 W SliceDataConverter: 	... 19 more
+11-01 00:24:39.312  1041  1067 W SliceDataConverter: Caused by: java.lang.RuntimeException: Can't create handler inside thread Thread[binder:1041_3,5,main] that has not called Looper.prepare()
+11-01 00:24:39.312  1041  1067 W SliceDataConverter: 	at android.os.Handler.<init>(Handler.java:227)
+11-01 00:24:39.312  1041  1067 W SliceDataConverter: 	at android.os.Handler.<init>(Handler.java:129)
+11-01 00:24:39.312  1041  1067 W SliceDataConverter: 	at com.android.settings.applications.credentials.CredentialManagerPreferenceController.<init>(CredentialManagerPreferenceController.java:105)
+11-01 00:24:39.312  1041  1067 W SliceDataConverter: 	... 22 more
+11-01 00:24:39.314  1041  1067 W ElapsedTimeUtils: getElapsedTime: sSuwFinishedTimeStamp is null
+11-01 00:24:39.317  1041  1067 W SliceDataConverter: Get slice data from XML failed 
+11-01 00:24:39.317  1041  1067 W SliceDataConverter: java.lang.IllegalStateException: Invalid preference controller: com.android.settings.development.DevelopmentMemtagFooterPreferenceController
+11-01 00:24:39.317  1041  1067 W SliceDataConverter: 	at com.android.settings.core.BasePreferenceController.createInstance(BasePreferenceController.java:146)
+11-01 00:24:39.317  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SliceBuilderUtils.getPreferenceController(SliceBuilderUtils.java:354)
+11-01 00:24:39.317  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SliceDataConverter.getSliceDataFromXML(SliceDataConverter.java:204)
+11-01 00:24:39.317  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SliceDataConverter.getSliceDataFromProvider(SliceDataConverter.java:149)
+11-01 00:24:39.317  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SliceDataConverter.getSliceData(SliceDataConverter.java:119)
+11-01 00:24:39.317  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SlicesIndexer.getSliceData(SlicesIndexer.java:94)
+11-01 00:24:39.317  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SlicesIndexer.indexSliceData(SlicesIndexer.java:75)
+11-01 00:24:39.317  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SlicesFeatureProviderImpl.indexSliceData(SlicesFeatureProviderImpl.java:63)
+11-01 00:24:39.317  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SlicesDatabaseAccessor.verifyIndexing(SlicesDatabaseAccessor.java:194)
+11-01 00:24:39.317  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SlicesDatabaseAccessor.getSliceUris(SlicesDatabaseAccessor.java:96)
+11-01 00:24:39.317  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SettingsSliceProvider.onGetSliceDescendants(SettingsSliceProvider.java:337)
+11-01 00:24:39.317  1041  1067 W SliceDataConverter: 	at androidx.slice.compat.SliceProviderWrapperContainer$SliceProviderWrapper.onGetSliceDescendants(SliceProviderWrapperContainer.java:166)
+11-01 00:24:39.317  1041  1067 W SliceDataConverter: 	at android.app.slice.SliceProvider.handleGetDescendants(SliceProvider.java:425)
+11-01 00:24:39.317  1041  1067 W SliceDataConverter: 	at android.app.slice.SliceProvider.call(SliceProvider.java:406)
+11-01 00:24:39.317  1041  1067 W SliceDataConverter: 	at androidx.slice.compat.SliceProviderWrapperContainer$SliceProviderWrapper.call(SliceProviderWrapperContainer.java:123)
+11-01 00:24:39.317  1041  1067 W SliceDataConverter: 	at android.content.ContentProvider.call(ContentProvider.java:2679)
+11-01 00:24:39.317  1041  1067 W SliceDataConverter: 	at android.content.ContentProvider$Transport.call(ContentProvider.java:628)
+11-01 00:24:39.317  1041  1067 W SliceDataConverter: 	at android.content.ContentProviderNative.onTransact(ContentProviderNative.java:307)
+11-01 00:24:39.317  1041  1067 W SliceDataConverter: 	at android.os.Binder.execTransactInternal(Binder.java:1339)
+11-01 00:24:39.317  1041  1067 W SliceDataConverter: 	at android.os.Binder.execTransact(Binder.java:1275)
+11-01 00:24:39.317  1041  1067 W SliceDataConverter: Caused by: java.lang.ClassNotFoundException: com.android.settings.development.DevelopmentMemtagFooterPreferenceController
+11-01 00:24:39.317  1041  1067 W SliceDataConverter: 	at java.lang.Class.classForName(Native Method)
+11-01 00:24:39.317  1041  1067 W SliceDataConverter: 	at java.lang.Class.forName(Class.java:536)
+11-01 00:24:39.317  1041  1067 W SliceDataConverter: 	at java.lang.Class.forName(Class.java:467)
+11-01 00:24:39.317  1041  1067 W SliceDataConverter: 	at com.android.settings.core.BasePreferenceController.createInstance(BasePreferenceController.java:139)
+11-01 00:24:39.317  1041  1067 W SliceDataConverter: 	... 19 more
+11-01 00:24:39.317  1041  1067 W SliceDataConverter: Caused by: java.lang.ClassNotFoundException: com.android.settings.development.DevelopmentMemtagFooterPreferenceController
+11-01 00:24:39.317  1041  1067 W SliceDataConverter: 	... 23 more
+11-01 00:24:39.317  1041  1067 W ElapsedTimeUtils: getElapsedTime: sSuwFinishedTimeStamp is null
+11-01 00:24:39.324  1609  1653 I earchbox:search: Background concurrent copying GC freed 157735(6414KB) AllocSpace objects, 49(5576KB) LOS objects, 49% free, 15MB/31MB, paused 42us,21us total 128.323ms
+11-01 00:24:39.328  1041  1067 I ActiveUnlockStatusUtils: authority not set
+11-01 00:24:39.328  1041  1067 I ActiveUnlockStatusUtils: authority not set
+11-01 00:24:39.328  1041  1067 I ActiveUnlockStatusUtils: authority not set
+11-01 00:24:39.328  1041  1067 W SliceDataConverter: Get slice data from XML failed 
+11-01 00:24:39.328  1041  1067 W SliceDataConverter: java.lang.IllegalStateException: Invalid preference controller: com.android.settings.accessibility.VibrationMainSwitchPreferenceController
+11-01 00:24:39.328  1041  1067 W SliceDataConverter: 	at com.android.settings.core.BasePreferenceController.createInstance(BasePreferenceController.java:146)
+11-01 00:24:39.328  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SliceBuilderUtils.getPreferenceController(SliceBuilderUtils.java:354)
+11-01 00:24:39.328  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SliceDataConverter.getSliceDataFromXML(SliceDataConverter.java:204)
+11-01 00:24:39.328  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SliceDataConverter.getSliceDataFromProvider(SliceDataConverter.java:149)
+11-01 00:24:39.328  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SliceDataConverter.getSliceData(SliceDataConverter.java:119)
+11-01 00:24:39.328  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SlicesIndexer.getSliceData(SlicesIndexer.java:94)
+11-01 00:24:39.328  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SlicesIndexer.indexSliceData(SlicesIndexer.java:75)
+11-01 00:24:39.328  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SlicesFeatureProviderImpl.indexSliceData(SlicesFeatureProviderImpl.java:63)
+11-01 00:24:39.328  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SlicesDatabaseAccessor.verifyIndexing(SlicesDatabaseAccessor.java:194)
+11-01 00:24:39.328  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SlicesDatabaseAccessor.getSliceUris(SlicesDatabaseAccessor.java:96)
+11-01 00:24:39.328  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SettingsSliceProvider.onGetSliceDescendants(SettingsSliceProvider.java:337)
+11-01 00:24:39.328  1041  1067 W SliceDataConverter: 	at androidx.slice.compat.SliceProviderWrapperContainer$SliceProviderWrapper.onGetSliceDescendants(SliceProviderWrapperContainer.java:166)
+11-01 00:24:39.328  1041  1067 W SliceDataConverter: 	at android.app.slice.SliceProvider.handleGetDescendants(SliceProvider.java:425)
+11-01 00:24:39.328  1041  1067 W SliceDataConverter: 	at android.app.slice.SliceProvider.call(SliceProvider.java:406)
+11-01 00:24:39.328  1041  1067 W SliceDataConverter: 	at androidx.slice.compat.SliceProviderWrapperContainer$SliceProviderWrapper.call(SliceProviderWrapperContainer.java:123)
+11-01 00:24:39.328  1041  1067 W SliceDataConverter: 	at android.content.ContentProvider.call(ContentProvider.java:2679)
+11-01 00:24:39.328  1041  1067 W SliceDataConverter: 	at android.content.ContentProvider$Transport.call(ContentProvider.java:628)
+11-01 00:24:39.328  1041  1067 W SliceDataConverter: 	at android.content.ContentProviderNative.onTransact(ContentProviderNative.java:307)
+11-01 00:24:39.328  1041  1067 W SliceDataConverter: 	at android.os.Binder.execTransactInternal(Binder.java:1339)
+11-01 00:24:39.328  1041  1067 W SliceDataConverter: 	at android.os.Binder.execTransact(Binder.java:1275)
+11-01 00:24:39.328  1041  1067 W SliceDataConverter: Caused by: java.lang.reflect.InvocationTargetException
+11-01 00:24:39.328  1041  1067 W SliceDataConverter: 	at java.lang.reflect.Constructor.newInstance0(Native Method)
+11-01 00:24:39.328  1041  1067 W SliceDataConverter: 	at java.lang.reflect.Constructor.newInstance(Constructor.java:343)
+11-01 00:24:39.328  1041  1067 W SliceDataConverter: 	at com.android.settings.core.BasePreferenceController.createInstance(BasePreferenceController.java:143)
+11-01 00:24:39.328  1041  1067 W SliceDataConverter: 	... 19 more
+11-01 00:24:39.328  1041  1067 W SliceDataConverter: Caused by: java.lang.RuntimeException: Can't create handler inside thread Thread[binder:1041_3,5,main] that has not called Looper.prepare()
+11-01 00:24:39.328  1041  1067 W SliceDataConverter: 	at android.os.Handler.<init>(Handler.java:227)
+11-01 00:24:39.328  1041  1067 W SliceDataConverter: 	at android.os.Handler.<init>(Handler.java:194)
+11-01 00:24:39.328  1041  1067 W SliceDataConverter: 	at com.android.settings.accessibility.VibrationMainSwitchPreferenceController.<init>(VibrationMainSwitchPreferenceController.java:52)
+11-01 00:24:39.328  1041  1067 W SliceDataConverter: 	... 22 more
+11-01 00:24:39.328  1041  1067 W ElapsedTimeUtils: getElapsedTime: sSuwFinishedTimeStamp is null
+11-01 00:24:39.330  1041  1067 W SliceDataConverter: Get slice data from XML failed 
+11-01 00:24:39.330  1041  1067 W SliceDataConverter: java.lang.IllegalStateException: Invalid preference controller: com.android.settings.network.telephony.CallsDefaultSubscriptionController
+11-01 00:24:39.330  1041  1067 W SliceDataConverter: 	at com.android.settings.core.BasePreferenceController.createInstance(BasePreferenceController.java:146)
+11-01 00:24:39.330  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SliceBuilderUtils.getPreferenceController(SliceBuilderUtils.java:354)
+11-01 00:24:39.330  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SliceDataConverter.getSliceDataFromXML(SliceDataConverter.java:204)
+11-01 00:24:39.330  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SliceDataConverter.getSliceDataFromProvider(SliceDataConverter.java:149)
+11-01 00:24:39.330  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SliceDataConverter.getSliceData(SliceDataConverter.java:119)
+11-01 00:24:39.330  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SlicesIndexer.getSliceData(SlicesIndexer.java:94)
+11-01 00:24:39.330  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SlicesIndexer.indexSliceData(SlicesIndexer.java:75)
+11-01 00:24:39.330  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SlicesFeatureProviderImpl.indexSliceData(SlicesFeatureProviderImpl.java:63)
+11-01 00:24:39.330  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SlicesDatabaseAccessor.verifyIndexing(SlicesDatabaseAccessor.java:194)
+11-01 00:24:39.330  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SlicesDatabaseAccessor.getSliceUris(SlicesDatabaseAccessor.java:96)
+11-01 00:24:39.330  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SettingsSliceProvider.onGetSliceDescendants(SettingsSliceProvider.java:337)
+11-01 00:24:39.330  1041  1067 W SliceDataConverter: 	at androidx.slice.compat.SliceProviderWrapperContainer$SliceProviderWrapper.onGetSliceDescendants(SliceProviderWrapperContainer.java:166)
+11-01 00:24:39.330  1041  1067 W SliceDataConverter: 	at android.app.slice.SliceProvider.handleGetDescendants(SliceProvider.java:425)
+11-01 00:24:39.330  1041  1067 W SliceDataConverter: 	at android.app.slice.SliceProvider.call(SliceProvider.java:406)
+11-01 00:24:39.330  1041  1067 W SliceDataConverter: 	at androidx.slice.compat.SliceProviderWrapperContainer$SliceProviderWrapper.call(SliceProviderWrapperContainer.java:123)
+11-01 00:24:39.330  1041  1067 W SliceDataConverter: 	at android.content.ContentProvider.call(ContentProvider.java:2679)
+11-01 00:24:39.330  1041  1067 W SliceDataConverter: 	at android.content.ContentProvider$Transport.call(ContentProvider.java:628)
+11-01 00:24:39.330  1041  1067 W SliceDataConverter: 	at android.content.ContentProviderNative.onTransact(ContentProviderNative.java:307)
+11-01 00:24:39.330  1041  1067 W SliceDataConverter: 	at android.os.Binder.execTransactInternal(Binder.java:1339)
+11-01 00:24:39.330  1041  1067 W SliceDataConverter: 	at android.os.Binder.execTransact(Binder.java:1275)
+11-01 00:24:39.330  1041  1067 W SliceDataConverter: Caused by: java.lang.NoSuchMethodException: com.android.settings.network.telephony.CallsDefaultSubscriptionController.<init> [class android.content.Context, class java.lang.String]
+11-01 00:24:39.330  1041  1067 W SliceDataConverter: 	at java.lang.Class.getConstructor0(Class.java:3325)
+11-01 00:24:39.330  1041  1067 W SliceDataConverter: 	at java.lang.Class.getConstructor(Class.java:2485)
+11-01 00:24:39.330  1041  1067 W SliceDataConverter: 	at com.android.settings.core.BasePreferenceController.createInstance(BasePreferenceController.java:141)
+11-01 00:24:39.330  1041  1067 W SliceDataConverter: 	... 19 more
+11-01 00:24:39.330  1041  1067 W ElapsedTimeUtils: getElapsedTime: sSuwFinishedTimeStamp is null
+11-01 00:24:39.331  1041  1067 W SliceDataConverter: Get slice data from XML failed 
+11-01 00:24:39.331  1041  1067 W SliceDataConverter: java.lang.IllegalStateException: Invalid preference controller: com.android.settings.network.NetworkProviderSimsCategoryController
+11-01 00:24:39.331  1041  1067 W SliceDataConverter: 	at com.android.settings.core.BasePreferenceController.createInstance(BasePreferenceController.java:146)
+11-01 00:24:39.331  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SliceBuilderUtils.getPreferenceController(SliceBuilderUtils.java:354)
+11-01 00:24:39.331  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SliceDataConverter.getSliceDataFromXML(SliceDataConverter.java:204)
+11-01 00:24:39.331  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SliceDataConverter.getSliceDataFromProvider(SliceDataConverter.java:149)
+11-01 00:24:39.331  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SliceDataConverter.getSliceData(SliceDataConverter.java:119)
+11-01 00:24:39.331  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SlicesIndexer.getSliceData(SlicesIndexer.java:94)
+11-01 00:24:39.331  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SlicesIndexer.indexSliceData(SlicesIndexer.java:75)
+11-01 00:24:39.331  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SlicesFeatureProviderImpl.indexSliceData(SlicesFeatureProviderImpl.java:63)
+11-01 00:24:39.331  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SlicesDatabaseAccessor.verifyIndexing(SlicesDatabaseAccessor.java:194)
+11-01 00:24:39.331  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SlicesDatabaseAccessor.getSliceUris(SlicesDatabaseAccessor.java:96)
+11-01 00:24:39.331  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SettingsSliceProvider.onGetSliceDescendants(SettingsSliceProvider.java:337)
+11-01 00:24:39.331  1041  1067 W SliceDataConverter: 	at androidx.slice.compat.SliceProviderWrapperContainer$SliceProviderWrapper.onGetSliceDescendants(SliceProviderWrapperContainer.java:166)
+11-01 00:24:39.331  1041  1067 W SliceDataConverter: 	at android.app.slice.SliceProvider.handleGetDescendants(SliceProvider.java:425)
+11-01 00:24:39.331  1041  1067 W SliceDataConverter: 	at android.app.slice.SliceProvider.call(SliceProvider.java:406)
+11-01 00:24:39.331  1041  1067 W SliceDataConverter: 	at androidx.slice.compat.SliceProviderWrapperContainer$SliceProviderWrapper.call(SliceProviderWrapperContainer.java:123)
+11-01 00:24:39.331  1041  1067 W SliceDataConverter: 	at android.content.ContentProvider.call(ContentProvider.java:2679)
+11-01 00:24:39.331  1041  1067 W SliceDataConverter: 	at android.content.ContentProvider$Transport.call(ContentProvider.java:628)
+11-01 00:24:39.331  1041  1067 W SliceDataConverter: 	at android.content.ContentProviderNative.onTransact(ContentProviderNative.java:307)
+11-01 00:24:39.331  1041  1067 W SliceDataConverter: 	at android.os.Binder.execTransactInternal(Binder.java:1339)
+11-01 00:24:39.331  1041  1067 W SliceDataConverter: 	at android.os.Binder.execTransact(Binder.java:1275)
+11-01 00:24:39.331  1041  1067 W SliceDataConverter: Caused by: java.lang.NoSuchMethodException: com.android.settings.network.NetworkProviderSimsCategoryController.<init> [class android.content.Context, class java.lang.String]
+11-01 00:24:39.331  1041  1067 W SliceDataConverter: 	at java.lang.Class.getConstructor0(Class.java:3325)
+11-01 00:24:39.331  1041  1067 W SliceDataConverter: 	at java.lang.Class.getConstructor(Class.java:2485)
+11-01 00:24:39.331  1041  1067 W SliceDataConverter: 	at com.android.settings.core.BasePreferenceController.createInstance(BasePreferenceController.java:141)
+11-01 00:24:39.331  1041  1067 W SliceDataConverter: 	... 19 more
+11-01 00:24:39.331  1041  1067 W ElapsedTimeUtils: getElapsedTime: sSuwFinishedTimeStamp is null
+11-01 00:24:39.333  1041  1067 W SliceDataConverter: Get slice data from XML failed 
+11-01 00:24:39.333  1041  1067 W SliceDataConverter: java.lang.IllegalStateException: Invalid preference controller: com.android.settings.applications.appinfo.ManageAppLocalePreferenceController
+11-01 00:24:39.333  1041  1067 W SliceDataConverter: 	at com.android.settings.core.BasePreferenceController.createInstance(BasePreferenceController.java:146)
+11-01 00:24:39.333  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SliceBuilderUtils.getPreferenceController(SliceBuilderUtils.java:354)
+11-01 00:24:39.333  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SliceDataConverter.getSliceDataFromXML(SliceDataConverter.java:204)
+11-01 00:24:39.333  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SliceDataConverter.getSliceDataFromProvider(SliceDataConverter.java:149)
+11-01 00:24:39.333  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SliceDataConverter.getSliceData(SliceDataConverter.java:119)
+11-01 00:24:39.333  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SlicesIndexer.getSliceData(SlicesIndexer.java:94)
+11-01 00:24:39.333  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SlicesIndexer.indexSliceData(SlicesIndexer.java:75)
+11-01 00:24:39.333  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SlicesFeatureProviderImpl.indexSliceData(SlicesFeatureProviderImpl.java:63)
+11-01 00:24:39.333  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SlicesDatabaseAccessor.verifyIndexing(SlicesDatabaseAccessor.java:194)
+11-01 00:24:39.333  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SlicesDatabaseAccessor.getSliceUris(SlicesDatabaseAccessor.java:96)
+11-01 00:24:39.333  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SettingsSliceProvider.onGetSliceDescendants(SettingsSliceProvider.java:337)
+11-01 00:24:39.333  1041  1067 W SliceDataConverter: 	at androidx.slice.compat.SliceProviderWrapperContainer$SliceProviderWrapper.onGetSliceDescendants(SliceProviderWrapperContainer.java:166)
+11-01 00:24:39.333  1041  1067 W SliceDataConverter: 	at android.app.slice.SliceProvider.handleGetDescendants(SliceProvider.java:425)
+11-01 00:24:39.333  1041  1067 W SliceDataConverter: 	at android.app.slice.SliceProvider.call(SliceProvider.java:406)
+11-01 00:24:39.333  1041  1067 W SliceDataConverter: 	at androidx.slice.compat.SliceProviderWrapperContainer$SliceProviderWrapper.call(SliceProviderWrapperContainer.java:123)
+11-01 00:24:39.333  1041  1067 W SliceDataConverter: 	at android.content.ContentProvider.call(ContentProvider.java:2679)
+11-01 00:24:39.333  1041  1067 W SliceDataConverter: 	at android.content.ContentProvider$Transport.call(ContentProvider.java:628)
+11-01 00:24:39.333  1041  1067 W SliceDataConverter: 	at android.content.ContentProviderNative.onTransact(ContentProviderNative.java:307)
+11-01 00:24:39.333  1041  1067 W SliceDataConverter: 	at android.os.Binder.execTransactInternal(Binder.java:1339)
+11-01 00:24:39.333  1041  1067 W SliceDataConverter: 	at android.os.Binder.execTransact(Binder.java:1275)
+11-01 00:24:39.333  1041  1067 W SliceDataConverter: Caused by: java.lang.ClassNotFoundException: com.android.settings.applications.appinfo.ManageAppLocalePreferenceController
+11-01 00:24:39.333  1041  1067 W SliceDataConverter: 	at java.lang.Class.classForName(Native Method)
+11-01 00:24:39.333  1041  1067 W SliceDataConverter: 	at java.lang.Class.forName(Class.java:536)
+11-01 00:24:39.333  1041  1067 W SliceDataConverter: 	at java.lang.Class.forName(Class.java:467)
+11-01 00:24:39.333  1041  1067 W SliceDataConverter: 	at com.android.settings.core.BasePreferenceController.createInstance(BasePreferenceController.java:139)
+11-01 00:24:39.333  1041  1067 W SliceDataConverter: 	... 19 more
+11-01 00:24:39.333  1041  1067 W SliceDataConverter: Caused by: java.lang.ClassNotFoundException: com.android.settings.applications.appinfo.ManageAppLocalePreferenceController
+11-01 00:24:39.333  1041  1067 W SliceDataConverter: 	... 23 more
+11-01 00:24:39.333  1041  1067 W ElapsedTimeUtils: getElapsedTime: sSuwFinishedTimeStamp is null
+11-01 00:24:39.336  1041  1067 W LocalMediaManager: BluetoothAdapter is null or muting expected device not exist
+11-01 00:24:39.343  4579  4579 I TextToSpeech: Sucessfully bound to com.google.android.tts
+11-01 00:24:39.343   520  3552 D TextToSpeechManagerPerUserService: Trying to start connection to TTS engine: com.google.android.tts
+11-01 00:24:39.345   520  2089 D CompatibilityChangeReporter: Compat change id reported: 261072174; UID 10192; state: ENABLED
+11-01 00:24:39.350  2608  2608 I GoogleTtsServicePeer: Creating Google TTS service, version googletts.google-speech-apk_20230123.02_p3.506463867
+11-01 00:24:39.350   520   520 I NotificationService: Cannot find enqueued record for key: 0|com.google.android.googlequicksearchbox|-307962363|null|10132
+11-01 00:24:39.357  1041  1067 W SliceDataConverter: Get slice data from XML failed 
+11-01 00:24:39.357  1041  1067 W SliceDataConverter: java.lang.IllegalStateException: Invalid preference controller: com.android.settings.network.telephony.CallsDefaultSubscriptionController
+11-01 00:24:39.357  1041  1067 W SliceDataConverter: 	at com.android.settings.core.BasePreferenceController.createInstance(BasePreferenceController.java:146)
+11-01 00:24:39.357  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SliceBuilderUtils.getPreferenceController(SliceBuilderUtils.java:354)
+11-01 00:24:39.357  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SliceDataConverter.getSliceDataFromXML(SliceDataConverter.java:204)
+11-01 00:24:39.357  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SliceDataConverter.getSliceDataFromProvider(SliceDataConverter.java:149)
+11-01 00:24:39.357  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SliceDataConverter.getSliceData(SliceDataConverter.java:119)
+11-01 00:24:39.357  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SlicesIndexer.getSliceData(SlicesIndexer.java:94)
+11-01 00:24:39.357  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SlicesIndexer.indexSliceData(SlicesIndexer.java:75)
+11-01 00:24:39.357  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SlicesFeatureProviderImpl.indexSliceData(SlicesFeatureProviderImpl.java:63)
+11-01 00:24:39.357  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SlicesDatabaseAccessor.verifyIndexing(SlicesDatabaseAccessor.java:194)
+11-01 00:24:39.357  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SlicesDatabaseAccessor.getSliceUris(SlicesDatabaseAccessor.java:96)
+11-01 00:24:39.357  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SettingsSliceProvider.onGetSliceDescendants(SettingsSliceProvider.java:337)
+11-01 00:24:39.357  1041  1067 W SliceDataConverter: 	at androidx.slice.compat.SliceProviderWrapperContainer$SliceProviderWrapper.onGetSliceDescendants(SliceProviderWrapperContainer.java:166)
+11-01 00:24:39.357  1041  1067 W SliceDataConverter: 	at android.app.slice.SliceProvider.handleGetDescendants(SliceProvider.java:425)
+11-01 00:24:39.357  1041  1067 W SliceDataConverter: 	at android.app.slice.SliceProvider.call(SliceProvider.java:406)
+11-01 00:24:39.357  1041  1067 W SliceDataConverter: 	at androidx.slice.compat.SliceProviderWrapperContainer$SliceProviderWrapper.call(SliceProviderWrapperContainer.java:123)
+11-01 00:24:39.357  1041  1067 W SliceDataConverter: 	at android.content.ContentProvider.call(ContentProvider.java:2679)
+11-01 00:24:39.357  1041  1067 W SliceDataConverter: 	at android.content.ContentProvider$Transport.call(ContentProvider.java:628)
+11-01 00:24:39.357  1041  1067 W SliceDataConverter: 	at android.content.ContentProviderNative.onTransact(ContentProviderNative.java:307)
+11-01 00:24:39.357  1041  1067 W SliceDataConverter: 	at android.os.Binder.execTransactInternal(Binder.java:1339)
+11-01 00:24:39.357  1041  1067 W SliceDataConverter: 	at android.os.Binder.execTransact(Binder.java:1275)
+11-01 00:24:39.357  1041  1067 W SliceDataConverter: Caused by: java.lang.NoSuchMethodException: com.android.settings.network.telephony.CallsDefaultSubscriptionController.<init> [class android.content.Context, class java.lang.String]
+11-01 00:24:39.357  1041  1067 W SliceDataConverter: 	at java.lang.Class.getConstructor0(Class.java:3325)
+11-01 00:24:39.357  1041  1067 W SliceDataConverter: 	at java.lang.Class.getConstructor(Class.java:2485)
+11-01 00:24:39.357  1041  1067 W SliceDataConverter: 	at com.android.settings.core.BasePreferenceController.createInstance(BasePreferenceController.java:141)
+11-01 00:24:39.357  1041  1067 W SliceDataConverter: 	... 19 more
+11-01 00:24:39.357  1041  1067 W ElapsedTimeUtils: getElapsedTime: sSuwFinishedTimeStamp is null
+11-01 00:24:39.357   520   520 D TextToSpeechManagerPerUserService: Connected successfully to TTS engine: com.google.android.tts
+11-01 00:24:39.357  4579  4596 I TextToSpeech: Connected to TTS engine
+11-01 00:24:39.358  1041  1067 D AssistGesture: mAssistOnly:false, isSupported:false, isSensorAvailable:false
+11-01 00:24:39.358  1041  1067 D AssistGesture: mAssistOnly:false, isSupported:false, isSensorAvailable:false
+11-01 00:24:39.361  2608  2624 W RankedDispatcher: The requested voice is not available for this app identifier
+11-01 00:24:39.361  2608  2624 I GoogleTTSServiceImpl: currentLocale = en-US
+11-01 00:24:39.361  2608  2624 W RankedDispatcher: The requested voice is not available for this app identifier
+11-01 00:24:39.361  2608  2624 I GoogleTTSServiceImpl: For default lang en-us is name en-US-language (en-us-x-iog-server)
+11-01 00:24:39.361  4579  4617 I TextToSpeech: Setting up the connection to TTS engine...
+11-01 00:24:39.364  1041  1067 W SliceDataConverter: Get slice data from XML failed 
+11-01 00:24:39.364  1041  1067 W SliceDataConverter: java.lang.IllegalStateException: Invalid preference controller: com.android.settings.applications.appinfo.ManageAppLocalePreferenceController
+11-01 00:24:39.364  1041  1067 W SliceDataConverter: 	at com.android.settings.core.BasePreferenceController.createInstance(BasePreferenceController.java:146)
+11-01 00:24:39.364  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SliceBuilderUtils.getPreferenceController(SliceBuilderUtils.java:354)
+11-01 00:24:39.364  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SliceDataConverter.getSliceDataFromXML(SliceDataConverter.java:204)
+11-01 00:24:39.364  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SliceDataConverter.getSliceDataFromProvider(SliceDataConverter.java:149)
+11-01 00:24:39.364  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SliceDataConverter.getSliceData(SliceDataConverter.java:119)
+11-01 00:24:39.364  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SlicesIndexer.getSliceData(SlicesIndexer.java:94)
+11-01 00:24:39.364  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SlicesIndexer.indexSliceData(SlicesIndexer.java:75)
+11-01 00:24:39.364  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SlicesFeatureProviderImpl.indexSliceData(SlicesFeatureProviderImpl.java:63)
+11-01 00:24:39.364  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SlicesDatabaseAccessor.verifyIndexing(SlicesDatabaseAccessor.java:194)
+11-01 00:24:39.364  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SlicesDatabaseAccessor.getSliceUris(SlicesDatabaseAccessor.java:96)
+11-01 00:24:39.364  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SettingsSliceProvider.onGetSliceDescendants(SettingsSliceProvider.java:337)
+11-01 00:24:39.364  1041  1067 W SliceDataConverter: 	at androidx.slice.compat.SliceProviderWrapperContainer$SliceProviderWrapper.onGetSliceDescendants(SliceProviderWrapperContainer.java:166)
+11-01 00:24:39.364  1041  1067 W SliceDataConverter: 	at android.app.slice.SliceProvider.handleGetDescendants(SliceProvider.java:425)
+11-01 00:24:39.364  1041  1067 W SliceDataConverter: 	at android.app.slice.SliceProvider.call(SliceProvider.java:406)
+11-01 00:24:39.364  1041  1067 W SliceDataConverter: 	at androidx.slice.compat.SliceProviderWrapperContainer$SliceProviderWrapper.call(SliceProviderWrapperContainer.java:123)
+11-01 00:24:39.364  1041  1067 W SliceDataConverter: 	at android.content.ContentProvider.call(ContentProvider.java:2679)
+11-01 00:24:39.364  1041  1067 W SliceDataConverter: 	at android.content.ContentProvider$Transport.call(ContentProvider.java:628)
+11-01 00:24:39.364  1041  1067 W SliceDataConverter: 	at android.content.ContentProviderNative.onTransact(ContentProviderNative.java:307)
+11-01 00:24:39.364  1041  1067 W SliceDataConverter: 	at android.os.Binder.execTransactInternal(Binder.java:1339)
+11-01 00:24:39.364  1041  1067 W SliceDataConverter: 	at android.os.Binder.execTransact(Binder.java:1275)
+11-01 00:24:39.364  1041  1067 W SliceDataConverter: Caused by: java.lang.ClassNotFoundException: com.android.settings.applications.appinfo.ManageAppLocalePreferenceController
+11-01 00:24:39.364  1041  1067 W SliceDataConverter: 	at java.lang.Class.classForName(Native Method)
+11-01 00:24:39.364  1041  1067 W SliceDataConverter: 	at java.lang.Class.forName(Class.java:536)
+11-01 00:24:39.364  1041  1067 W SliceDataConverter: 	at java.lang.Class.forName(Class.java:467)
+11-01 00:24:39.364  1041  1067 W SliceDataConverter: 	at com.android.settings.core.BasePreferenceController.createInstance(BasePreferenceController.java:139)
+11-01 00:24:39.364  1041  1067 W SliceDataConverter: 	... 19 more
+11-01 00:24:39.364  1041  1067 W SliceDataConverter: Caused by: java.lang.ClassNotFoundException: com.android.settings.applications.appinfo.ManageAppLocalePreferenceController
+11-01 00:24:39.364  1041  1067 W SliceDataConverter: 	... 23 more
+11-01 00:24:39.364  1041  1067 W ElapsedTimeUtils: getElapsedTime: sSuwFinishedTimeStamp is null
+11-01 00:24:39.364   520  1666 D CompatibilityChangeReporter: Compat change id reported: 266524688; UID 10132; state: DISABLED
+11-01 00:24:39.370   520   520 I NotificationService: Cannot find enqueued record for key: 0|com.google.android.googlequicksearchbox|-307962363|null|10132
+11-01 00:24:39.370   520  1666 D ConnectivityService: requestNetwork for uid/pid:10132/1609 activeRequest: null callbackRequest: 116 [NetworkRequest [ REQUEST id=116, [ Transports: CELLULAR Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN&NOT_VCN_MANAGED Uid: 10132 RequestorUid: 10132 RequestorPkg: com.google.android.googlequicksearchbox UnderlyingNetworks: Null] ]] callback flags: 0 order: 2147483647
+11-01 00:24:39.372  4579  4579 D CompatibilityChangeReporter: Compat change id reported: 237531167; UID 10192; state: DISABLED
+11-01 00:24:39.372  4579  4579 W OpenGLRenderer: Unknown dataspace 0
+11-01 00:24:39.375   336   373 I netd    : networkSetPermissionForNetwork(101, 0) <2.21ms>
+11-01 00:24:39.382   520   758 D ConnectivityService: NetReassign [116 : null → 101] [c 0] [a 11] [i 0]
+11-01 00:24:39.382   520   758 D ConnectivityService: reportNetworkConnectivity(100, false) by 10132
+11-01 00:24:39.387   992  2754 D NetworkMonitor/100: Forcing reevaluation for UID 10132. Dns signal count: 0
+11-01 00:24:39.389  1041  1067 W SliceData: Highlight menu key res is empty: com.android.settings.deviceinfo.hardwareinfo.DeviceModelPreferenceController
+11-01 00:24:39.391  1041  1067 E HardwareInfoFeatureProviderImpl: Could not parse manufactured year from serial.
+11-01 00:24:39.391  1041  1067 E HardwareInfoFeatureProviderImpl: java.lang.NumberFormatException: For input string: "E"
+11-01 00:24:39.391  1041  1067 E HardwareInfoFeatureProviderImpl: 	at java.lang.Integer.parseInt(Integer.java:797)
+11-01 00:24:39.391  1041  1067 E HardwareInfoFeatureProviderImpl: 	at java.lang.Integer.valueOf(Integer.java:1128)
+11-01 00:24:39.391  1041  1067 E HardwareInfoFeatureProviderImpl: 	at com.google.android.settings.deviceinfo.hardwareinfo.HardwareInfoFeatureProviderGoogleImpl.getManufacturedYear(HardwareInfoFeatureProviderGoogleImpl.kt:22)
+11-01 00:24:39.391  1041  1067 E HardwareInfoFeatureProviderImpl: 	at com.android.settings.deviceinfo.hardwareinfo.ManufacturedYearPreferenceController.<init>(ManufacturedYearPreferenceController.kt:26)
+11-01 00:24:39.391  1041  1067 E HardwareInfoFeatureProviderImpl: 	at java.lang.reflect.Constructor.newInstance0(Native Method)
+11-01 00:24:39.391  1041  1067 E HardwareInfoFeatureProviderImpl: 	at java.lang.reflect.Constructor.newInstance(Constructor.java:343)
+11-01 00:24:39.391  1041  1067 E HardwareInfoFeatureProviderImpl: 	at com.android.settings.core.BasePreferenceController.createInstance(BasePreferenceController.java:143)
+11-01 00:24:39.391  1041  1067 E HardwareInfoFeatureProviderImpl: 	at com.android.settings.slices.SliceBuilderUtils.getPreferenceController(SliceBuilderUtils.java:354)
+11-01 00:24:39.391  1041  1067 E HardwareInfoFeatureProviderImpl: 	at com.android.settings.slices.SliceDataConverter.getSliceDataFromXML(SliceDataConverter.java:204)
+11-01 00:24:39.391  1041  1067 E HardwareInfoFeatureProviderImpl: 	at com.android.settings.slices.SliceDataConverter.getSliceDataFromProvider(SliceDataConverter.java:149)
+11-01 00:24:39.391  1041  1067 E HardwareInfoFeatureProviderImpl: 	at com.android.settings.slices.SliceDataConverter.getSliceData(SliceDataConverter.java:119)
+11-01 00:24:39.391  1041  1067 E HardwareInfoFeatureProviderImpl: 	at com.android.settings.slices.SlicesIndexer.getSliceData(SlicesIndexer.java:94)
+11-01 00:24:39.391  1041  1067 E HardwareInfoFeatureProviderImpl: 	at com.android.settings.slices.SlicesIndexer.indexSliceData(SlicesIndexer.java:75)
+11-01 00:24:39.391  1041  1067 E HardwareInfoFeatureProviderImpl: 	at com.android.settings.slices.SlicesFeatureProviderImpl.indexSliceData(SlicesFeatureProviderImpl.java:63)
+11-01 00:24:39.391  1041  1067 E HardwareInfoFeatureProviderImpl: 	at com.android.settings.slices.SlicesDatabaseAccessor.verifyIndexing(SlicesDatabaseAccessor.java:194)
+11-01 00:24:39.391  1041  1067 E HardwareInfoFeatureProviderImpl: 	at com.android.settings.slices.SlicesDatabaseAccessor.getSliceUris(SlicesDatabaseAccessor.java:96)
+11-01 00:24:39.391  1041  1067 E HardwareInfoFeatureProviderImpl: 	at com.android.settings.slices.SettingsSliceProvider.onGetSliceDescendants(SettingsSliceProvider.java:337)
+11-01 00:24:39.391  1041  1067 E HardwareInfoFeatureProviderImpl: 	at androidx.slice.compat.SliceProviderWrapperContainer$SliceProviderWrapper.onGetSliceDescendants(SliceProviderWrapperContainer.java:166)
+11-01 00:24:39.391  1041  1067 E HardwareInfoFeatureProviderImpl: 	at android.app.slice.SliceProvider.handleGetDescendants(SliceProvider.java:425)
+11-01 00:24:39.391  1041  1067 E HardwareInfoFeatureProviderImpl: 	at android.app.slice.SliceProvider.call(SliceProvider.java:406)
+11-01 00:24:39.391  1041  1067 E HardwareInfoFeatureProviderImpl: 	at androidx.slice.compat.SliceProviderWrapperContainer$SliceProviderWrapper.call(SliceProviderWrapperContainer.java:123)
+11-01 00:24:39.391  1041  1067 E HardwareInfoFeatureProviderImpl: 	at android.content.ContentProvider.call(ContentProvider.java:2679)
+11-01 00:24:39.391  1041  1067 E HardwareInfoFeatureProviderImpl: 	at android.content.ContentProvider$Transport.call(ContentProvider.java:628)
+11-01 00:24:39.391  1041  1067 E HardwareInfoFeatureProviderImpl: 	at android.content.ContentProviderNative.onTransact(ContentProviderNative.java:307)
+11-01 00:24:39.391  1041  1067 E HardwareInfoFeatureProviderImpl: 	at android.os.Binder.execTransactInternal(Binder.java:1339)
+11-01 00:24:39.391  1041  1067 E HardwareInfoFeatureProviderImpl: 	at android.os.Binder.execTransact(Binder.java:1275)
+11-01 00:24:39.403  1041  1067 W libc    : Access denied finding property "ro.vendor.aware_available"
+11-01 00:24:39.403   992  4620 D TrafficStats: tagSocket(6) with statsTag=0xffffff81, statsUid=-1
+11-01 00:24:39.403   992  4620 D TrafficStats: tagSocket(6) with statsTag=0xffffff81, statsUid=-1
+11-01 00:24:39.412   520  1667 D CoreBackPreview: Window{173840d u0 fr.vigiroad.vigiroad/fr.vigiroad.vigiroad.MainActivity}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@12ff228, mPriority=0, mIsAnimationCallback=false}
+11-01 00:24:39.412   992  4621 D TrafficStats: tagSocket(106) with statsTag=0xffffff81, statsUid=-1
+11-01 00:24:39.412   992  4621 D TrafficStats: tagSocket(106) with statsTag=0xffffff81, statsUid=-1
+11-01 00:24:39.412   336  4622 I resolv  : ResNSendHandler::run: 0 / {100 983140 100 983140 1073 1}
+11-01 00:24:39.412   336  4622 I resolv  : resolv_cache_lookup: FOUND IN CACHE entry=0x781bf0d64d50
+11-01 00:24:39.413   336  4623 I resolv  : ResNSendHandler::run: 0 / {100 983140 100 983140 1073 1}
+11-01 00:24:39.413   336  4623 I resolv  : resolv_cache_lookup: FOUND IN CACHE entry=0x781c90d61c70
+11-01 00:24:39.415  4579  4601 W OpenGLRenderer: Failed to initialize 101010-2 format, error = EGL_SUCCESS
+11-01 00:24:39.415   992   992 D TrafficStats: tagSocket(6) with statsTag=0xffffffff, statsUid=-1
+11-01 00:24:39.415  1041  1067 E SystemServiceRegistry: No service published for: ethernet
+11-01 00:24:39.415  1041  1067 E SystemServiceRegistry: android.os.ServiceManager$ServiceNotFoundException: No service published for: ethernet
+11-01 00:24:39.415  1041  1067 E SystemServiceRegistry: 	at android.os.ServiceManager.getServiceOrThrow(ServiceManager.java:166)
+11-01 00:24:39.415  1041  1067 E SystemServiceRegistry: 	at android.app.SystemServiceRegistry$139.createService(SystemServiceRegistry.java:1872)
+11-01 00:24:39.415  1041  1067 E SystemServiceRegistry: 	at android.app.SystemServiceRegistry$CachedServiceFetcher.getService(SystemServiceRegistry.java:1971)
+11-01 00:24:39.415  1041  1067 E SystemServiceRegistry: 	at android.app.SystemServiceRegistry.getSystemService(SystemServiceRegistry.java:1645)
+11-01 00:24:39.415  1041  1067 E SystemServiceRegistry: 	at android.app.ContextImpl.getSystemService(ContextImpl.java:2212)
+11-01 00:24:39.415  1041  1067 E SystemServiceRegistry: 	at android.content.ContextWrapper.getSystemService(ContextWrapper.java:934)
+11-01 00:24:39.415  1041  1067 E SystemServiceRegistry: 	at android.content.Context.getSystemService(Context.java:4420)
+11-01 00:24:39.415  1041  1067 E SystemServiceRegistry: 	at com.android.settings.network.EthernetTetherPreferenceController.<init>(EthernetTetherPreferenceController.java:48)
+11-01 00:24:39.415  1041  1067 E SystemServiceRegistry: 	at java.lang.reflect.Constructor.newInstance0(Native Method)
+11-01 00:24:39.415  1041  1067 E SystemServiceRegistry: 	at java.lang.reflect.Constructor.newInstance(Constructor.java:343)
+11-01 00:24:39.415  1041  1067 E SystemServiceRegistry: 	at com.android.settings.core.BasePreferenceController.createInstance(BasePreferenceController.java:143)
+11-01 00:24:39.415  1041  1067 E SystemServiceRegistry: 	at com.android.settings.slices.SliceBuilderUtils.getPreferenceController(SliceBuilderUtils.java:354)
+11-01 00:24:39.415  1041  1067 E SystemServiceRegistry: 	at com.android.settings.slices.SliceDataConverter.getSliceDataFromXML(SliceDataConverter.java:204)
+11-01 00:24:39.415  1041  1067 E SystemServiceRegistry: 	at com.android.settings.slices.SliceDataConverter.getSliceDataFromProvider(SliceDataConverter.java:149)
+11-01 00:24:39.415  1041  1067 E SystemServiceRegistry: 	at com.android.settings.slices.SliceDataConverter.getSliceData(SliceDataConverter.java:119)
+11-01 00:24:39.415  1041  1067 E SystemServiceRegistry: 	at com.android.settings.slices.SlicesIndexer.getSliceData(SlicesIndexer.java:94)
+11-01 00:24:39.415  1041  1067 E SystemServiceRegistry: 	at com.android.settings.slices.SlicesIndexer.indexSliceData(SlicesIndexer.java:75)
+11-01 00:24:39.415  1041  1067 E SystemServiceRegistry: 	at com.android.settings.slices.SlicesFeatureProviderImpl.indexSliceData(SlicesFeatureProviderImpl.java:63)
+11-01 00:24:39.415  1041  1067 E SystemServiceRegistry: 	at com.android.settings.slices.SlicesDatabaseAccessor.verifyIndexing(SlicesDatabaseAccessor.java:194)
+11-01 00:24:39.415  1041  1067 E SystemServiceRegistry: 	at com.android.settings.slices.SlicesDatabaseAccessor.getSliceUris(SlicesDatabaseAccessor.java:96)
+11-01 00:24:39.415  1041  1067 E SystemServiceRegistry: 	at com.android.settings.slices.SettingsSliceProvider.onGetSliceDescendants(SettingsSliceProvider.java:337)
+11-01 00:24:39.415  1041  1067 E SystemServiceRegistry: 	at androidx.slice.compat.SliceProviderWrapperContainer$SliceProviderWrapper.onGetSliceDescendants(SliceProviderWrapperContainer.java:166)
+11-01 00:24:39.415  1041  1067 E SystemServiceRegistry: 	at android.app.slice.SliceProvider.handleGetDescendants(SliceProvider.java:425)
+11-01 00:24:39.415  1041  1067 E SystemServiceRegistry: 	at android.app.slice.SliceProvider.call(SliceProvider.java:406)
+11-01 00:24:39.415  1041  1067 E SystemServiceRegistry: 	at androidx.slice.compat.SliceProviderWrapperContainer$SliceProviderWrapper.call(SliceProviderWrapperContainer.java:123)
+11-01 00:24:39.415  1041  1067 E SystemServiceRegistry: 	at android.content.ContentProvider.call(ContentProvider.java:2679)
+11-01 00:24:39.415  1041  1067 E SystemServiceRegistry: 	at android.content.ContentProvider$Transport.call(ContentProvider.java:628)
+11-01 00:24:39.415  1041  1067 E SystemServiceRegistry: 	at android.content.ContentProviderNative.onTransact(ContentProviderNative.java:307)
+11-01 00:24:39.415  1041  1067 E SystemServiceRegistry: 	at android.os.Binder.execTransactInternal(Binder.java:1339)
+11-01 00:24:39.415  1041  1067 E SystemServiceRegistry: 	at android.os.Binder.execTransact(Binder.java:1275)
+11-01 00:24:39.416   336  4624 I resolv  : ResNSendHandler::run: 0 / {100 983140 100 983140 1073 1}
+11-01 00:24:39.416   336  4624 I resolv  : resolv_cache_lookup: FOUND IN CACHE entry=0x781c80d58dd0
+11-01 00:24:39.417   336  4625 I resolv  : ResNSendHandler::run: 0 / {100 983140 100 983140 1073 1}
+11-01 00:24:39.417   336  4625 I resolv  : resolv_cache_lookup: FOUND IN CACHE entry=0x781c80d59af0
+11-01 00:24:39.421   992   992 D TrafficStats: tagSocket(6) with statsTag=0xffffffff, statsUid=-1
+11-01 00:24:39.426   992   992 D TrafficStats: tagSocket(6) with statsTag=0xffffffff, statsUid=-1
+11-01 00:24:39.428  1041  1067 W SliceDataConverter: Get slice data from XML failed 
+11-01 00:24:39.428  1041  1067 W SliceDataConverter: java.lang.IllegalStateException: Invalid preference controller: com.android.settings.fuelgauge.batteryusage.BatteryChartPreferenceController
+11-01 00:24:39.428  1041  1067 W SliceDataConverter: 	at com.android.settings.core.BasePreferenceController.createInstance(BasePreferenceController.java:146)
+11-01 00:24:39.428  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SliceBuilderUtils.getPreferenceController(SliceBuilderUtils.java:354)
+11-01 00:24:39.428  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SliceDataConverter.getSliceDataFromXML(SliceDataConverter.java:204)
+11-01 00:24:39.428  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SliceDataConverter.getSliceDataFromProvider(SliceDataConverter.java:149)
+11-01 00:24:39.428  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SliceDataConverter.getSliceData(SliceDataConverter.java:119)
+11-01 00:24:39.428  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SlicesIndexer.getSliceData(SlicesIndexer.java:94)
+11-01 00:24:39.428  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SlicesIndexer.indexSliceData(SlicesIndexer.java:75)
+11-01 00:24:39.428  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SlicesFeatureProviderImpl.indexSliceData(SlicesFeatureProviderImpl.java:63)
+11-01 00:24:39.428  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SlicesDatabaseAccessor.verifyIndexing(SlicesDatabaseAccessor.java:194)
+11-01 00:24:39.428  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SlicesDatabaseAccessor.getSliceUris(SlicesDatabaseAccessor.java:96)
+11-01 00:24:39.428  1041  1067 W SliceDataConverter: 	at com.android.settings.slices.SettingsSliceProvider.onGetSliceDescendants(SettingsSliceProvider.java:337)
+11-01 00:24:39.428  1041  1067 W SliceDataConverter: 	at androidx.slice.compat.SliceProviderWrapperContainer$SliceProviderWrapper.onGetSliceDescendants(SliceProviderWrapperContainer.java:166)
+11-01 00:24:39.428  1041  1067 W SliceDataConverter: 	at android.app.slice.SliceProvider.handleGetDescendants(SliceProvider.java:425)
+11-01 00:24:39.428  1041  1067 W SliceDataConverter: 	at android.app.slice.SliceProvider.call(SliceProvider.java:406)
+11-01 00:24:39.428  1041  1067 W SliceDataConverter: 	at androidx.slice.compat.SliceProviderWrapperContainer$SliceProviderWrapper.call(SliceProviderWrapperContainer.java:123)
+11-01 00:24:39.428  1041  1067 W SliceDataConverter: 	at android.content.ContentProvider.call(ContentProvider.java:2679)
+11-01 00:24:39.428  1041  1067 W SliceDataConverter: 	at android.content.ContentProvider$Transport.call(ContentProvider.java:628)
+11-01 00:24:39.428  1041  1067 W SliceDataConverter: 	at android.content.ContentProviderNative.onTransact(ContentProviderNative.java:307)
+11-01 00:24:39.428  1041  1067 W SliceDataConverter: 	at android.os.Binder.execTransactInternal(Binder.java:1339)
+11-01 00:24:39.428  1041  1067 W SliceDataConverter: 	at android.os.Binder.execTransact(Binder.java:1275)
+11-01 00:24:39.428  1041  1067 W SliceDataConverter: Caused by: java.lang.NoSuchMethodException: com.android.settings.fuelgauge.batteryusage.BatteryChartPreferenceController.<init> [class android.content.Context, class java.lang.String]
+11-01 00:24:39.428  1041  1067 W SliceDataConverter: 	at java.lang.Class.getConstructor0(Class.java:3325)
+11-01 00:24:39.428  1041  1067 W SliceDataConverter: 	at java.lang.Class.getConstructor(Class.java:2485)
+11-01 00:24:39.428  1041  1067 W SliceDataConverter: 	at com.android.settings.core.BasePreferenceController.createInstance(BasePreferenceController.java:141)
+11-01 00:24:39.428  1041  1067 W SliceDataConverter: 	... 19 more
+11-01 00:24:39.428  1041  1067 W ElapsedTimeUtils: getElapsedTime: sSuwFinishedTimeStamp is null
+11-01 00:24:39.619     0     0 I servicemanager: Could not find android.hardware.graphics.allocator.IAllocator/default in the VINTF manifest.
+11-01 00:24:39.430   135   135 I hwservicemanager: getTransport: Cannot find entry android.hardware.graphics.mapper@4.0::IMapper/default in either framework or device VINTF manifest.
+11-01 00:24:39.430  4579  4601 I Gralloc4: mapper 4.x is not supported
+11-01 00:24:39.430   992   992 D TrafficStats: tagSocket(6) with statsTag=0xffffffff, statsUid=-1
+11-01 00:24:39.437   992   992 D TrafficStats: tagSocket(6) with statsTag=0xffffffff, statsUid=-1
+11-01 00:24:39.450   992   992 D TrafficStats: tagSocket(6) with statsTag=0xffffffff, statsUid=-1
+11-01 00:24:39.453  1041  1067 W SliceData: Highlight menu key res is empty: com.android.settings.accessibility.AccessibilitySlicePreferenceController
+11-01 00:24:39.453  1041  1067 W SliceData: Highlight menu key res is empty: com.android.settings.accessibility.AccessibilitySlicePreferenceController
+11-01 00:24:39.454  1041  1067 D SlicesIndexer: Indexing slices database took: 195
+11-01 00:24:39.458   992   992 D TrafficStats: tagSocket(6) with statsTag=0xffffffff, statsUid=-1
+11-01 00:24:39.459   992   992 D TrafficStats: tagSocket(6) with statsTag=0xffffffff, statsUid=-1
+11-01 00:24:39.460   992   992 D TrafficStats: tagSocket(6) with statsTag=0xffffffff, statsUid=-1
+11-01 00:24:39.460  1041  1067 D SettingsSliceProvider: Allowlisting 13 uris to 3 pkgs.
+11-01 00:24:39.462   992   992 D TrafficStats: tagSocket(6) with statsTag=0xffffffff, statsUid=-1
+11-01 00:24:39.462   992   992 D TrafficStats: tagSocket(6) with statsTag=0xffffffff, statsUid=-1
+11-01 00:24:39.462   992   992 D TrafficStats: tagSocket(6) with statsTag=0xffffffff, statsUid=-1
+11-01 00:24:39.463   992   992 D TrafficStats: tagSocket(6) with statsTag=0xffffffff, statsUid=-1
+11-01 00:24:39.463   992   992 D TrafficStats: tagSocket(6) with statsTag=0xffffffff, statsUid=-1
+11-01 00:24:39.464   992   992 D TrafficStats: tagSocket(6) with statsTag=0xffffffff, statsUid=-1
+11-01 00:24:39.464   992   992 D TrafficStats: tagSocket(6) with statsTag=0xffffffff, statsUid=-1
+11-01 00:24:39.465   992   992 D TrafficStats: tagSocket(6) with statsTag=0xffffffff, statsUid=-1
+11-01 00:24:39.465   992   992 D TrafficStats: tagSocket(6) with statsTag=0xffffffff, statsUid=-1
+11-01 00:24:39.469   992  4621 D NetworkMonitor/100: PROBE_DNS connectivitycheck.gstatic.com 56ms OK 142.251.184.94,2607:f8b0:4001:c70::5e
+11-01 00:24:39.469   992  4620 D NetworkMonitor/100: PROBE_DNS www.google.com 62ms OK 142.251.156.119,142.251.157.119,142.251.151.119,142.251.152.119,142.251.153.119,142.251.155.119,142.251.150.119,142.251.154.119,2001:4860:4828:7700::,2001:4860:4826:7700::,2001:4860:4829:7700::,2001:4860:482c:7700::,2001:4860:482b:7700::,2001:4860:4827:7700::,2001:4860:482d:7700::,2001:4860:482a:7700::
+11-01 00:24:39.480   336  4627 I resolv  : GetAddrInfoHandler::run: {100 983140 100 983140 1073 1}
+11-01 00:24:39.481   336  4628 I resolv  : GetAddrInfoHandler::run: {100 983140 100 983140 1073 1}
+11-01 00:24:39.482  1041  1067 D SlicesIndexer: Slices already indexed - returning.
+11-01 00:24:39.482  1041  1067 D SettingsSliceProvider: Allowlisting 5 uris to 3 pkgs.
+11-01 00:24:39.485   336  4630 I resolv  : res_nmkquery: (QUERY, IN, A)
+11-01 00:24:39.485   336  4632 I resolv  : res_nmkquery: (QUERY, IN, A)
+11-01 00:24:39.485   336  4632 I resolv  : resolv_cache_lookup: FOUND IN CACHE entry=0x781c90d61c70
+11-01 00:24:39.485   336  4631 I resolv  : res_nmkquery: (QUERY, IN, AAAA)
+11-01 00:24:39.486   336  4629 I resolv  : res_nmkquery: (QUERY, IN, AAAA)
+11-01 00:24:39.486   336  4632 I resolv  : doQuery: rcode=0, ancount=8, return value=160
+11-01 00:24:39.486   336  4630 I resolv  : resolv_cache_lookup: FOUND IN CACHE entry=0x781c80d59af0
+11-01 00:24:39.486   336  4630 I resolv  : doQuery: rcode=0, ancount=1, return value=63
+11-01 00:24:39.486   336  4631 I resolv  : resolv_cache_lookup: FOUND IN CACHE entry=0x781bf0d64d50
+11-01 00:24:39.486   336  4631 I resolv  : doQuery: rcode=0, ancount=8, return value=256
+11-01 00:24:39.486   336  4629 I resolv  : resolv_cache_lookup: FOUND IN CACHE entry=0x781c80d58dd0
+11-01 00:24:39.487   336  4629 I resolv  : doQuery: rcode=0, ancount=1, return value=75
+11-01 00:24:39.487   992  4621 D TrafficStats: tagSocket(6) with statsTag=0xffffff81, statsUid=-1
+11-01 00:24:39.488   992  4620 D TrafficStats: tagSocket(106) with statsTag=0xffffff81, statsUid=-1
+11-01 00:24:39.505  1041  1067 D SettingsSliceProvider: onBindSlice start: content://com.android.settings.slices/action/os_firmware_version
+11-01 00:24:39.507  1041  4228 D SlicesIndexer: Slices already indexed - returning.
+11-01 00:24:39.508  1041  4228 W SliceData: Highlight menu key res is empty: com.android.settings.deviceinfo.firmwareversion.FirmwareVersionDetailPreferenceController
+11-01 00:24:39.508  1041  1067 V SettingsSliceProvider: onBindSlice end
+11-01 00:24:39.509  1041  4228 D SettingsSliceProvider: Built slice (content://com.android.settings.slices/action/os_firmware_version) in: 2
+11-01 00:24:39.510  1041  2994 D SlicesIndexer: Slices already indexed - returning.
+11-01 00:24:39.510  1041  2994 D SettingsSliceProvider: Built slice (content://com.android.settings.slices/action/screen_magnification_gestures_preference_screen) in: 0
+11-01 00:24:39.511  1041  4228 D SlicesIndexer: Slices already indexed - returning.
+11-01 00:24:39.511  1041  4228 D VolumeSliceHelper: Registering uri for broadcast relay: content://com.android.settings.slices/action/media_volume
+11-01 00:24:39.512  1041  4228 D SliceBroadcastRelay: Registering Uri for broadcast relay: content://com.android.settings.slices/action/volume_slices
+11-01 00:24:39.512  1041  1041 D SettingsSliceProvider: Starting background worker for: content://com.android.settings.slices/action/media_volume
+11-01 00:24:39.512  1041  1041 D SliceBackgroundWorker: create instance: class com.android.settings.media.MediaOutputIndicatorWorker
+11-01 00:24:39.514  1041  2994 W LocalMediaManager: BluetoothAdapter is null or muting expected device not exist
+11-01 00:24:39.517  1041  2994 D SlicesIndexer: Slices already indexed - returning.
+11-01 00:24:39.517  1041  2994 D VolumeSliceHelper: Registering uri for broadcast relay: content://com.android.settings.slices/action/call_volume
+11-01 00:24:39.519  1041  4228 D SettingsSliceProvider: Built slice (content://com.android.settings.slices/action/media_volume) in: 8
+11-01 00:24:39.519  1041  2994 D SettingsSliceProvider: Built slice (content://com.android.settings.slices/action/call_volume) in: 2
+11-01 00:24:39.520  1041  4228 D SlicesIndexer: Slices already indexed - returning.
+11-01 00:24:39.521  1041  4228 D VolumeSliceHelper: Registering uri for broadcast relay: content://com.android.settings.slices/action/separate_ring_volume
+11-01 00:24:39.523  1041  4228 D SettingsSliceProvider: Built slice (content://com.android.settings.slices/action/separate_ring_volume) in: 3
+11-01 00:24:39.523  1041  2994 D SlicesIndexer: Slices already indexed - returning.
+11-01 00:24:39.524  1041  2994 D VolumeSliceHelper: Registering uri for broadcast relay: content://com.android.settings.slices/action/notification_volume
+11-01 00:24:39.525  1041  4228 D SlicesIndexer: Slices already indexed - returning.
+11-01 00:24:39.525  1041  4228 D VolumeSliceHelper: Registering uri for broadcast relay: content://com.android.settings.slices/action/alarm_volume
+11-01 00:24:39.526  1041  2994 D SettingsSliceProvider: Built slice (content://com.android.settings.slices/action/notification_volume) in: 3
+11-01 00:24:39.526  1041  2994 D SlicesIndexer: Slices already indexed - returning.
+11-01 00:24:39.527  1041  2994 W SliceData: Highlight menu key res is empty: com.android.settings.deviceinfo.hardwareinfo.DeviceModelPreferenceController
+11-01 00:24:39.527  1041  4228 D SettingsSliceProvider: Built slice (content://com.android.settings.slices/action/alarm_volume) in: 2
+11-01 00:24:39.527  1041  4228 D SlicesIndexer: Slices already indexed - returning.
+11-01 00:24:39.528  1041  1067 D SubscriptionUtil: getSelectableSubscriptionInfoList: [[SubscriptionInfo: id=1 iccId=89860318640220133897 simSlotIndex=0 portIndex=0 isEmbedded=false carrierId=1 displayName=T-Mobile carrierName=T-Mobile isOpportunistic=false groupUuid=null groupOwner= isGroupDisabled=false displayNameSource=CARRIER iconTint=-9033797 number=+15551234567 dataRoaming=0 mcc=310 mnc=260 ehplmns=[] hplmns=[] cardString=89860318640220133897 cardId=0 nativeAccessRules=null carrierConfigAccessRules=[cert: 92B5F8117FBD9BD5738FF168A4FA12CBE284BE834EDE1A7BB44DD8455BA15920 pkg: null access: 0, cert: 3D1A4BEF6EE7AF7D34D120E7B1AAC0DD245585DE6237CF100F68333AFACFF562 pkg: null access: 0, cert: 6892793FC413019D2DF609DFED7AF622D0F2D8FCF96EFA7E3FB87EEA34E10B93 pkg: null access: 0, cert: 7B68FD9D4E7610C9CB35FC0C6CC06EA04C6906E3DFA9F48F9A05460AF36BFFFC pkg: null access: 0] countryIso=us profileClass=-1 mType=LOCAL_SIM areUiccApplicationsEnabled=true usageSetting=DEFAULT]]
+11-01 00:24:39.529  1041  2994 D SettingsSliceProvider: Built slice (content://com.android.settings.slices/action/hardware_info_device_model) in: 3
+11-01 00:24:39.530  1041  1067 D SubscriptionUtil: getSelectableSubscriptionInfoList: [[SubscriptionInfo: id=1 iccId=89860318640220133897 simSlotIndex=0 portIndex=0 isEmbedded=false carrierId=1 displayName=T-Mobile carrierName=T-Mobile isOpportunistic=false groupUuid=null groupOwner= isGroupDisabled=false displayNameSource=CARRIER iconTint=-9033797 number=+15551234567 dataRoaming=0 mcc=310 mnc=260 ehplmns=[] hplmns=[] cardString=89860318640220133897 cardId=0 nativeAccessRules=null carrierConfigAccessRules=[cert: 92B5F8117FBD9BD5738FF168A4FA12CBE284BE834EDE1A7BB44DD8455BA15920 pkg: null access: 0, cert: 3D1A4BEF6EE7AF7D34D120E7B1AAC0DD245585DE6237CF100F68333AFACFF562 pkg: null access: 0, cert: 6892793FC413019D2DF609DFED7AF622D0F2D8FCF96EFA7E3FB87EEA34E10B93 pkg: null access: 0, cert: 7B68FD9D4E7610C9CB35FC0C6CC06EA04C6906E3DFA9F48F9A05460AF36BFFFC pkg: null access: 0] countryIso=us profileClass=-1 mType=LOCAL_SIM areUiccApplicationsEnabled=true usageSetting=DEFAULT]]
+11-01 00:24:39.530  1041  1067 D SubscriptionUtil: getSelectableSubscriptionInfoList: [[SubscriptionInfo: id=1 iccId=89860318640220133897 simSlotIndex=0 portIndex=0 isEmbedded=false carrierId=1 displayName=T-Mobile carrierName=T-Mobile isOpportunistic=false groupUuid=null groupOwner= isGroupDisabled=false displayNameSource=CARRIER iconTint=-9033797 number=+15551234567 dataRoaming=0 mcc=310 mnc=260 ehplmns=[] hplmns=[] cardString=89860318640220133897 cardId=0 nativeAccessRules=null carrierConfigAccessRules=[cert: 92B5F8117FBD9BD5738FF168A4FA12CBE284BE834EDE1A7BB44DD8455BA15920 pkg: null access: 0, cert: 3D1A4BEF6EE7AF7D34D120E7B1AAC0DD245585DE6237CF100F68333AFACFF562 pkg: null access: 0, cert: 6892793FC413019D2DF609DFED7AF622D0F2D8FCF96EFA7E3FB87EEA34E10B93 pkg: null access: 0, cert: 7B68FD9D4E7610C9CB35FC0C6CC06EA04C6906E3DFA9F48F9A05460AF36BFFFC pkg: null access: 0] countryIso=us profileClass=-1 mType=LOCAL_SIM areUiccApplicationsEnabled=true usageSetting=DEFAULT]]
+11-01 00:24:39.530  1041  1067 D SubscriptionUtil: getSelectableSubscriptionInfoList: [[SubscriptionInfo: id=1 iccId=89860318640220133897 simSlotIndex=0 portIndex=0 isEmbedded=false carrierId=1 displayName=T-Mobile carrierName=T-Mobile isOpportunistic=false groupUuid=null groupOwner= isGroupDisabled=false displayNameSource=CARRIER iconTint=-9033797 number=+15551234567 dataRoaming=0 mcc=310 mnc=260 ehplmns=[] hplmns=[] cardString=89860318640220133897 cardId=0 nativeAccessRules=null carrierConfigAccessRules=[cert: 92B5F8117FBD9BD5738FF168A4FA12CBE284BE834EDE1A7BB44DD8455BA15920 pkg: null access: 0, cert: 3D1A4BEF6EE7AF7D34D120E7B1AAC0DD245585DE6237CF100F68333AFACFF562 pkg: null access: 0, cert: 6892793FC413019D2DF609DFED7AF622D0F2D8FCF96EFA7E3FB87EEA34E10B93 pkg: null access: 0, cert: 7B68FD9D4E7610C9CB35FC0C6CC06EA04C6906E3DFA9F48F9A05460AF36BFFFC pkg: null access: 0] countryIso=us profileClass=-1 mType=LOCAL_SIM areUiccApplicationsEnabled=true usageSetting=DEFAULT]]
+11-01 00:24:39.535  1041  4228 D SettingsSliceProvider: Built slice (content://com.android.settings.slices/action/gesture_double_tap_power) in: 8
+11-01 00:24:39.549   992  4621 D NetworkMonitor/100: PROBE_HTTP http://connectivitycheck.gstatic.com/generate_204 time=74ms ret=204 request={Connection=[close], User-Agent=[Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.32 Safari/537.36]} headers={null=[HTTP/1.1 204 No Content], Connection=[close], Content-Length=[0], Cross-Origin-Resource-Policy=[cross-origin], Date=[Sun, 01 Nov 2026 00:24:39 GMT], X-Android-Received-Millis=[1793492679549], X-Android-Response-Source=[NETWORK 204], X-Android-Selected-Protocol=[http/1.1], X-Android-Sent-Millis=[1793492679516]}
+11-01 00:24:39.570   992  4620 D NetworkMonitor/100: PROBE_HTTPS https://www.google.com/generate_204 time=94ms ret=204 request={Connection=[close], User-Agent=[Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.32 Safari/537.36]} headers={null=[HTTP/1.1 204 No Content], Alt-Svc=[h3=":443"; ma=2592000,h3-29=":443"; ma=2592000], Connection=[close], Content-Length=[0], Cross-Origin-Resource-Policy=[cross-origin], Date=[Sun, 01 Nov 2026 00:24:39 GMT], X-Android-Received-Millis=[1793492679570], X-Android-Response-Source=[NETWORK 204], X-Android-Selected-Protocol=[http/1.1], X-Android-Sent-Millis=[1793492679553]}
+11-01 00:24:39.573   992  4619 D NetworkMonitor/100: isCaptivePortal: isSuccessful()=true isPortal()=false RedirectUrl=null isPartialConnectivity()=false Time=171ms
+11-01 00:24:39.577   520   758 D ConnectivityService: [100 WIFI] validation passed
+11-01 00:24:39.592  1041  1067 D WifiCallingSliceHelper: Wifi calling is either not provisioned or not enabled by Platform
+11-01 00:24:39.601  1041  2994 D SlicesIndexer: Slices already indexed - returning.
+11-01 00:24:39.602  1041  2994 D SettingsSliceProvider: Built slice (content://android.settings.slices/action/battery_saver) in: 1
+11-01 00:24:39.604  1041  4228 D SlicesIndexer: Slices already indexed - returning.
+11-01 00:24:39.606  1041  4228 D SettingsSliceProvider: Built slice (content://android.settings.slices/action/airplane_mode) in: 2
+11-01 00:24:39.610  1041  1067 D WifiSlice: calling uid name : com.google.android.settings.intelligence
+11-01 00:24:39.892  4579  4579 D FlutterGeolocator: Creating service.
+11-01 00:24:39.895  4579  4579 D FlutterGeolocator: Binding to location service.
+11-01 00:24:39.898  2608  2624 W RankedDispatcher: The requested voice is not available for this app identifier
+11-01 00:24:39.898  2608  2624 I GoogleTTSServiceImpl: currentLocale = en-US
+11-01 00:24:39.900  2608  2624 W RankedDispatcher: The requested voice is not available for this app identifier
+11-01 00:24:39.900  2608  2624 I GoogleTTSServiceImpl: currentLocale = en-US
+11-01 00:24:39.902  2608  2624 W RankedDispatcher: The requested voice is not available for this app identifier
+11-01 00:24:39.902  2608  2624 I GoogleTTSServiceImpl: For default lang en-us is name en-US-language (en-us-x-iog-server)
+11-01 00:24:39.941  2608  2624 W RankedDispatcher: The requested voice is not available for this app identifier
+11-01 00:24:39.942  2608  2624 I GoogleTTSServiceImpl: currentLocale = en-US
+11-01 00:24:39.944  2608  2624 W RankedDispatcher: The requested voice is not available for this app identifier
+11-01 00:24:39.944  2608  2624 I GoogleTTSServiceImpl: currentLocale = en-US
+11-01 00:24:39.944  2608  2624 W RankedDispatcher: The requested voice is not available for this app identifier
+11-01 00:24:39.945  2608  2624 I GoogleTTSServiceImpl: currentLocale = en-US
+11-01 00:24:39.945  2608  2624 W RankedDispatcher: The requested voice is not available for this app identifier
+11-01 00:24:39.945  2608  2624 I GoogleTTSServiceImpl: For default lang en-us is name en-US-language (en-us-x-iog-server)
+11-01 00:24:39.946  2608  2624 W RankedDispatcher: The requested voice is not available for this app identifier
+11-01 00:24:39.946  2608  2624 I GoogleTTSServiceImpl: currentLocale = en-US
+11-01 00:24:39.950  2608  4615 I PipelineReaderImpl: Initializing en-us-x-hol-lstm-embedded from disk
+11-01 00:24:39.978  4579  4579 I Choreographer: Skipped 33 frames!  The application may be doing too much work on its main thread.
+11-01 00:24:40.170  4579  4579 D FlutterGeolocator: Flutter engine connected. Connected engine count 1
+11-01 00:24:40.174  4579  4594 I OpenGLRenderer: Davey! duration=747ms; Flags=1, FrameTimelineVsyncId=5599, IntendedVsync=54684883861, Vsync=55234883839, InputEventId=0, HandleInputStart=55244089050, AnimationStart=55244089891, PerformTraversalsStart=55244089992, DrawStart=55244683212, FrameDeadline=54701550527, FrameInterval=55242092603, FrameStartTime=16666666, SyncQueued=55244857113, SyncStart=55245022131, IssueDrawCommandsStart=55257033362, SwapBuffers=55325029895, FrameCompleted=55432057109, DequeueBufferDuration=513380, QueueBufferDuration=839590, GpuCompleted=55431498681, SwapBuffersCompleted=55432057109, DisplayPresentTime=0, CommandSubmissionCompleted=55325029895, 
+11-01 00:24:40.180  1427  2201 I FontLog : Received query Noto Color Emoji Compat, URI content://com.google.android.gms.fonts [CONTEXT service_id=132 ]
+11-01 00:24:40.180  1427  2201 I FontLog : Query [emojicompat-emoji-font] resolved to {Noto Color Emoji Compat, wdth 100.0, wght 400, ital 0.0, bestEffort false} [CONTEXT service_id=132 ]
+11-01 00:24:40.181  1427  2201 I FontLog : Fetch {Noto Color Emoji Compat, wdth 100.0, wght 400, ital 0.0, bestEffort false} end status Status{statusCode=SUCCESS, resolution=null} [CONTEXT service_id=132 ]
+11-01 00:24:40.182  1427  2201 I FontLog : Pulling font file for id = 5, cache size = 5 [CONTEXT service_id=132 ]
+11-01 00:24:40.182   520   539 I ActivityTaskManager: Displayed fr.vigiroad.vigiroad/.MainActivity for user 0: +1s270ms
+11-01 00:24:40.182   520   539 I ActivityTaskManager: Fully drawn fr.vigiroad.vigiroad/.MainActivity: +1s270ms
+11-01 00:24:40.196   827   881 W WindowOnBackDispatcher: sendCancelIfRunning: isInProgress=falsecallback=android.view.ViewRootImpl$$ExternalSyntheticLambda17@f0f4d3a
+11-01 00:24:40.196   520  1607 D CoreBackPreview: Window{9213638 u0 Splash Screen fr.vigiroad.vigiroad EXITING}: Setting back callback null
+11-01 00:24:40.196   520   894 W InputManager-JNI: Input channel object '9213638 Splash Screen fr.vigiroad.vigiroad (client)' was disposed without first being removed with the input manager!
+11-01 00:24:40.202  1427  2201 I FontLog : Pulling font file for id = 5, cache size = 5 [CONTEXT service_id=132 ]
+11-01 00:24:40.202   520  1607 D CompatibilityChangeReporter: Compat change id reported: 214016041; UID 10192; state: ENABLED
+11-01 00:24:40.202   520  1607 I ImeTracker: fr.vigiroad.vigiroad:7bd72a1e: onRequestHide at ORIGIN_SERVER_HIDE_INPUT reason HIDE_UNSPECIFIED_WINDOW
+11-01 00:24:40.202   520  1607 I ImeTracker: fr.vigiroad.vigiroad:7bd72a1e: onCancelled at PHASE_SERVER_SHOULD_HIDE
+11-01 00:24:40.209  1080  1137 I ImeTracker: com.google.android.apps.nexuslauncher:af2f3d71: onRequestHide at ORIGIN_CLIENT_HIDE_SOFT_INPUT reason HIDE_SOFT_INPUT
+11-01 00:24:40.217  1609  3465 I PBSessionCacheImpl: Deleted sessionId[7078250329019135] from persistence.
+11-01 00:24:40.219  1080  2040 D OneSearchSuggestProvider: Shut down the binder channel
+11-01 00:24:40.219  1080  1104 I IPCThreadState: oneway function results for code 2 on binder at 0x78c6c264a7f0 will be dropped but finished with status UNKNOWN_TRANSACTION
+11-01 00:24:40.233  1609  2213 I A       : Using proto config with mendel
+11-01 00:24:40.234  1609  2213 I A       : Using proto config with mendel
+11-01 00:24:40.236   520  2984 W InputMethodManagerService: Ignoring hideSoftInput of uid 10169 : com.android.internal.inputmethod.IInputMethodClient$Stub$Proxy@b3c0c7f
+11-01 00:24:40.236   520  2984 I ImeTracker: com.google.android.apps.nexuslauncher:af2f3d71: onCancelled at PHASE_SERVER_CLIENT_FOCUSED
+11-01 00:24:40.237  1609  2213 W SearchServiceCore: Abort, client detached.
+11-01 00:24:40.238  1609  2213 W SearchServiceCore: Abort, client detached.
+11-01 00:24:40.238  1609  2213 W SearchServiceCore: Abort, client detached.
+11-01 00:24:40.238  1609  2213 W SearchServiceCore: Abort, client detached.
+11-01 00:24:40.238  1609  2213 W SearchServiceCore: Abort, client detached.
+11-01 00:24:40.240  1609  2213 W SearchServiceCore: Abort, client detached.
+11-01 00:24:40.240  1464  1464 I GoogleInputMethodService: GoogleInputMethodService.onFinishInput():3227 
+11-01 00:24:40.242  1464  1464 I GoogleInputMethodService: GoogleInputMethodService.updateDeviceLockedStatus():2087 repeatCheckTimes = 0, unlocked = true
+11-01 00:24:40.242  1464  1464 I GoogleInputMethodService: GoogleInputMethodService.onStartInput():1877 onStartInput(EditorInfo{inputType=0x0(NULL) imeOptions=0x0 privateImeOptions=null actionName=UNSPECIFIED actionLabel=null actionId=0 initialSelStart=-1 initialSelEnd=-1 initialCapsMode=0x0 hintText=null label=null packageName=fr.vigiroad.vigiroad fieldId=0 fieldName=null extras=null}, false)
+11-01 00:24:40.242  1464  1464 I GoogleInputMethodService: GoogleInputMethodService.shouldHideHeaderOnInitialState():4008 ShouldHideHeaderOnInitialState = false
+11-01 00:24:40.244  1464  1464 I GoogleInputMethodService: GoogleInputMethodService.updateDeviceLockedStatus():2087 repeatCheckTimes = 2, unlocked = true
+11-01 00:24:40.249  1609  2213 W SearchServiceCore: Abort, client detached.
+11-01 00:24:40.249  1609  2213 W SearchServiceCore: Abort, client detached.
+11-01 00:24:40.249  1609  2213 W SearchServiceCore: Abort, client detached.
+11-01 00:24:40.400  1427  1427 D BoundBrokerSvc: onUnbind: Intent { act=com.google.android.gms.semanticlocation.service.START_ODLH pkg=com.google.android.gms }
+11-01 00:24:40.424  2608  4615 E tflite  : third_party/tensorflow/lite/core/subgraph.cc:903 tensor.data.raw != nullptr was not true.
+11-01 00:24:40.574  2608  4615 I ControllerWrapperImpl: Done initializing en-us-x-hol-lstm-embedded
+11-01 00:24:40.581  4579  4589 I giroad.vigiroad: JIT allocated 66KB for compiled code of void ks.onMethodCall(nb0, wb0)
+11-01 00:24:40.581  4579  4589 I giroad.vigiroad: Compiler allocated 6988KB to compile void ks.onMethodCall(nb0, wb0)
+11-01 00:24:40.623  1427  1427 D BoundBrokerSvc: onUnbind: Intent { act=com.google.android.gms.clearcut.bootcount.service.START pkg=com.google.android.gms }
+11-01 00:24:40.646  4579  4579 I flutter : VIGIROAD_WAKEWORD_SMOKE OK scores=22 max=0.0000 seuil=0.9995
+11-01 00:24:40.650  1536  2315 W ModernMediaScanner: Failed to apply ContentProviderOperation(type=insert uri=content://media/internal/file values={instance_id=null, compilation=null, disc_number=null, duration=1000, is_ringtone=0, album_artist=null, resolution=null, orientation=null, artist=pdx, author=null, height=null, is_drm=0, is_audiobook=0, date_modified=1720722121, writer=null, composer=null, _modifier=3, is_recording=0, datetaken=null, mime_type=audio/ogg, is_notification=1, bitrate=80000, cd_track_number=2dB214a, xmp=[], year=null, _data=/product/media/audio/notifications/arcturus.ogg, _size=7908, album=notifications, genre=null, is_alarm=0, title=Arcturus, track=null, width=null, is_music=0, document_id=null, is_podcast=0, capture_framerate=null, num_tracks=1, original_document_id=null, media_type=2} exceptionAllowed)
+11-01 00:24:40.650  1536  2315 W ModernMediaScanner: android.database.sqlite.SQLiteConstraintException: UNIQUE constraint failed: files._data (code 2067 SQLITE_CONSTRAINT_UNIQUE)
+11-01 00:24:40.650  1536  2315 W ModernMediaScanner: 	at android.database.sqlite.SQLiteConnection.nativeExecuteForLastInsertedRowId(Native Method)
+11-01 00:24:40.650  1536  2315 W ModernMediaScanner: 	at android.database.sqlite.SQLiteConnection.executeForLastInsertedRowId(SQLiteConnection.java:961)
+11-01 00:24:40.650  1536  2315 W ModernMediaScanner: 	at android.database.sqlite.SQLiteSession.executeForLastInsertedRowId(SQLiteSession.java:790)
+11-01 00:24:40.650  1536  2315 W ModernMediaScanner: 	at android.database.sqlite.SQLiteStatement.executeInsert(SQLiteStatement.java:89)
+11-01 00:24:40.650  1536  2315 W ModernMediaScanner: 	at com.android.providers.media.util.DatabaseUtils.executeInsert(DatabaseUtils.java:456)
+11-01 00:24:40.650  1536  2315 W ModernMediaScanner: 	at com.android.providers.media.util.SQLiteQueryBuilder.insert(SQLiteQueryBuilder.java:611)
+11-01 00:24:40.650  1536  2315 W ModernMediaScanner: 	at com.android.providers.media.util.SQLiteQueryBuilder.lambda$insert$1(SQLiteQueryBuilder.java:575)
+11-01 00:24:40.650  1536  2315 W ModernMediaScanner: 	at com.android.providers.media.util.SQLiteQueryBuilder.$r8$lambda$z6PmNgi8nEawad46M5nyYc14aRM(SQLiteQueryBuilder.java:0)
+11-01 00:24:40.650  1536  2315 W ModernMediaScanner: 	at com.android.providers.media.util.SQLiteQueryBuilder$$ExternalSyntheticLambda4.apply(R8$$SyntheticClass:0)
+11-01 00:24:40.650  1536  2315 W ModernMediaScanner: 	at com.android.providers.media.DatabaseHelper.runWithTransaction(DatabaseHelper.java:850)
+11-01 00:24:40.650  1536  2315 W ModernMediaScanner: 	at com.android.providers.media.util.SQLiteQueryBuilder.insert(SQLiteQueryBuilder.java:574)
+11-01 00:24:40.650  1536  2315 W ModernMediaScanner: 	at com.android.providers.media.MediaProvider.lambda$insertAllowingUpsert$20(MediaProvider.java:4846)
+11-01 00:24:40.650  1536  2315 W ModernMediaScanner: 	at com.android.providers.media.MediaProvider.$r8$lambda$A8_bSAcDGkyGiCcvRo57xoMQkf8(MediaProvider.java:0)
+11-01 00:24:40.650  1536  2315 W ModernMediaScanner: 	at com.android.providers.media.MediaProvider$$ExternalSyntheticLambda39.apply(R8$$SyntheticClass:0)
+11-01 00:24:40.650  1536  2315 W ModernMediaScanner: 	at com.android.providers.media.DatabaseHelper.runWithTransaction(DatabaseHelper.java:850)
+11-01 00:24:40.650  1536  2315 W ModernMediaScanner: 	at com.android.providers.media.MediaProvider.insertAllowingUpsert(MediaProvider.java:4836)
+11-01 00:24:40.650  1536  2315 W ModernMediaScanner: 	at com.android.providers.media.MediaProvider.insertFile(MediaProvider.java:4818)
+11-01 00:24:40.650  1536  2315 W ModernMediaScanner: 	at com.android.providers.media.MediaProvider.insertInternal(MediaProvider.java:5287)
+11-01 00:24:40.650  1536  2315 W ModernMediaScanner: 	at com.android.providers.media.MediaProvider.insert(MediaProvider.java:4980)
+11-01 00:24:40.650  1536  2315 W ModernMediaScanner: 	at android.content.ContentProviderOperation.applyInternal(ContentProviderOperation.java:375)
+11-01 00:24:40.650  1536  2315 W ModernMediaScanner: 	at android.content.ContentProviderOperation.apply(ContentProviderOperation.java:347)
+11-01 00:24:40.650  1536  2315 W ModernMediaScanner: 	at android.content.ContentProvider.applyBatch(ContentProvider.java:2653)
+11-01 00:24:40.650  1536  2315 W ModernMediaScanner: 	at com.android.providers.media.MediaProvider.applyBatch(MediaProvider.java:5339)
+11-01 00:24:40.650  1536  2315 W ModernMediaScanner: 	at android.content.ContentProvider.applyBatch(ContentProvider.java:2644)
+11-01 00:24:40.650  1536  2315 W ModernMediaScanner: 	at android.content.ContentResolver.applyBatch(ContentResolver.java:2246)
+11-01 00:24:40.650  1536  2315 W ModernMediaScanner: 	at com.android.providers.media.scan.ModernMediaScanner$Scan.applyPending(ModernMediaScanner.java:938)
+11-01 00:24:40.650  1536  2315 W ModernMediaScanner: 	at com.android.providers.media.scan.ModernMediaScanner$Scan.postVisitDirectory(ModernMediaScanner.java:896)
+11-01 00:24:40.650  1536  2315 W ModernMediaScanner: 	at com.android.providers.media.scan.ModernMediaScanner$Scan.postVisitDirectory(ModernMediaScanner.java:319)
+11-01 00:24:40.650  1536  2315 W ModernMediaScanner: 	at java.nio.file.Files.walkFileTree(Files.java:2688)
+11-01 00:24:40.650  1536  2315 W ModernMediaScanner: 	at java.nio.file.Files.walkFileTree(Files.java:2742)
+11-01 00:24:40.650  1536  2315 W ModernMediaScanner: 	at com.android.providers.media.scan.ModernMediaScanner$Scan.walkFileTree(ModernMediaScanner.java:435)
+11-01 00:24:40.650  1536  2315 W ModernMediaScanner: 	at com.android.providers.media.scan.ModernMediaScanner$Scan.runInternal(ModernMediaScanner.java:398)
+11-01 00:24:40.650  1536  2315 W ModernMediaScanner: 	at com.android.providers.media.scan.ModernMediaScanner$Scan.run(ModernMediaScanner.java:387)
+11-01 00:24:40.653  1536  2315 W ModernMediaScanner: 	at com.android.providers.media.scan.ModernMediaScanner.scanDirectory(ModernMediaScanner.java:246)
+11-01 00:24:40.653  1536  2315 W ModernMediaScanner: 	at com.android.providers.media.MediaProvider.scanDirectory(MediaProvider.java:1939)
+11-01 00:24:40.653  1536  2315 W ModernMediaScanner: 	at com.android.providers.media.MediaService.onScanVolume(MediaService.java:204)
+11-01 00:24:40.653  1536  2315 W ModernMediaScanner: 	at com.android.providers.media.MediaService.onScanVolume(MediaService.java:172)
+11-01 00:24:40.653  1536  2315 W ModernMediaScanner: 	at com.android.providers.media.MediaService.onHandleWork(MediaService.java:95)
+11-01 00:24:40.653  1536  2315 W ModernMediaScanner: 	at androidx.core.app.JobIntentService$CommandProcessor.doInBackground(JobIntentService.java:396)
+11-01 00:24:40.653  1536  2315 W ModernMediaScanner: 	at androidx.core.app.JobIntentService$CommandProcessor.doInBackground(JobIntentService.java:387)
+11-01 00:24:40.653  1536  2315 W ModernMediaScanner: 	at android.os.AsyncTask$3.call(AsyncTask.java:394)
+11-01 00:24:40.653  1536  2315 W ModernMediaScanner: 	at java.util.concurrent.FutureTask.run(FutureTask.java:264)
+11-01 00:24:40.653  1536  2315 W ModernMediaScanner: 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+11-01 00:24:40.653  1536  2315 W ModernMediaScanner: 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:644)
+11-01 00:24:40.653  1536  2315 W ModernMediaScanner: 	at java.lang.Thread.run(Thread.java:1012)
+11-01 00:24:40.658  1536  2315 I MediaProvider: Scanned internal due to REASON_MOUNTED, found 227 items in 27032ms, 224 inserts 3 updates 0 deletes
+11-01 00:24:40.662   520  3552 D CompatibilityChangeReporter: Compat change id reported: 182734110; UID 1000; state: ENABLED
+11-01 00:24:40.667  1536  2315 W MediaProvider: Didn't find any volume for getVolume(/product/media/audio/ringtones/Ring_Synth_04.ogg)
+11-01 00:24:40.668  1536  2315 I MediaProvider: Open with lower FS for /product/media/audio/ringtones/Ring_Synth_04.ogg. Uid: 10173
+11-01 00:24:40.672  1536  2315 W MediaProvider: Didn't find any volume for getVolume(/product/media/audio/notifications/pixiedust.ogg)
+11-01 00:24:40.673  1536  2315 I MediaProvider: Open with lower FS for /product/media/audio/notifications/pixiedust.ogg. Uid: 10173
+11-01 00:24:40.676  1536  2315 W MediaProvider: Didn't find any volume for getVolume(/product/media/audio/alarms/Alarm_Classic.ogg)
+11-01 00:24:40.676  1536  2315 I MediaProvider: Open with lower FS for /product/media/audio/alarms/Alarm_Classic.ogg. Uid: 10173
+11-01 00:24:40.680  1536  2315 W MediaProvider: isAppCloneUserPair for user 0: false
+11-01 00:24:40.680  1536  2315 W MediaProvider: isAppCloneUserPair for user 0: false
+11-01 00:24:40.686  1536  1865 E StorageManager: Failed to set extended attributes for /storage/emulated/0/Android to set project id.: Operation not permitted
+11-01 00:24:40.686  1536  1865 W MediaProvider: Failed to update quota type for /storage/emulated/0/Android
+11-01 00:24:40.686  1536  1865 W MediaProvider: java.io.IOException: Failed to update quota type for /storage/emulated/0/Android
+11-01 00:24:40.686  1536  1865 W MediaProvider: 	at android.os.storage.StorageManager.updateExternalStorageFileQuotaType(StorageManager.java:2551)
+11-01 00:24:40.686  1536  1865 W MediaProvider: 	at com.android.providers.media.MediaProvider.updateQuotaTypeForFileInternal(MediaProvider.java:882)
+11-01 00:24:40.686  1536  1865 W MediaProvider: 	at com.android.providers.media.MediaProvider.updateQuotaTypeForUri(MediaProvider.java:857)
+11-01 00:24:40.686  1536  1865 W MediaProvider: 	at com.android.providers.media.MediaProvider.-$$Nest$mupdateQuotaTypeForUri(MediaProvider.java:0)
+11-01 00:24:40.686  1536  1865 W MediaProvider: 	at com.android.providers.media.MediaProvider$5.lambda$onInsert$0(MediaProvider.java:916)
+11-01 00:24:40.686  1536  1865 W MediaProvider: 	at com.android.providers.media.MediaProvider$5.$r8$lambda$fpXVCCb4tNgN0rBFXazZWCUznbc(MediaProvider.java:0)
+11-01 00:24:40.686  1536  1865 W MediaProvider: 	at com.android.providers.media.MediaProvider$5$$ExternalSyntheticLambda1.run(R8$$SyntheticClass:0)
+11-01 00:24:40.686  1536  1865 W MediaProvider: 	at android.os.Handler.handleCallback(Handler.java:958)
+11-01 00:24:40.686  1536  1865 W MediaProvider: 	at android.os.Handler.dispatchMessage(Handler.java:99)
+11-01 00:24:40.686  1536  1865 W MediaProvider: 	at android.os.Looper.loopOnce(Looper.java:205)
+11-01 00:24:40.686  1536  1865 W MediaProvider: 	at android.os.Looper.loop(Looper.java:294)
+11-01 00:24:40.686  1536  1865 W MediaProvider: 	at android.os.HandlerThread.run(HandlerThread.java:67)
+11-01 00:24:40.689  1536  2315 I MediaProvider: Scanned external_primary due to REASON_MOUNTED, found 15 items in 12ms, 2 inserts 0 updates 0 deletes
+11-01 00:24:40.690  1536  1865 E StorageManager: Failed to set extended attributes for /storage/emulated/0/Android/media to set project id.: Operation not permitted
+11-01 00:24:40.690  1536  1865 W MediaProvider: Failed to update quota type for /storage/emulated/0/Android/media
+11-01 00:24:40.690  1536  1865 W MediaProvider: java.io.IOException: Failed to update quota type for /storage/emulated/0/Android/media
+11-01 00:24:40.690  1536  1865 W MediaProvider: 	at android.os.storage.StorageManager.updateExternalStorageFileQuotaType(StorageManager.java:2551)
+11-01 00:24:40.690  1536  1865 W MediaProvider: 	at com.android.providers.media.MediaProvider.updateQuotaTypeForFileInternal(MediaProvider.java:882)
+11-01 00:24:40.690  1536  1865 W MediaProvider: 	at com.android.providers.media.MediaProvider.updateQuotaTypeForUri(MediaProvider.java:857)
+11-01 00:24:40.690  1536  1865 W MediaProvider: 	at com.android.providers.media.MediaProvider.-$$Nest$mupdateQuotaTypeForUri(MediaProvider.java:0)
+11-01 00:24:40.690  1536  1865 W MediaProvider: 	at com.android.providers.media.MediaProvider$5.lambda$onInsert$0(MediaProvider.java:916)
+11-01 00:24:40.690  1536  1865 W MediaProvider: 	at com.android.providers.media.MediaProvider$5.$r8$lambda$fpXVCCb4tNgN0rBFXazZWCUznbc(MediaProvider.java:0)
+11-01 00:24:40.690  1536  1865 W MediaProvider: 	at com.android.providers.media.MediaProvider$5$$ExternalSyntheticLambda1.run(R8$$SyntheticClass:0)
+11-01 00:24:40.690  1536  1865 W MediaProvider: 	at android.os.Handler.handleCallback(Handler.java:958)
+11-01 00:24:40.690  1536  1865 W MediaProvider: 	at android.os.Handler.dispatchMessage(Handler.java:99)
+11-01 00:24:40.690  1536  1865 W MediaProvider: 	at android.os.Looper.loopOnce(Looper.java:205)
+11-01 00:24:40.690  1536  1865 W MediaProvider: 	at android.os.Looper.loop(Looper.java:294)
+11-01 00:24:40.690  1536  1865 W MediaProvider: 	at android.os.HandlerThread.run(HandlerThread.java:67)
+11-01 00:24:40.691  1536  2315 I MediaProvider: End Intent { act=com.android.providers.media.action.SCAN_VOLUME (has extras) }
+11-01 00:24:40.691  1536  2315 I MediaProvider: Begin Intent { act=android.intent.action.MEDIA_MOUNTED dat=file:///... flg=0x5000010 cmp=com.google.android.providers.media.module/com.android.providers.media.MediaService (has extras) }
+11-01 00:24:40.691  1536  2315 I MediaProvider: Volume MediaVolume name: [external_primary] id: [emulated;0] user: [UserHandle{0}] path: [/storage/emulated/0] externallyManaged: [false] mPublicVolume: [false] already attached
+11-01 00:24:40.691  1536  2315 I MediaProvider: End Intent { act=android.intent.action.MEDIA_MOUNTED dat=file:///... flg=0x5000010 cmp=com.google.android.providers.media.module/com.android.providers.media.MediaService (has extras) }
+11-01 00:24:40.707  1427  1961 I HeterodyneSyncScheduler: Scheduling Phenotype for a PhenotypeSyncImmediately(7, com.google.android.gms.time#com.google.android.gms) one off with window [1, 2] in seconds [CONTEXT service_id=51 ]
+11-01 00:24:40.727  1474  1738 W TimedProcessReaper: Scheduling killing of process to refresh configuration
+11-01 00:24:40.729  1718  1718 D BoundBrokerSvc: onUnbind: Intent { act=com.google.android.gms.chimera.container.moduleinstall.ModuleInstallService.START dat=chimera-action:/... cmp=com.google.android.gms/.chimera.GmsApiService }
+11-01 00:24:40.741  1474  1738 I PhenotypeBackgroundRecv: Successfully updated snapshot for com.google.android.libraries.consentverifier#com.google.android.apps.wellbeing
+11-01 00:24:40.747  1474  1744 I PhenotypeBackgroundRecv: Successfully updated snapshot for com.google.android.libraries.consentverifier#com.google.android.apps.wellbeing
+11-01 00:24:40.750   520   622 I InputReader: Reconfiguring input devices, changes=KEYBOARD_LAYOUTS
+11-01 00:24:40.756   520   601 D CompatibilityChangeReporter: Compat change id reported: 218533173; UID 10172; state: ENABLED
+11-01 00:24:40.756   520   601 D CompatibilityChangeReporter: Compat change id reported: 262645982; UID 10172; state: ENABLED
+11-01 00:24:40.766   829  4152 I PermissionControllerServiceImpl: Updating user sensitive for uid 10172
+11-01 00:24:40.770   827   903 D StylusManager: Stylus InputDevice changed: 14 virtio_input_multi_touch_11
+11-01 00:24:40.773  1039  1039 D CarrierSvcBindHelper: onPackageUpdateFinished: fr.vigiroad.vigiroad
+11-01 00:24:40.774   829  4152 I PermissionControllerServiceImpl: Updating user sensitive for uid 10131
+11-01 00:24:40.774  1039  1039 D CarrierSvcBindHelper: No carrier app for: 0
+11-01 00:24:40.774  1039  1039 D CarrierSvcBindHelper: onPackageModified: fr.vigiroad.vigiroad
+11-01 00:24:40.774  1039  1039 D CarrierSvcBindHelper: No carrier app for: 0
+11-01 00:24:40.778  1718  1718 D BoundBrokerSvc: onUnbind: Intent { act=com.google.android.gms.wallet.service.BIND pkg=com.google.android.gms }
+11-01 00:24:40.784  2969  2969 I PhenotypeBackgroundRecv: Skipping com.google.android.dialer which doesn't use ProcessStable flags.
+11-01 00:24:40.785   520   622 I InputReader: Reconfiguring input devices, changes=KEYBOARD_LAYOUTS
+11-01 00:24:40.788  1039  1351 D ImsResolver: maybeAddedImsService, packageName: fr.vigiroad.vigiroad
+11-01 00:24:40.791   827   903 D StylusManager: Stylus InputDevice changed: 13 virtio_input_multi_touch_10
+11-01 00:24:40.795   827   903 D StylusManager: Stylus InputDevice changed: 12 virtio_input_multi_touch_9
+11-01 00:24:40.797   827   903 D StylusManager: Stylus InputDevice changed: 10 virtio_input_multi_touch_7
+11-01 00:24:40.797   827   903 D StylusManager: Stylus InputDevice changed: 8 virtio_input_multi_touch_5
+11-01 00:24:40.798   827   903 D StylusManager: Stylus InputDevice changed: 7 virtio_input_multi_touch_4
+11-01 00:24:40.799   827   903 D StylusManager: Stylus InputDevice changed: 6 virtio_input_multi_touch_3
+11-01 00:24:40.803   827   903 D StylusManager: Stylus InputDevice changed: 9 virtio_input_multi_touch_6
+11-01 00:24:40.803   827   903 D StylusManager: Stylus InputDevice changed: 5 virtio_input_multi_touch_2
+11-01 00:24:40.804   827   903 D StylusManager: Stylus InputDevice changed: 11 virtio_input_multi_touch_8
+11-01 00:24:40.804   827   903 D StylusManager: Stylus InputDevice changed: 4 virtio_input_multi_touch_1
+11-01 00:24:40.805   827   903 D StylusManager: Stylus InputDevice changed: 14 virtio_input_multi_touch_11
+11-01 00:24:40.807  1523  1523 I AiAiEcho: AppFetcherImpl onPackageChanged com.google.android.rkpdapp.
+11-01 00:24:40.808  1523  2514 I AiAiEcho: AppIndexer Package:[com.google.android.rkpdapp] UserProfile:[0] Enabled:[true].
+11-01 00:24:40.808  1523  2514 I AiAiEcho: AppFetcherImplV2 updateApps package:[com.google.android.rkpdapp], userId:[0], reason:[package is updated.].
+11-01 00:24:40.822   520   549 I CredManSysServiceImpl: CredentialManagerServiceImpl constructed for: com.google.android.gms/.auth.api.credentials.credman.service.PasswordAndPasskeyService
+11-01 00:24:40.823   520   549 I CredManSysServiceImpl: newServiceInfoLocked, mInfo null, com.google.android.gms/com.google.android.gms.auth.api.credentials.credman.service.PasswordAndPasskeyService
+11-01 00:24:40.889  1427  1434 I .gms.persistent: Compiler allocated 4804KB to compile void bwhy.C(java.util.Set, long, dmuh, dmui, java.util.List, java.util.LinkedHashMap, dzew, bwhx, boolean)
+11-01 00:24:40.907  1609  2881 W A       : [Download] response code: 400
+11-01 00:24:40.952  1427  1964 I HeterodyneSyncScheduler: Scheduling Phenotype for a PhenotypeSyncImmediately(6, com.google.android.gms.phenotype) one off with window [1, 2] in seconds [CONTEXT service_id=51 ]
+11-01 00:24:40.984  4287  4408 W TimedProcessReaper: Scheduling killing of process to refresh configuration
+11-01 00:24:40.984  1427  1964 I HeterodyneSyncScheduler: Scheduling Phenotype for a PhenotypeSyncImmediately(8, com.google.android.apps.messaging.auto#com.google.android.apps.messaging) one off with window [1, 2] in seconds [CONTEXT service_id=51 ]
+11-01 00:24:40.987  4287  4408 W TimedProcessReaper: Scheduling killing of process to refresh configuration
+11-01 00:24:40.992  4287  4395 W TimedProcessReaper: Scheduling killing of process to refresh configuration
+11-01 00:24:40.993  1427  1961 I HeterodyneSyncScheduler: Scheduling Phenotype for a PhenotypeSyncImmediately(8, com.google.android.apps.messaging#com.google.android.apps.messaging) one off with window [1, 2] in seconds [CONTEXT service_id=51 ]
+11-01 00:24:40.997  4287  4395 W TimedProcessReaper: Scheduling killing of process to refresh configuration
+11-01 00:24:41.003  4287  4395 W TimedProcessReaper: Scheduling killing of process to refresh configuration
+11-01 00:24:41.010  4170  4216 W TimedProcessReaper: Scheduling killing of process to refresh configuration
+11-01 00:24:41.011  3133  3133 D CompatibilityChangeReporter: Compat change id reported: 150939131; UID 10098; state: ENABLED
+11-01 00:24:41.207     0     0 I logd    : logdr: UID=2000 GID=2000 PID=4663 n tail=0 logMask=99 pid=0 start=0ns deadline=0ns
+11-01 00:24:41.022  3133  3133 I ProvidersCache: Updating roots due to change on user 0at content://com.android.externalstorage.documents/
+11-01 00:24:41.032  3133  4666 E IPCThreadState: Binder transaction failure: 285608/29202/0
+11-01 00:24:41.032  3133  4666 E JavaBinder: !!! FAILED BINDER TRANSACTION !!!  (parcel size = 332)
+11-01 00:24:41.032  3133  4666 I ActivityThread: Removing dead content provider:android.content.ContentProviderProxy@379d592
+11-01 00:24:41.222     0     0 I binder  : 4666:3133 dead process or thread
+11-01 00:24:41.223     0     0 I binder  : 3133:4666 transaction call to 2512:0 failed 285608/29202/0, size 332-16 line 3830
+11-01 00:24:41.225     0     0 I binder  : 816:520 dead process or thread
+11-01 00:24:41.226     0     0 I binder  : 520:816 transaction call to 2512:0 failed 285616/29202/0, size 0-0 line 3830
+11-01 00:24:41.034   520  1607 W ProcessStats: Tracking association SourceState{4c50f5e com.google.android.settings.intelligence/10118 ImpBg #2883} whose proc state 6 is better than process ProcessState{30859d2 com.google.process.gservices/10131 pkg=com.google.android.gsf} proc state 10 (5431 skipped)
+11-01 00:24:41.035   520   816 E IPCThreadState: Binder transaction failure: 285616/29202/0
+11-01 00:24:41.035   520   816 I ActivityManager: Process com.android.externalstorage (pid 2512) early provider death
+11-01 00:24:41.035   520   816 I ActivityManager: Process com.android.externalstorage (pid 2512) has died: cch+99 CEM 
+11-01 00:24:41.035   520   540 D DisplayManagerService: Drop pending events for gone uid 10084
+11-01 00:24:41.039  3133  4666 W ProvidersCache: Failed to load some roots from com.android.externalstorage.documents
+11-01 00:24:41.039  3133  4666 W ProvidersCache: android.os.DeadObjectException: Transaction failed on small parcel; remote process probably died, but this could also be caused by running out of binder buffer space
+11-01 00:24:41.039  3133  4666 W ProvidersCache: 	at android.os.BinderProxy.transactNative(Native Method)
+11-01 00:24:41.039  3133  4666 W ProvidersCache: 	at android.os.BinderProxy.transact(BinderProxy.java:584)
+11-01 00:24:41.039  3133  4666 W ProvidersCache: 	at android.content.ContentProviderProxy.query(ContentProviderNative.java:493)
+11-01 00:24:41.039  3133  4666 W ProvidersCache: 	at android.content.ContentProviderClient.query(ContentProviderClient.java:196)
+11-01 00:24:41.039  3133  4666 W ProvidersCache: 	at android.content.ContentProviderClient.query(ContentProviderClient.java:178)
+11-01 00:24:41.039  3133  4666 W ProvidersCache: 	at android.content.ContentProviderClient.query(ContentProviderClient.java:168)
+11-01 00:24:41.039  3133  4666 W ProvidersCache: 	at com.android.documentsui.roots.ProvidersCache.loadRootsForAuthority(ProvidersCache.java:365)
+11-01 00:24:41.039  3133  4666 W ProvidersCache: 	at com.android.documentsui.roots.ProvidersCache.-$$Nest$mloadRootsForAuthority(ProvidersCache.java:0)
+11-01 00:24:41.039  3133  4666 W ProvidersCache: 	at com.android.documentsui.roots.ProvidersCache$MultiProviderUpdateTask.handleDocumentsProvider(ProvidersCache.java:644)
+11-01 00:24:41.039  3133  4666 W ProvidersCache: 	at com.android.documentsui.roots.ProvidersCache$MultiProviderUpdateTask.startSingleProviderUpdateTask(ProvidersCache.java:620)
+11-01 00:24:41.039  3133  4666 W ProvidersCache: 	at com.android.documentsui.roots.ProvidersCache$MultiProviderUpdateTask.lambda$doInBackground$0(ProvidersCache.java:566)
+11-01 00:24:41.039  3133  4666 W ProvidersCache: 	at com.android.documentsui.roots.ProvidersCache$MultiProviderUpdateTask.$r8$lambda$JoZYG_i4kbsZkEOv7jFikTYLS9c(ProvidersCache.java:0)
+11-01 00:24:41.039  3133  4666 W ProvidersCache: 	at com.android.documentsui.roots.ProvidersCache$MultiProviderUpdateTask$$ExternalSyntheticLambda0.run(R8$$SyntheticClass:0)
+11-01 00:24:41.039  3133  4666 W ProvidersCache: 	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:487)
+11-01 00:24:41.039  3133  4666 W ProvidersCache: 	at java.util.concurrent.FutureTask.run(FutureTask.java:264)
+11-01 00:24:41.039  3133  4666 W ProvidersCache: 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+11-01 00:24:41.039  3133  4666 W ProvidersCache: 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:644)
+11-01 00:24:41.039  3133  4666 W ProvidersCache: 	at java.lang.Thread.run(Thread.java:1012)
+11-01 00:24:41.043   520   552 I libprocessgroup: Successfully killed process cgroup uid 10084 pid 2512 in 0ms
+11-01 00:24:41.043   520  2984 V ActivityManager: Got obituary of 2512:com.android.externalstorage
+11-01 00:24:41.044   337   337 I Zygote  : Process 2512 exited due to signal 9 (Killed)
+11-01 00:24:41.234     0     0 I binder  : undelivered transaction 264759, process died.
+11-01 00:24:41.235     0     0 I binder  : undelivered transaction 264532, process died.
+11-01 00:24:41.238     0     0 I logd    : logdr: UID=2000 GID=2000 PID=4672 n tail=0 logMask=99 pid=0 start=0ns deadline=0ns

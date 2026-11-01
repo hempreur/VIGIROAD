@@ -1,0 +1,39 @@
+ Container deploy-caddy-1 Created 
+ Container deploy-traffic-1 Starting 
+ Container deploy-traffic-1 Started 
+ Container deploy-caddy-1 Starting 
+ Container deploy-caddy-1 Started 
+{"status":"ok","sources":2,"coverage":["FR"]}sans clé : HTTP 401
+{"sources":[{"id":"fr-bison-fute","name":"Bison Futé — réseau routier national non concédé","countries":["FR"],"licence":"Licence de réutilisation des données d'information routière (Bison Futé) / Licence Ouverte 2.0","attribution":"Information fournie par Bison Futé","minIntervalSeconds":120,"homepage":"https://www.bison-fute.gouv.fr/s-abonner.html","areas":[[-5.3,41.3,9.7,51.2]],"covecaddy-1    | {"level":"info","ts":1793508101.711833,"msg":"maxprocs: Leaving GOMAXPROCS=4: CPU quota undefined"}
+caddy-1    | {"level":"info","ts":1793508101.7118812,"msg":"GOMEMLIMIT is updated","GOMEMLIMIT":15082562764,"previous":9223372036854775807}
+caddy-1    | {"level":"info","ts":1793508101.711884,"msg":"using config from file","file":"/etc/caddy/Caddyfile"}
+caddy-1    | {"level":"info","ts":1793508101.7118852,"msg":"adapted config to JSON","adapter":"caddyfile"}
+caddy-1    | {"level":"info","ts":1793508101.7124398,"logger":"admin","msg":"admin endpoint started","address":"localhost:2019","enforce_origin":false,"origins":["//[::1]:2019","//127.0.0.1:2019","//localhost:2019"]}
+caddy-1    | {"level":"info","ts":1793508101.7125788,"logger":"http.auto_https","msg":"server is listening only on the HTTPS port but has no TLS connection policies; adding one to enable TLS","server_name":"srv0","https_port":443}
+caddy-1    | {"level":"info","ts":1793508101.7125933,"logger":"http.auto_https","msg":"enabling automatic HTTP->HTTPS redirects","server_name":"srv0"}
+caddy-1    | {"level":"info","ts":1793508101.712675,"logger":"tls.cache.maintenance","msg":"started background certificate maintenance","cache":"0x3df80a1d900"}
+caddy-1    | {"level":"info","ts":1793508101.7163002,"logger":"http","msg":"enabling HTTP/3 listener","addr":":443"}
+caddy-1    | {"level":"info","ts":1793508101.7163634,"msg":"failed to sufficiently increase receive buffer size (was: 1024 kiB, wanted: 7168 kiB, got: 2048 kiB). See https://github.com/quic-go/quic-go/wiki/UDP-Buffer-Sizes for details."}
+caddy-1    | {"level":"info","ts":1793508101.7164772,"logger":"http.log","msg":"server running","name":"srv0","protocols":["h1","h2","h3"]}
+caddy-1    | {"level":"warn","ts":1793508101.7165267,"logger":"http","msg":"HTTP/2 skipped because it requires TLS","network":"tcp","addr":":80"}
+caddy-1    | {"level":"warn","ts":1793508101.7165327,"logger":"http","msg":"HTTP/3 skipped because it requires TLS","network":"tcp","addr":":80"}
+caddy-1    | {"level":"info","ts":1793508101.7165346,"logger":"http.log","msg":"server running","name":"remaining_auto_https_redirects","protocols":["h1","h2","h3"]}
+caddy-1    | {"level":"info","ts":1793508101.7165377,"logger":"http","msg":"enabling automatic TLS certificate management","domains":["localhost"]}
+caddy-1    | {"level":"info","ts":1793508101.7179132,"logger":"tls.obtain","msg":"acquiring lock","identifier":"localhost"}
+traffic-1  | VigiRoadTrafficAggregator : port 8080, sources : fr-bison-fute, fr-pan-transport-data-gouv
+traffic-1  | 2026-11-01T04:41:43.719533  0:00:00.000079 GET     [200] /health
+traffic-1  | 2026-11-01T04:41:43.728686  0:00:00.000021 GET     [200] /health
+traffic-1  | 2026-11-01T04:41:43.737537  0:00:00.000043 GET     [401] /v1/sources
+traffic-1  | 2026-11-01T04:41:43.747648  0:00:00.000107 GET     [200] /v1/sources
+caddy-1    | {"level":"info","ts":1793508101.7181168,"logger":"tls","msg":"cleaning storage unit","storage":"FileStorage:/data/caddy"}
+caddy-1    | {"level":"info","ts":1793508101.7188568,"logger":"tls.obtain","msg":"lock acquired","identifier":"localhost"}
+caddy-1    | {"level":"info","ts":1793508101.7190228,"logger":"tls.obtain","msg":"obtaining certificate","identifier":"localhost"}
+caddy-1    | {"level":"info","ts":1793508101.7218037,"logger":"tls","msg":"finished cleaning storage units"}
+caddy-1    | {"level":"warn","ts":1793508101.726097,"logger":"pki.ca.local","msg":"installing root certificate (you might be prompted for password)","path":"storage:pki/authorities/local/root.crt"}
+caddy-1    | {"level":"info","ts":1793508101.726352,"msg":"warning: \"certutil\" is not available, install \"certutil\" with \"apt install libnss3-tools\" or \"yum install nss-tools\" and try again"}
+caddy-1    | {"level":"info","ts":1793508101.7263632,"msg":"define JAVA_HOME environment variable to use the Java trust"}
+caddy-1    | {"level":"info","ts":1793508101.7283936,"logger":"tls.obtain","msg":"certificate obtained successfully","identifier":"localhost","issuer":"local"}
+caddy-1    | {"level":"info","ts":1793508101.7284582,"logger":"tls.obtain","msg":"releasing lock","identifier":"localhost"}
+caddy-1    | {"level":"info","ts":1793508101.742117,"msg":"certificate installed properly in linux trusts"}
+caddy-1    | {"level":"info","ts":1793508101.742237,"msg":"autosaved config (load with --resume flag)","file":"/config/caddy/autosave.json"}
+caddy-1    | {"level":"info","ts":1793508101.7422478,"msg":"serving initial configuration"}

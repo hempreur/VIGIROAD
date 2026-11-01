@@ -1,0 +1,28 @@
+name: Squelette des applications de bureau
+on:
+  push:
+    branches: ['chore/admin-scaffold']
+permissions:
+  contents: write
+jobs:
+  scaffold:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: 3.47.9
+      - name: Génération
+        run: |
+          mkdir -p ci-out
+          flutter create --platforms=linux --org fr.vigiroad --project-name vigiroad_server_control ci-out/linux_app
+          flutter create --platforms=windows,linux --org fr.vigiroad --project-name vigiroad_admin_manager ci-out/windows_app
+          flutter create --template=package --project-name vigiroad_admin_core ci-out/shared
+          flutter --version > ci-out/flutter_version.txt
+          rm -rf ci-out/*/build ci-out/*/.dart_tool
+      - name: Publier
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          JOB_STATUS: success
+        run: .github/scripts/publish_logs.sh admin-scaffold ci-out

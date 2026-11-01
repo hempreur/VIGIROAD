@@ -96,7 +96,7 @@ jobs:
           docker compose --env-file .env --env-file .domain ps | tee -a ../../ci-out/compose.log
           # Seul Caddy publie des ports.
           docker ps --format '{{.Names}} {{.Ports}}' | tee -a ../../ci-out/compose.log
-          published=$(docker ps --format '{{.Names}} {{.Ports}}' | grep -v caddy | grep -c -- '->' || true)
+          published=$(docker ps --format '{{.Names}} {{.Ports}}' | grep '^deploy-' | grep -v caddy | grep -c -- '->' || true)
           echo "ports publiés hors Caddy : $published" | tee -a ../../ci-out/compose.log
           [ "$published" = 0 ]
       - name: Bout en bout (HTTPS, TOTP, comptes, Docker réel, sauvegarde, restauration, SSE)
@@ -325,7 +325,7 @@ jobs:
           if (-not (Test-Path $exe)) { throw "Application non installée : $exe" }
           (Get-Item $exe).VersionInfo | Format-List CompanyName, ProductName, FileDescription, LegalCopyright | Out-String | Tee-Object ci-out\installed.log
           Get-ChildItem "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\VIGIROAD" | Tee-Object -Append ci-out\installed.log
-      - name: PostgreSQL et API d'administration (Windows)
+      - name: API réelle (PostgreSQL) et test de bout en bout de l'application (Windows)
         shell: pwsh
         run: |
           $pg = Get-Service -Name postgresql*
@@ -353,24 +353,25 @@ jobs:
           for ($i = 0; $i -lt 60; $i++) {
             try { Invoke-RestMethod http://127.0.0.1:8081/admin/health | ConvertTo-Json | Tee-Object ci-out\services.log; break } catch { Start-Sleep 2 }
           }
-      - name: Comptes mobiles de test (API réelle)
-        shell: bash
-        run: |
-          for i in 1 2 3; do
-            t=$(curl -fsS -X POST http://127.0.0.1:8081/v1/account/register -H 'content-type: application/json' \
-              -H 'x-api-key: cle-de-test-ci-1234567890' -H "x-forwarded-for: 198.51.100.$i" \
-              -d "{\"pseudonym\":\"ci_mobile_$i\",\"email\":\"mobile$i@vigiroad.test\",\"password\":\"Conduite2026\",\"appVersion\":\"1.4.0\",\"device\":{\"installationId\":\"ci-windows-installation-$i\",\"brand\":\"Samsung\",\"model\":\"Galaxy S24\",\"os\":\"android\",\"osVersion\":\"15\"}}" \
-              | sed -E 's/.*"token":"([^"]+)".*/\1/')
-            curl -fsS -X POST http://127.0.0.1:8081/v1/account/heartbeat -H 'content-type: application/json' -H "authorization: Bearer $t" -d '{}' > /dev/null
-          done
-          echo "3 comptes créés" | tee -a ci-out/services.log
-      - name: Test de bout en bout de l'application (Windows)
-        shell: bash
-        working-directory: admin/windows
-        run: |
-          set -o pipefail
-          flutter test integration_test/app_test.dart -d windows \
-            --dart-define=VR_ADMIN_URL=http://127.0.0.1:8081 --dart-define=VR_SETUP_TOKEN=jeton-installation-windows 2>&1 | tee ../../ci-out/integration_windows.log
+          # Les processus lancés ici s'arrêtent à la fin de l'étape (Windows) :
+          # comptes de test et test de l'application dans la même étape.
+          for ($i = 1; $i -le 3; $i++) {
+            $body = @{
+              pseudonym = "ci_mobile_$i"; email = "mobile$i@vigiroad.test"; password = 'Conduite2026'; appVersion = '1.4.0'
+              device = @{ installationId = "ci-windows-installation-$i"; brand = 'Samsung'; model = 'Galaxy S24'; os = 'android'; osVersion = '15' }
+            } | ConvertTo-Json -Depth 4
+            $r = Invoke-RestMethod -Method Post -Uri http://127.0.0.1:8081/v1/account/register -ContentType 'application/json' `
+              -Headers @{ 'x-api-key' = 'cle-de-test-ci-1234567890'; 'x-forwarded-for' = "198.51.100.$i" } -Body $body
+            Invoke-RestMethod -Method Post -Uri http://127.0.0.1:8081/v1/account/heartbeat -ContentType 'application/json' `
+              -Headers @{ authorization = "Bearer $($r.token)" } -Body '{}' | Out-Null
+          }
+          "3 comptes créés" | Tee-Object -Append ci-out\services.log
+          Push-Location admin\windows
+          flutter test integration_test/app_test.dart -d windows `
+            --dart-define=VR_ADMIN_URL=http://127.0.0.1:8081 --dart-define=VR_SETUP_TOKEN=jeton-installation-windows 2>&1 | Tee-Object ..\..\ci-out\integration_windows.log
+          $code = $LASTEXITCODE
+          Pop-Location
+          if ($code -ne 0) { throw "Test de bout en bout en échec ($code)" }
       - name: Capture de l'application installée
         if: success() || failure()
         shell: pwsh

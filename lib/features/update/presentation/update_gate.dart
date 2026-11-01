@@ -92,7 +92,16 @@ class _UpdateCard extends ConsumerWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const Text('🚀', textAlign: TextAlign.center, style: TextStyle(fontSize: 40)),
+                // Fusée (icône de l'application, identique sur tous les téléphones).
+                const Center(
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      boxShadow: [BoxShadow(color: Color(0x6619CFF4), blurRadius: 24)],
+                    ),
+                    child: Icon(Icons.rocket_launch_rounded, color: VrColors.cyan, size: 46),
+                  ),
+                ),
                 const SizedBox(height: 8),
                 Text(
                   'Nouvelle mise à jour disponible !',

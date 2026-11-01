@@ -47,7 +47,10 @@ class _VrTableState extends State<VrTable> {
   Widget build(BuildContext context) {
     Widget cell(VrColumn c, Widget child) => Expanded(
       flex: c.flex,
-      child: Align(alignment: c.numeric ? Alignment.centerRight : Alignment.centerLeft, child: child),
+      child: Padding(
+        padding: EdgeInsets.only(right: c.numeric ? 18 : 10),
+        child: Align(alignment: c.numeric ? Alignment.centerRight : Alignment.centerLeft, child: child),
+      ),
     );
     final header = Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),

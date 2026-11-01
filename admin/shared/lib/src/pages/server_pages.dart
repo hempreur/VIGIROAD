@@ -121,8 +121,8 @@ class LiveGauges extends StatelessWidget {
           Gauge(
             label: 'Réseau',
             percent: null,
-            value: '↓ ${Fmt.rate(net?['rxBps'] as num?)}',
-            sub: '↑ ${Fmt.rate(net?['txBps'] as num?)}',
+            value: Fmt.rate(net?['rxBps'] as num?),
+            sub: 'entrant · sortant ${Fmt.rate(net?['txBps'] as num?)}',
           ),
           Gauge(
             label: 'Température',

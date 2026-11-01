@@ -101,6 +101,12 @@ class _AdminShellState extends State<AdminShell> {
                 Expanded(
                   child: AnimatedSwitcher(
                     duration: const Duration(milliseconds: 220),
+                    // Pages ancrées en haut (pas centrées verticalement).
+                    layoutBuilder: (current, previous) => Stack(
+                      alignment: Alignment.topLeft,
+                      fit: StackFit.expand,
+                      children: [...previous, ?current],
+                    ),
                     child: KeyedSubtree(key: ValueKey(page.id), child: page.builder(context)),
                   ),
                 ),

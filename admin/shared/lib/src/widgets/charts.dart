@@ -356,8 +356,18 @@ class Gauge extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(value, style: VrText.metric.copyWith(fontSize: size * 0.2, color: color == VrColors.textMuted ? VrColors.textMuted : VrColors.textPrimary)),
-                  if (sub != null) Text(sub!, style: VrText.caption.copyWith(fontSize: 10.5), textAlign: TextAlign.center),
+                  SizedBox(
+                    width: size * 0.72,
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(value, style: VrText.metric.copyWith(fontSize: size * 0.2, color: color == VrColors.textMuted ? VrColors.textMuted : VrColors.textPrimary)),
+                    ),
+                  ),
+                  if (sub != null)
+                    SizedBox(
+                      width: size * 0.7,
+                      child: Text(sub!, style: VrText.caption.copyWith(fontSize: 10), textAlign: TextAlign.center, maxLines: 2, overflow: TextOverflow.ellipsis),
+                    ),
                 ],
               ),
             ),

@@ -1,0 +1,5 @@
+Analyzing vigiroad_traffic...
+
+   info - lib/src/traffic_event.dart:58:27 - The parameter name 'o' doesn't match the name 'other' in the overridden method. Try changing the name to 'other'. - avoid_renaming_method_parameters
+
+1 issue found.

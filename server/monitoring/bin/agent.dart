@@ -25,7 +25,7 @@ Future<void> main() async {
   final server = await HttpServer.bind(InternetAddress.anyIPv4, port);
   stdout.writeln('Agent de supervision VIGIROAD : port $port, projet ${agent.policy.project ?? '?'}');
   server.listen((req) => agent.handle(req));
-  for (final s in [ProcessSignal.sigint, ProcessSignal.sigterm]) {
+  for (final s in [ProcessSignal.sigint, if (!Platform.isWindows) ProcessSignal.sigterm]) {
     s.watch().listen((_) async {
       host.stop();
       await server.close(force: true);

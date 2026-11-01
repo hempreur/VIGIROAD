@@ -23,6 +23,9 @@ const config = AppConfig(
 );
 
 /// Faux serveur de comptes : enregistre les requêtes, peut révoquer la session.
+const jsonHeaders = {'content-type': 'application/json; charset=utf-8'};
+
+/// Faux serveur de comptes.
 class FakeAccounts {
   final calls = <String, Map<String, dynamic>>{};
   final order = <String>[];
@@ -38,12 +41,12 @@ class FakeAccounts {
     order.add(key);
     expect(req.headers['x-api-key'], 'cle-application-test-123');
     if (revoked && req.headers['authorization'] != null) {
-      return http.Response(jsonEncode({'error': 'Accès révoqué', 'code': 'revoked'}), 401);
+      return http.Response(jsonEncode({'error': 'Accès révoqué', 'code': 'revoked'}), 401, headers: jsonHeaders);
     }
     Object out;
     switch (key) {
       case 'POST /v1/account/register':
-        if (body['pseudonym'] == 'pris') return http.Response(jsonEncode({'error': 'Ce pseudonyme est déjà utilisé'}), 409);
+        if (body['pseudonym'] == 'pris') return http.Response(jsonEncode({'error': 'Ce pseudonyme est déjà utilisé'}), 409, headers: jsonHeaders);
         out = {'token': 'vrs_jeton', 'sessionId': 's1', 'deviceId': body['device'] == null ? null : 'd1', 'user': user()};
       case 'POST /v1/account/login':
         out = {'token': 'vrs_jeton', 'sessionId': 's1', 'user': user()};
@@ -66,7 +69,7 @@ class FakeAccounts {
       default:
         out = {'ok': true, 'deviceId': 'd1'};
     }
-    return http.Response(jsonEncode(out), 200, headers: {'content-type': 'application/json'});
+    return http.Response(jsonEncode(out), 200, headers: jsonHeaders);
   });
 }
 

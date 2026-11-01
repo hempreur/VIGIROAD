@@ -25,7 +25,7 @@ Future<void> main() async {
   stdout.writeln('VigiRoadTrafficAggregator : port ${server.port}, sources : '
       '${aggregator.statuses.map((s) => s.connector.info.id).join(', ')}');
 
-  for (final signal in [ProcessSignal.sigint, ProcessSignal.sigterm]) {
+  for (final signal in [ProcessSignal.sigint, if (!Platform.isWindows) ProcessSignal.sigterm]) {
     signal.watch().listen((_) async {
       aggregator.stop();
       await server.close();

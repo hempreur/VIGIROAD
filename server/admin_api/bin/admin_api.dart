@@ -64,7 +64,7 @@ Future<void> main() async {
   stdout.writeln('API d\'administration VIGIROAD ${AdminApi.version} : port ${server.port}');
   if (config.setupToken != null) stdout.writeln('Création du premier administrateur possible (jeton d\'installation).');
 
-  for (final s in [ProcessSignal.sigint, ProcessSignal.sigterm]) {
+  for (final s in [ProcessSignal.sigint, if (!Platform.isWindows) ProcessSignal.sigterm]) {
     s.watch().listen((_) async {
       api.stopJobs();
       await server.close(force: true);

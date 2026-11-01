@@ -117,12 +117,18 @@ class _Builder {
     }
   }
 
-  GeoIp build() => GeoIp._(
-    Uint32List.fromList(v4s),
-    Uint32List.fromList(v4e),
-    v4c,
-    Int64List.fromList(v6s),
-    Int64List.fromList(v6e),
-    v6c,
-  );
+  /// Plages triées par début (recherche dichotomique), quel que soit
+  /// l'ordre du fichier.
+  GeoIp build() {
+    final i4 = List<int>.generate(v4s.length, (i) => i)..sort((a, b) => v4s[a].compareTo(v4s[b]));
+    final i6 = List<int>.generate(v6s.length, (i) => i)..sort((a, b) => v6s[a].compareTo(v6s[b]));
+    return GeoIp._(
+      Uint32List.fromList([for (final i in i4) v4s[i]]),
+      Uint32List.fromList([for (final i in i4) v4e[i]]),
+      [for (final i in i4) v4c[i]],
+      Int64List.fromList([for (final i in i6) v6s[i]]),
+      Int64List.fromList([for (final i in i6) v6e[i]]),
+      [for (final i in i6) v6c[i]],
+    );
+  }
 }

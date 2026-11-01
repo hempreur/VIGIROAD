@@ -48,7 +48,7 @@ void main() {
       ApiException? expired;
       final c = AdminClient(
         Uri.parse('https://vps.fr'),
-        client: MockClient((r) async => http.Response(jsonEncode({'error': 'Session expirée', 'code': 'session_expired'}), 401)),
+        client: MockClient((r) async => http.Response(jsonEncode({'error': 'Session expirée', 'code': 'session_expired'}), 401, headers: {'content-type': 'application/json; charset=utf-8'})),
       )
         ..token = 'vra_x'
         ..onUnauthorized = (e) => expired = e;

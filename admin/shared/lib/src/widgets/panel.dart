@@ -96,7 +96,14 @@ class StatusPill extends StatelessWidget {
         children: [
           StatusDot(health, size: 6),
           const SizedBox(width: 6),
-          Text(label, style: VrText.caption.copyWith(color: c, fontWeight: FontWeight.w600)),
+          Flexible(
+            child: Text(
+              label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: VrText.caption.copyWith(color: c, fontWeight: FontWeight.w600),
+            ),
+          ),
         ],
       ),
     );

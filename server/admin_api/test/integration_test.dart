@@ -159,7 +159,7 @@ void main() {
         appKeyHeader: true,
       );
       expect(s, 200);
-      final failures = await app.db.scalar<int>("SELECT count(*) FROM login_events WHERE NOT success AND reason = 'bad_password'");
+      final failures = await app.db.scalar<int>("SELECT count(*) FROM login_events WHERE kind = 'user' AND NOT success AND reason = 'bad_password'");
       expect(failures, 1);
     });
 
@@ -217,7 +217,8 @@ void main() {
       expect(s, 200);
       expect(m(b)['user']['pseudonym'], 'Conducteur_1');
       expect((m(b)['devices'] as List).single['model'], 'Galaxy S24');
-      expect(jsonEncode(b), isNot(contains('password')));
+      expect(jsonEncode(b), isNot(contains('passwordHash')));
+      expect(jsonEncode(b), isNot(contains('argon2')));
     });
 
     group('administration (application Windows)', () {

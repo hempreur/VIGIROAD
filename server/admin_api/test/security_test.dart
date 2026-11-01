@@ -99,8 +99,8 @@ void main() {
 
   group('GeoIP', () {
     final geo = GeoIp.parse([
-      '1.0.0.0,1.0.0.255,AU',
       '2.0.0.0,2.15.255.255,FR',
+      '1.0.0.0,1.0.0.255,AU',
       '"5.0.0.0","5.0.255.255","DE"',
       '2001:db8::,2001:db8:ffff:ffff:ffff:ffff:ffff:ffff,FR',
       '2a00::,2a00:ffff:ffff:ffff:ffff:ffff:ffff:ffff,GB',

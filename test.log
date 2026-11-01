@@ -1,0 +1,244 @@
+00:00 +0: loading /home/runner/work/VIGIROAD/VIGIROAD/test/osrm_router_test.dart
+00:00 +0: /home/runner/work/VIGIROAD/VIGIROAD/test/osrm_router_test.dart: analyse une réponse OSRM complète
+00:00 +1: /home/runner/work/VIGIROAD/VIGIROAD/test/osrm_router_test.dart: erreurs OSRM traduites
+00:00 +2: /home/runner/work/VIGIROAD/VIGIROAD/test/osrm_router_test.dart: requête : coordonnées lon,lat, étapes, cap
+00:00 +3: /home/runner/work/VIGIROAD/VIGIROAD/test/osrm_router_test.dart: erreur réseau : message explicite
+00:09 +4: /home/runner/work/VIGIROAD/VIGIROAD/test/sentrix/sentrix_controller_test.dart: appui sur SENTRIX : écoute, exécution, réponse vocale
+00:09 +5: /home/runner/work/VIGIROAD/VIGIROAD/test/sentrix/sentrix_controller_test.dart: appui sur SENTRIX : écoute, exécution, réponse vocale
+00:09 +6: /home/runner/work/VIGIROAD/VIGIROAD/test/sentrix/sentrix_controller_test.dart: appui sur SENTRIX : écoute, exécution, réponse vocale
+00:09 +7: /home/runner/work/VIGIROAD/VIGIROAD/test/sentrix/sentrix_controller_test.dart: appui sur SENTRIX : écoute, exécution, réponse vocale
+00:09 +8: /home/runner/work/VIGIROAD/VIGIROAD/test/sentrix/sentrix_controller_test.dart: appui sur SENTRIX : écoute, exécution, réponse vocale
+00:09 +9: /home/runner/work/VIGIROAD/VIGIROAD/test/sentrix/sentrix_controller_test.dart: appui sur SENTRIX : écoute, exécution, réponse vocale
+00:09 +10: /home/runner/work/VIGIROAD/VIGIROAD/test/sentrix/sentrix_controller_test.dart: appui sur SENTRIX : écoute, exécution, réponse vocale
+00:09 +11: /home/runner/work/VIGIROAD/VIGIROAD/test/sentrix/sentrix_controller_test.dart: appui sur SENTRIX : écoute, exécution, réponse vocale
+00:10 +12: /home/runner/work/VIGIROAD/VIGIROAD/test/sentrix/sentrix_controller_test.dart: commande de navigation vers l'historique
+00:10 +13: /home/runner/work/VIGIROAD/VIGIROAD/test/sentrix/sentrix_controller_test.dart: phrase non comprise : état erreur et aide
+00:11 +14: /home/runner/work/VIGIROAD/VIGIROAD/test/sentrix/sentrix_controller_test.dart: trafic : réponse honnête
+00:11 +15: /home/runner/work/VIGIROAD/VIGIROAD/test/sentrix/sentrix_controller_test.dart: micro refusé : pas d'écoute
+00:11 +16: /home/runner/work/VIGIROAD/VIGIROAD/test/sentrix/sentrix_controller_test.dart: reconnaissance indisponible : message
+00:12 +17: /home/runner/work/VIGIROAD/VIGIROAD/test/sentrix_head_test.dart: le peintre dessine chaque état sans erreur
+00:12 +18: /home/runner/work/VIGIROAD/VIGIROAD/test/sentrix_head_test.dart: ne redessine que si l'état ou l'horloge change
+00:12 +19: /home/runner/work/VIGIROAD/VIGIROAD/test/sentrix_head_test.dart: expose un libellé d'accessibilité par état
+00:13 +20: /home/runner/work/VIGIROAD/VIGIROAD/test/integration/simultaneous_test.dart: navigation + caméra + alerte + SENTRIX simultanés
+00:15 +21: /home/runner/work/VIGIROAD/VIGIROAD/test/navigation_session_test.dart: attend le GPS, calcule, guide et annonce le départ
+00:15 +22: /home/runner/work/VIGIROAD/VIGIROAD/test/navigation_session_test.dart: annonces vocales pendant le trajet puis arrivée
+00:15 +23: /home/runner/work/VIGIROAD/VIGIROAD/test/navigation_session_test.dart: recalcule après plusieurs positions hors trajet
+00:15 +24: /home/runner/work/VIGIROAD/VIGIROAD/test/navigation_session_test.dart: erreur de calcul : statut explicite puis nouvel essai différé
+00:15 +25: /home/runner/work/VIGIROAD/VIGIROAD/test/navigation_session_test.dart: guidage vocal coupé : aucune annonce
+00:15 +26: /home/runner/work/VIGIROAD/VIGIROAD/test/navigation_session_test.dart: annuler la destination arrête le guidage
+00:15 +27: /home/runner/work/VIGIROAD/VIGIROAD/test/navigation_session_test.dart: guidage en arrière-plan : localisation relancée en mode service, puis rétablie
+00:15 +28: /home/runner/work/VIGIROAD/VIGIROAD/test/navigation_session_test.dart: réglage désactivé : pas de mode arrière-plan
+00:15 +29: /home/runner/work/VIGIROAD/VIGIROAD/test/navigation_session_test.dart: réglages de localisation selon la plateforme
+00:16 +30: loading /home/runner/work/VIGIROAD/VIGIROAD/test/app_flow_test.dart
+00:17 +30: /home/runner/work/VIGIROAD/VIGIROAD/test/app_flow_test.dart: splash puis accueil quand toutes les autorisations sont accordées
+00:17 +31: /home/runner/work/VIGIROAD/VIGIROAD/test/app_flow_test.dart: splash puis accueil quand toutes les autorisations sont accordées
+00:17 +32: /home/runner/work/VIGIROAD/VIGIROAD/test/app_flow_test.dart: splash puis accueil quand toutes les autorisations sont accordées
+00:17 +33: /home/runner/work/VIGIROAD/VIGIROAD/test/app_flow_test.dart: splash puis accueil quand toutes les autorisations sont accordées
+00:17 +34: /home/runner/work/VIGIROAD/VIGIROAD/test/app_flow_test.dart: splash puis accueil quand toutes les autorisations sont accordées
+00:18 +35: /home/runner/work/VIGIROAD/VIGIROAD/test/app_flow_test.dart: splash puis accueil quand toutes les autorisations sont accordées
+00:18 +36: /home/runner/work/VIGIROAD/VIGIROAD/test/app_flow_test.dart: splash puis accueil quand toutes les autorisations sont accordées
+00:18 +37: /home/runner/work/VIGIROAD/VIGIROAD/test/app_flow_test.dart: splash puis accueil quand toutes les autorisations sont accordées
+00:18 +38: /home/runner/work/VIGIROAD/VIGIROAD/test/app_flow_test.dart: splash puis accueil quand toutes les autorisations sont accordées
+00:18 +39: /home/runner/work/VIGIROAD/VIGIROAD/test/app_flow_test.dart: splash puis accueil quand toutes les autorisations sont accordées
+00:18 +40: /home/runner/work/VIGIROAD/VIGIROAD/test/app_flow_test.dart: splash puis accueil quand toutes les autorisations sont accordées
+00:18 +41: /home/runner/work/VIGIROAD/VIGIROAD/test/app_flow_test.dart: splash puis écran d'autorisations quand elles manquent
+00:19 +42: loading /home/runner/work/VIGIROAD/VIGIROAD/test/traffic/traffic_test.dart
+00:20 +42: /home/runner/work/VIGIROAD/VIGIROAD/test/traffic/traffic_test.dart: libellés distances parlées
+00:20 +43: /home/runner/work/VIGIROAD/VIGIROAD/test/traffic/traffic_test.dart: libellés annonces
+00:20 +44: /home/runner/work/VIGIROAD/VIGIROAD/test/traffic/traffic_test.dart: client HTTP zone : clé, emprise, état connu et mentions
+00:20 +45: /home/runner/work/VIGIROAD/VIGIROAD/test/traffic/traffic_test.dart: client HTTP réponse sans état de zone : jamais présumée connue
+00:20 +46: /home/runner/work/VIGIROAD/VIGIROAD/test/traffic/traffic_test.dart: client HTTP clé refusée : erreur explicite
+00:20 +47: /home/runner/work/VIGIROAD/VIGIROAD/test/traffic/traffic_test.dart: client HTTP itinéraire allégé avant envoi
+00:20 +48: /home/runner/work/VIGIROAD/VIGIROAD/test/traffic/traffic_test.dart: état du trafic sans serveur configuré : désactivé, aucune requête
+00:20 +49: /home/runner/work/VIGIROAD/VIGIROAD/test/traffic/traffic_test.dart: état du trafic zone couverte, zone inconnue
+00:20 +50: /home/runner/work/VIGIROAD/VIGIROAD/test/traffic/traffic_test.dart: état du trafic serveur injoignable : données conservées 5 min, puis plus rien
+00:20 +51: /home/runner/work/VIGIROAD/VIGIROAD/test/traffic/traffic_test.dart: SENTRIX et itinéraire annonce une fois la perturbation située devant
+00:20 +52: /home/runner/work/VIGIROAD/VIGIROAD/test/traffic/traffic_test.dart: SENTRIX et itinéraire perturbation déjà dépassée ou guidage vocal coupé : silence
+00:20 +53: /home/runner/work/VIGIROAD/VIGIROAD/test/traffic/traffic_test.dart: limitations de vitesse OpenStreetMap client : une valeur par segment, valeurs aberrantes écartées
+00:20 +54: /home/runner/work/VIGIROAD/VIGIROAD/test/traffic/traffic_test.dart: limitations de vitesse OpenStreetMap chargées pour l'itinéraire, segment par segment
+00:20 +55: /home/runner/work/VIGIROAD/VIGIROAD/test/traffic/traffic_test.dart: limitations de vitesse OpenStreetMap réponse partielle : nouvel essai après une pause
+00:20 +56: /home/runner/work/VIGIROAD/VIGIROAD/test/traffic/traffic_test.dart: limitations de vitesse OpenStreetMap sans serveur : rien n'est demandé
+00:20 +57: /home/runner/work/VIGIROAD/VIGIROAD/test/traffic/traffic_test.dart: légende zone inconnue : jamais « fluide »
+00:21 +58: /home/runner/work/VIGIROAD/VIGIROAD/test/traffic/traffic_test.dart: légende zone inconnue : jamais « fluide »
+00:21 +59: /home/runner/work/VIGIROAD/VIGIROAD/test/traffic/traffic_test.dart: légende zone inconnue : jamais « fluide »
+00:21 +60: /home/runner/work/VIGIROAD/VIGIROAD/test/traffic/traffic_test.dart: légende zone inconnue : jamais « fluide »
+00:21 +61: /home/runner/work/VIGIROAD/VIGIROAD/test/traffic/traffic_test.dart: légende zone inconnue : jamais « fluide »
+00:21 +62: /home/runner/work/VIGIROAD/VIGIROAD/test/traffic/traffic_test.dart: légende zone inconnue : jamais « fluide »
+00:21 +63: /home/runner/work/VIGIROAD/VIGIROAD/test/traffic/traffic_test.dart: légende sans trajet : aucun compte
+00:21 +64: /home/runner/work/VIGIROAD/VIGIROAD/test/traffic/traffic_test.dart: légende compte les seules perturbations du trajet encore devant, sans mention de source
+00:21 +65: /home/runner/work/VIGIROAD/VIGIROAD/test/traffic/traffic_test.dart: légende trajet sans perturbation
+00:22 +66: loading /home/runner/work/VIGIROAD/VIGIROAD/test/account/account_test.dart
+00:23 +66: /home/runner/work/VIGIROAD/VIGIROAD/test/account/account_test.dart: sans serveur configuré : compte indisponible, rien n'est envoyé
+00:23 +67: /home/runner/work/VIGIROAD/VIGIROAD/test/account/account_test.dart: inscription : appareil avec identifiant aléatoire, consentements désactivés par défaut
+00:23 +68: /home/runner/work/VIGIROAD/VIGIROAD/test/account/account_test.dart: pseudonyme déjà pris : message, toujours déconnecté
+00:23 +69: /home/runner/work/VIGIROAD/VIGIROAD/test/account/account_test.dart: session révoquée par un administrateur : déconnexion locale et message
+00:23 +70: /home/runner/work/VIGIROAD/VIGIROAD/test/account/account_test.dart: session restaurée au démarrage
+00:23 +71: /home/runner/work/VIGIROAD/VIGIROAD/test/account/account_test.dart: consentements, appareil, nouvel identifiant, déconnexion
+00:23 +72: /home/runner/work/VIGIROAD/VIGIROAD/test/account/account_test.dart: suppression du compte : mot de passe transmis, tout est effacé localement
+00:23 +73: /home/runner/work/VIGIROAD/VIGIROAD/test/account/account_test.dart: écran : connexion puis sessions
+00:23 +74: /home/runner/work/VIGIROAD/VIGIROAD/test/account/account_test.dart: écran : connexion puis sessions
+00:23 +75: /home/runner/work/VIGIROAD/VIGIROAD/test/account/account_test.dart: écran : connexion puis sessions
+00:23 +76: /home/runner/work/VIGIROAD/VIGIROAD/test/account/account_test.dart: écran : connexion puis sessions
+00:23 +77: /home/runner/work/VIGIROAD/VIGIROAD/test/account/account_test.dart: écran : connexion puis sessions
+00:24 +78: /home/runner/work/VIGIROAD/VIGIROAD/test/account/account_test.dart: écran : connexion puis sessions
+00:24 +79: /home/runner/work/VIGIROAD/VIGIROAD/test/account/account_test.dart: écran : connexion puis sessions
+00:24 +80: /home/runner/work/VIGIROAD/VIGIROAD/test/account/account_test.dart: écran : connexion puis sessions
+00:24 +81: /home/runner/work/VIGIROAD/VIGIROAD/test/account/account_test.dart: écran : connexion puis sessions
+00:24 +82: /home/runner/work/VIGIROAD/VIGIROAD/test/account/account_test.dart: écran : connexion puis sessions
+00:24 +83: /home/runner/work/VIGIROAD/VIGIROAD/test/reports/reports_test.dart: écran bouton Chicken → Ma route / Route en face → signalement envoyé
+00:25 +84: /home/runner/work/VIGIROAD/VIGIROAD/test/reports/reports_test.dart: écran dessin du bouton
+00:26 +85: loading /home/runner/work/VIGIROAD/VIGIROAD/test/app_config_test.dart
+00:27 +85: /home/runner/work/VIGIROAD/VIGIROAD/test/app_config_test.dart: valeurs par défaut sans --dart-define
+00:27 +86: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/alert_flow_test.dart: plaque du fichier : encadré, son, annonce SENTRIX, historique
+00:27 +87: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/alert_flow_test.dart: plaque non répertoriée : aucune alerte, aucune trace
+00:27 +88: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/alert_flow_test.dart: deux plaques dangereuses et une ordinaire en même temps
+00:27 +89: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/alert_flow_test.dart: lecture insuffisante (2 images) : aucune alerte
+00:27 +90: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/alert_flow_test.dart: pas d'alerte répétée pour la même plaque
+00:27 +91: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/alert_flow_test.dart: décideur : seuil de confiance et délai
+00:28 +92: loading /home/runner/work/VIGIROAD/VIGIROAD/test/plates/plate_scanning_controller_test.dart
+00:29 +92: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/plate_scanning_controller_test.dart: démarre la caméra et confirme une plaque après plusieurs images
+00:29 +93: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/plate_scanning_controller_test.dart: plusieurs plaques sur la même image : toutes lues, seule la dangereuse encadrée
+00:29 +94: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/plate_scanning_controller_test.dart: deux lectures ne suffisent pas
+00:29 +95: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/plate_scanning_controller_test.dart: caméra refusée : message, caméra non démarrée
+00:29 +96: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/plate_scanning_controller_test.dart: erreur caméra : message explicite
+00:29 +97: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/plate_scanning_controller_test.dart: échecs OCR répétés : cause affichée, effacée à la lecture suivante
+00:29 +98: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/plate_scanning_controller_test.dart: arrêt : caméra libérée
+00:29 +99: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/plate_scanning_controller_test.dart: faible luminosité signalée
+00:29 +100: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/pipeline_benchmark_test.dart: banc : Conditions favorables
+Conditions favorables: précision 99.59 %, rappel 96.3 %, fausses plaques 8, manquées 75
+00:30 +101: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/pipeline_benchmark_test.dart: banc : Conditions moyennes
+Conditions moyennes: précision 99.87 %, rappel 79.4 %, fausses plaques 2, manquées 412
+00:30 +102: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/pipeline_benchmark_test.dart: banc : Conditions difficiles
+Conditions difficiles: précision 99.91 %, rappel 55.9 %, fausses plaques 1, manquées 883
+00:30 +103: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/pipeline_benchmark_test.dart: (tearDownAll)
+00:31 +103: loading /home/runner/work/VIGIROAD/VIGIROAD/test/plates/plate_voter_test.dart
+00:31 +103: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/plate_voter_test.dart: une lecture isolée ne suffit jamais
+00:31 +104: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/plate_voter_test.dart: confirmée après 3 lectures concordantes
+00:31 +105: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/plate_voter_test.dart: variante concurrente majoritaire : pas de confirmation
+00:31 +106: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/plate_voter_test.dart: lectures trop espacées : fenêtre glissante
+00:31 +107: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/plate_voter_test.dart: confiance trop faible (lectures très corrigées) : rejet
+00:31 +108: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/plate_voter_test.dart: pas de réémission avant le délai
+00:31 +109: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/plate_voter_test.dart: plusieurs véhicules à la fois
+00:32 +110: loading /home/runner/work/VIGIROAD/VIGIROAD/test/plates/frame_analysis_test.dart
+00:33 +110: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/frame_analysis_test.dart: image nette (damier) bien plus nette qu'une image floue (dégradé)
+00:33 +111: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/frame_analysis_test.dart: luminosité moyenne
+00:33 +112: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/frame_analysis_test.dart: pixels entrelacés (BGRA) et pas de ligne
+00:33 +113: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/frame_analysis_test.dart: FrameThrottle une seule analyse à la fois
+00:33 +114: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/frame_analysis_test.dart: FrameThrottle ralentit quand l'OCR est lent, plafonné
+00:33 +115: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/frame_analysis_test.dart: FrameThrottle respecte l'intervalle
+00:33 +116: loading /home/runner/work/VIGIROAD/VIGIROAD/test/plates/plate_format_test.dart
+00:34 +116: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/plate_format_test.dart: SIV validité
+00:34 +117: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/plate_format_test.dart: SIV affichage
+00:34 +118: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/plate_format_test.dart: SIV extraction depuis une ligne OCR avec bande « F »
+00:34 +119: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/plate_format_test.dart: SIV corrige les confusions selon la position
+00:34 +120: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/plate_format_test.dart: SIV au-delà de 2 corrections : rejet
+00:34 +121: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/plate_format_test.dart: SIV département de la bande droite : pas de fausse plaque FNI
+00:34 +122: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/plate_format_test.dart: SIV textes sans plaque ignorés
+00:34 +123: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/plate_format_test.dart: FNI validité et affichage
+00:34 +124: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/plate_format_test.dart: FNI extraction seulement avec séparateurs nets
+00:34 +125: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/plate_format_test.dart: reconnaissance de format pour la saisie
+00:34 +126: loading /home/runner/work/VIGIROAD/VIGIROAD/test/plates/camera_tuning_test.dart
+00:35 +126: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/camera_tuning_test.dart: anti-vibrations (gyroscope) sans gyroscope : toutes les images sont analysées
+00:35 +127: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/camera_tuning_test.dart: anti-vibrations (gyroscope) secousse : image ignorée, puis analysée au calme
+00:35 +128: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/camera_tuning_test.dart: anti-vibrations (gyroscope) vibrations continues : une image quand même au bout du délai
+00:35 +129: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/camera_tuning_test.dart: anti-vibrations (gyroscope) lissage : un pic isolé ne bloque pas
+00:35 +130: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/camera_tuning_test.dart: netteté adaptative image floue de bougé écartée par rapport aux images récentes
+00:35 +131: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/camera_tuning_test.dart: netteté adaptative plancher absolu
+00:35 +132: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/camera_tuning_test.dart: netteté adaptative scène peu contrastée (nuit) : seuil relatif, pas absolu
+00:35 +133: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/camera_tuning_test.dart: zoom et mise au point plaque lointaine au centre : zoom progressif jusqu'à la taille cible
+00:35 +134: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/camera_tuning_test.dart: zoom et mise au point jamais au-delà du zoom maximal
+00:35 +135: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/camera_tuning_test.dart: zoom et mise au point plaque excentrée : zoom limité pour la garder dans le champ
+00:35 +136: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/camera_tuning_test.dart: zoom et mise au point plusieurs plaques : toutes restent dans le champ
+00:35 +137: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/camera_tuning_test.dart: zoom et mise au point plaque trop proche : dézoom
+00:35 +138: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/camera_tuning_test.dart: zoom et mise au point plus de plaque : retour au grand angle et mise au point automatique
+00:35 +139: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/camera_tuning_test.dart: zoom et mise au point mise au point renouvelée si la plaque se déplace
+00:35 +140: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/camera_tuning_test.dart: zoom et mise au point mise au point sur la plaque la plus proche (la plus grande)
+00:35 +141: loading /home/runner/work/VIGIROAD/VIGIROAD/test/plates/plates_screen_test.dart
+00:36 +141: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/plates_screen_test.dart: ajout manuel avec validation du format
+00:37 +142: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/plates_screen_test.dart: ajout manuel avec validation du format
+00:37 +143: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/plates_screen_test.dart: ajout manuel avec validation du format
+00:37 +144: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/plates_screen_test.dart: ajout manuel avec validation du format
+00:37 +145: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/plates_screen_test.dart: ajout manuel avec validation du format
+00:37 +146: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/plates_screen_test.dart: ajout manuel avec validation du format
+00:37 +147: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/plates_screen_test.dart: ajout manuel avec validation du format
+00:37 +148: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/plates_screen_test.dart: ajout manuel avec validation du format
+00:37 +149: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/plates_screen_test.dart: ajout manuel avec validation du format
+00:37 +150: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/plates_screen_test.dart: ajout manuel avec validation du format
+00:37 +151: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/plates_screen_test.dart: ajout manuel avec validation du format
+00:37 +152: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/plates_screen_test.dart: ajout manuel avec validation du format
+00:38 +153: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/plates_screen_test.dart: import CSV avec aperçu et compte rendu
+00:38 +154: /home/runner/work/VIGIROAD/VIGIROAD/test/plates/plates_screen_test.dart: suppression confirmée
+00:39 +155: /home/runner/work/VIGIROAD/VIGIROAD/test/geo_test.dart: distanceMeters Paris – Lyon ≈ 392 km
+00:39 +156: /home/runner/work/VIGIROAD/VIGIROAD/test/geo_test.dart: distanceMeters distance nulle pour un même point
+00:39 +157: /home/runner/work/VIGIROAD/VIGIROAD/test/geo_test.dart: formatDistance mètres arrondis à la dizaine
+00:39 +158: /home/runner/work/VIGIROAD/VIGIROAD/test/geo_test.dart: formatDistance kilomètres avec virgule
+00:39 +159: /home/runner/work/VIGIROAD/VIGIROAD/test/geo_test.dart: formatDistance au-delà de 100 km sans décimale
+00:39 +160: /home/runner/work/VIGIROAD/VIGIROAD/test/geo_test.dart: GeoFix convertit m/s en km/h
+00:39 +161: /home/runner/work/VIGIROAD/VIGIROAD/test/geo_test.dart: GeoFix 0 km/h à l'arrêt (bruit GPS)
+00:39 +162: /home/runner/work/VIGIROAD/VIGIROAD/test/geo_test.dart: GeoFix vitesse inconnue
+00:39 +163: /home/runner/work/VIGIROAD/VIGIROAD/test/geo_test.dart: GeoFix cap fiable seulement en mouvement
+00:40 +164: loading /home/runner/work/VIGIROAD/VIGIROAD/test/voice_queue_test.dart
+00:41 +164: /home/runner/work/VIGIROAD/VIGIROAD/test/voice_queue_test.dart: une seule voix à la fois, dans l'ordre
+00:41 +165: /home/runner/work/VIGIROAD/VIGIROAD/test/voice_queue_test.dart: une consigne de navigation interrompt SENTRIX
+00:41 +166: /home/runner/work/VIGIROAD/VIGIROAD/test/voice_queue_test.dart: une alerte n'interrompt pas une consigne : elle attend son tour
+00:41 +167: /home/runner/work/VIGIROAD/VIGIROAD/test/voice_queue_test.dart: seule la consigne la plus récente est gardée en attente
+00:41 +168: /home/runner/work/VIGIROAD/VIGIROAD/test/voice_queue_test.dart: une alerte coupée par une consigne est répétée ensuite
+00:41 +169: /home/runner/work/VIGIROAD/VIGIROAD/test/voice_queue_test.dart: annonce périmée abandonnée
+00:41 +170: /home/runner/work/VIGIROAD/VIGIROAD/test/voice_queue_test.dart: effacement ciblé
+00:41 +171: /home/runner/work/VIGIROAD/VIGIROAD/test/quality/robustness_test.dart: fonctionnement prolongé : 3 h de lecture à 4 images/s, temps et mémoire bornés
+00:42 +172: /home/runner/work/VIGIROAD/VIGIROAD/test/quality/robustness_test.dart: suivi d'itinéraire prolongé : 20 000 positions
+00:42 +173: /home/runner/work/VIGIROAD/VIGIROAD/test/quality/robustness_test.dart: perte de réseau pendant la recherche : message clair, pas de plantage
+00:43 +174: /home/runner/work/VIGIROAD/VIGIROAD/test/quality/robustness_test.dart: perte de réseau pendant la recherche : message clair, pas de plantage
+00:43 +175: /home/runner/work/VIGIROAD/VIGIROAD/test/quality/robustness_test.dart: perte de réseau pendant la recherche : message clair, pas de plantage
+00:43 +176: /home/runner/work/VIGIROAD/VIGIROAD/test/quality/robustness_test.dart: perte de réseau pendant la recherche : message clair, pas de plantage
+00:43 +177: /home/runner/work/VIGIROAD/VIGIROAD/test/quality/robustness_test.dart: perte de réseau pendant la recherche : message clair, pas de plantage
+00:43 +178: /home/runner/work/VIGIROAD/VIGIROAD/test/quality/robustness_test.dart: perte de réseau pendant la recherche : message clair, pas de plantage
+00:43 +179: /home/runner/work/VIGIROAD/VIGIROAD/test/quality/robustness_test.dart: perte de réseau pendant la recherche : message clair, pas de plantage
+00:43 +180: /home/runner/work/VIGIROAD/VIGIROAD/test/quality/robustness_test.dart: perte de réseau pendant la recherche : message clair, pas de plantage
+00:43 +181: /home/runner/work/VIGIROAD/VIGIROAD/test/quality/robustness_test.dart: perte de réseau pendant la recherche : message clair, pas de plantage
+00:44 +182: /home/runner/work/VIGIROAD/VIGIROAD/test/quality/accessibility_test.dart: petit téléphone (360×640) : écran complet sans débordement
+00:44 +183: /home/runner/work/VIGIROAD/VIGIROAD/test/quality/accessibility_test.dart: texte agrandi (×1,3) sans débordement
+00:45 +184: /home/runner/work/VIGIROAD/VIGIROAD/test/quality/accessibility_test.dart: cibles tactiles ≥ 48 px
+00:45 +185: /home/runner/work/VIGIROAD/VIGIROAD/test/quality/accessibility_test.dart: boutons libellés pour les lecteurs d'écran
+00:45 +186: loading /home/runner/work/VIGIROAD/VIGIROAD/test/history/history_test.dart
+00:46 +186: /home/runner/work/VIGIROAD/VIGIROAD/test/history/history_test.dart: filtres période
+00:46 +187: /home/runner/work/VIGIROAD/VIGIROAD/test/history/history_test.dart: filtres priorité
+00:46 +188: /home/runner/work/VIGIROAD/VIGIROAD/test/history/history_test.dart: filtres recherche plaque (tirets ignorés) et catégorie
+00:46 +189: /home/runner/work/VIGIROAD/VIGIROAD/test/history/history_test.dart: export CSV
+00:46 +190: /home/runner/work/VIGIROAD/VIGIROAD/test/history/history_test.dart: conservation appliquée à l'ouverture
+00:47 +191: /home/runner/work/VIGIROAD/VIGIROAD/test/history/history_test.dart: conservation appliquée à l'ouverture
+00:47 +192: /home/runner/work/VIGIROAD/VIGIROAD/test/history/history_test.dart: conservation appliquée à l'ouverture
+00:47 +193: /home/runner/work/VIGIROAD/VIGIROAD/test/history/history_test.dart: conservation appliquée à l'ouverture
+00:47 +194: /home/runner/work/VIGIROAD/VIGIROAD/test/history/history_test.dart: conservation appliquée à l'ouverture
+00:47 +195: /home/runner/work/VIGIROAD/VIGIROAD/test/history/history_test.dart: conservation appliquée à l'ouverture
+00:48 +196: /home/runner/work/VIGIROAD/VIGIROAD/test/history/history_test.dart: filtre par période et export autorisé
+00:48 +197: /home/runner/work/VIGIROAD/VIGIROAD/test/history/history_test.dart: export masqué par défaut
+00:48 +198: /home/runner/work/VIGIROAD/VIGIROAD/test/history/history_test.dart: purge confirmée
+00:48 +199: loading /home/runner/work/VIGIROAD/VIGIROAD/test/settings/settings_screen_test.dart
+00:50 +199: /home/runner/work/VIGIROAD/VIGIROAD/test/settings/settings_screen_test.dart: interrupteurs et choix persistés
+00:51 +200: /home/runner/work/VIGIROAD/VIGIROAD/test/settings/settings_screen_test.dart: interrupteurs et choix persistés
+00:51 +201: /home/runner/work/VIGIROAD/VIGIROAD/test/settings/settings_screen_test.dart: interrupteurs et choix persistés
+00:51 +202: /home/runner/work/VIGIROAD/VIGIROAD/test/settings/settings_screen_test.dart: export de la liste et effacements confirmés
+00:52 +203: /home/runner/work/VIGIROAD/VIGIROAD/test/settings/settings_screen_test.dart: réinitialisation
+00:53 +204: /home/runner/work/VIGIROAD/VIGIROAD/test/instructions_test.dart: consignes affichées
+00:53 +205: /home/runner/work/VIGIROAD/VIGIROAD/test/instructions_test.dart: direction affichée
+00:53 +206: /home/runner/work/VIGIROAD/VIGIROAD/test/instructions_test.dart: phrases vocales
+00:54 +207: loading /home/runner/work/VIGIROAD/VIGIROAD/test/navigation_screen_test.dart
+00:55 +207: /home/runner/work/VIGIROAD/VIGIROAD/test/navigation_screen_test.dart: affiche la vitesse GPS réelle et l'invitation à chercher
+00:55 +208: /home/runner/work/VIGIROAD/VIGIROAD/test/navigation_screen_test.dart: affiche la vitesse GPS réelle et l'invitation à chercher
+00:55 +209: /home/runner/work/VIGIROAD/VIGIROAD/test/navigation_screen_test.dart: affiche la vitesse GPS réelle et l'invitation à chercher
+00:55 +210: /home/runner/work/VIGIROAD/VIGIROAD/test/navigation_screen_test.dart: affiche la vitesse GPS réelle et l'invitation à chercher
+00:55 +211: /home/runner/work/VIGIROAD/VIGIROAD/test/navigation_screen_test.dart: affiche la vitesse GPS réelle et l'invitation à chercher
+00:55 +212: /home/runner/work/VIGIROAD/VIGIROAD/test/navigation_screen_test.dart: affiche la vitesse GPS réelle et l'invitation à chercher
+00:55 +213: /home/runner/work/VIGIROAD/VIGIROAD/test/navigation_screen_test.dart: affiche la vitesse GPS réelle et l'invitation à chercher
+00:55 +214: /home/runner/work/VIGIROAD/VIGIROAD/test/navigation_screen_test.dart: affiche la vitesse GPS réelle et l'invitation à chercher
+00:55 +215: /home/runner/work/VIGIROAD/VIGIROAD/test/navigation_screen_test.dart: affiche la vitesse GPS réelle et l'invitation à chercher
+00:56 +216: /home/runner/work/VIGIROAD/VIGIROAD/test/update/update_test.dart: fenêtre centrée : versions, améliorations, boutons
+00:56 +217: /home/runner/work/VIGIROAD/VIGIROAD/test/update/update_test.dart: fenêtre centrée : versions, améliorations, boutons
+00:56 +218: /home/runner/work/VIGIROAD/VIGIROAD/test/update/update_test.dart: fenêtre centrée : versions, améliorations, boutons
+00:56 +219: /home/runner/work/VIGIROAD/VIGIROAD/test/navigation_screen_test.dart: destination : guidage, heure d'arrivée, limitation, annulation
+00:56 +220: /home/runner/work/VIGIROAD/VIGIROAD/test/navigation_screen_test.dart: itinéraire impossible : message et nouvel essai
+00:57 +221: /home/runner/work/VIGIROAD/VIGIROAD/test/navigation_screen_test.dart: alerte : encadré rouge puis fermeture
+00:57 +222: /home/runner/work/VIGIROAD/VIGIROAD/test/navigation_screen_test.dart: boutons : vue 3D, historique, menu SENTRIX
+00:57 +223: /home/runner/work/VIGIROAD/VIGIROAD/test/navigation_screen_test.dart: recherche : choisir un résultat définit la destination
+00:59 +224: All tests passed!

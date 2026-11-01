@@ -1,0 +1,5 @@
+job=server
+sha=29c3488ec5e7ce71754924252616ebce9d679b3a
+ref=refs/heads/fix/xrdp-port
+run=https://github.com/hempreur/VIGIROAD/actions/runs/41332774381
+status=success

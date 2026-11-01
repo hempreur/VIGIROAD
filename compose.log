@@ -1,0 +1,75 @@
+ Container deploy-backup-1 Starting 
+ Container deploy-backup-1 Started 
+ Container deploy-admin-api-1 Started 
+ Container deploy-caddy-1 Starting 
+ Container deploy-caddy-1 Started 
+{"status":"ok","sources":2,"coverage":["FR"]}sans clé : HTTP 401
+{"sources":[{"id":"fr-bison-fute","name":"Bison Futé — réseau routier national non concédé","countries":["FR"],"licence":"Licence de réutilisation des données d'information routière (Bison Futé) / Licence Ouverte 2.0","attribution":"Information fournie par Bison Futé","minIntervalSeconds":120,"homepage":"https://www.bison-fute.gouv.fr/s-abonner.html","areas":[[-5.3,41.3,9.7,51.2]],"covepostgres-1   | 2026-11-01 17:44:24.919 UTC [41] LOG:  database system is ready to accept connections
+agent-1      | Agent de supervision VIGIROAD : port 9100, projet deploy
+postgres-1   |  done
+postgres-1   | server started
+postgres-1   | CREATE DATABASE
+postgres-1   | 
+caddy-1  | {"level":"info","ts":1793555074.7181878,"msg":"maxprocs: Leaving GOMAXPROCS=4: CPU quota undefined"}
+backup-1     | 2026-11-01T17:44:34Z service de sauvegarde démarré (sauvegarde quotidienne vers 3 h UTC)
+traffic-1    | VigiRoadTrafficAggregator : port 8080, sources : fr-bison-fute, fr-pan-transport-data-gouv
+caddy-1      | {"level":"info","ts":1793555074.7182748,"msg":"GOMEMLIMIT is updated","GOMEMLIMIT":15083502796,"previous":9223372036854775807}
+caddy-1      | {"level":"info","ts":1793555074.718292,"msg":"using config from file","file":"/etc/caddy/Caddyfile"}
+caddy-1      | {"level":"info","ts":1793555074.7183063,"msg":"adapted config to JSON","adapter":"caddyfile"}
+caddy-1      | {"level":"info","ts":1793555074.7189667,"logger":"admin","msg":"admin endpoint started","address":"localhost:2019","enforce_origin":false,"origins":["//localhost:2019","//[::1]:2019","//127.0.0.1:2019"]}
+caddy-1      | {"level":"info","ts":1793555074.7191298,"logger":"http.auto_https","msg":"server is listening only on the HTTPS port but has no TLS connection policies; adding one to enable TLS","server_name":"srv0","https_port":443}
+caddy-1      | {"level":"info","ts":1793555074.7191699,"logger":"http.auto_https","msg":"enabling automatic HTTP->HTTPS redirects","server_name":"srv0"}
+caddy-1      | {"level":"info","ts":1793555074.7192657,"logger":"tls.cache.maintenance","msg":"started background certificate maintenance","cache":"0x3d3cc2d2ad80"}
+caddy-1      | {"level":"info","ts":1793555074.722684,"logger":"http","msg":"enabling HTTP/3 listener","addr":":443"}
+caddy-1      | {"level":"info","ts":1793555074.7227619,"msg":"failed to sufficiently increase receive buffer size (was: 1024 kiB, wanted: 7168 kiB, got: 2048 kiB). See https://github.com/quic-go/quic-go/wiki/UDP-Buffer-Sizes for details."}
+caddy-1      | {"level":"info","ts":1793555074.7228875,"logger":"http.log","msg":"server running","name":"srv0","protocols":["h1","h2","h3"]}
+admin-api-1  | Migrations appliquées : 1
+postgres-1   | 
+postgres-1   | /usr/local/bin/docker-entrypoint.sh: ignoring /docker-entrypoint-initdb.d/*
+postgres-1   | 
+postgres-1   | waiting for server to shut down....2026-11-01 17:44:25.064 UTC [41] LOG:  received fast shutdown request
+postgres-1   | 2026-11-01 17:44:25.065 UTC [41] LOG:  aborting any active transactions
+postgres-1   | 2026-11-01 17:44:25.066 UTC [41] LOG:  background worker "logical replication launcher" (PID 47) exited with exit code 1
+postgres-1   | 2026-11-01 17:44:25.068 UTC [42] LOG:  shutting down
+postgres-1   | 2026-11-01 17:44:25.068 UTC [42] LOG:  checkpoint starting: shutdown immediate
+postgres-1   | 2026-11-01 17:44:25.159 UTC [42] LOG:  checkpoint complete: wrote 926 buffers (5.7%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.072 s, sync=0.018 s, total=0.091 s; sync files=301, longest=0.017 s, average=0.001 s; distance=4283 kB, estimate=4283 kB; lsn=0/1925D68, redo lsn=0/1925D68
+postgres-1   | 2026-11-01 17:44:25.166 UTC [41] LOG:  database system is shut down
+postgres-1   |  done
+postgres-1   | server stopped
+postgres-1   | 
+postgres-1   | PostgreSQL init process complete; ready for start up.
+postgres-1   | 
+postgres-1   | 2026-11-01 17:44:25.284 UTC [1] LOG:  starting PostgreSQL 16.15 on x86_64-pc-linux-musl, compiled by gcc (Alpine 15.2.0) 15.2.0, 64-bit
+postgres-1   | 2026-11-01 17:44:25.285 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+postgres-1   | 2026-11-01 17:44:25.285 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+postgres-1   | 2026-11-01 17:44:25.285 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+postgres-1   | 2026-11-01 17:44:25.288 UTC [57] LOG:  database system was shut down at 2026-11-01 17:44:25 UTC
+postgres-1   | 2026-11-01 17:44:25.292 UTC [1] LOG:  database system is ready to accept connections
+postgres-1   | 2026-11-01 17:44:34.455 UTC [68] ERROR:  relation "backup_jobs" does not exist at character 15
+postgres-1   | 2026-11-01 17:44:34.455 UTC [68] STATEMENT:  SELECT 1 FROM backup_jobs LIMIT 1
+postgres-1   | 2026-11-01 17:44:34.472 UTC [69] ERROR:  relation "backup_jobs" does not exist at character 22
+postgres-1   | 2026-11-01 17:44:34.472 UTC [69] STATEMENT:  SELECT count(*) FROM backup_jobs
+traffic-1    | 2026-11-01T17:44:34.705293  0:00:00.000149 GET     [200] /health
+traffic-1    | 2026-11-01T17:44:34.705849  0:00:00.000129 GET     [200] /v1/sources
+traffic-1    | 2026-11-01T17:44:36.723081  0:00:00.000032 GET     [200] /health
+traffic-1    | 2026-11-01T17:44:36.732157  0:00:00.000019 GET     [200] /health
+traffic-1    | 2026-11-01T17:44:36.741218  0:00:00.000036 GET     [401] /v1/sources
+traffic-1    | 2026-11-01T17:44:36.752335  0:00:00.000055 GET     [200] /v1/sources
+admin-api-1  | API d'administration VIGIROAD 1.0.0 : port 8081
+caddy-1      | {"level":"warn","ts":1793555074.7230067,"logger":"http","msg":"HTTP/2 skipped because it requires TLS","network":"tcp","addr":":80"}
+caddy-1      | {"level":"warn","ts":1793555074.7230859,"logger":"http","msg":"HTTP/3 skipped because it requires TLS","network":"tcp","addr":":80"}
+caddy-1      | {"level":"info","ts":1793555074.723113,"logger":"http.log","msg":"server running","name":"remaining_auto_https_redirects","protocols":["h1","h2","h3"]}
+caddy-1      | {"level":"info","ts":1793555074.723144,"logger":"http","msg":"enabling automatic TLS certificate management","domains":["localhost"]}
+caddy-1      | {"level":"info","ts":1793555074.7242565,"logger":"tls.obtain","msg":"acquiring lock","identifier":"localhost"}
+caddy-1      | {"level":"info","ts":1793555074.7259135,"logger":"tls","msg":"cleaning storage unit","storage":"FileStorage:/data/caddy"}
+caddy-1      | {"level":"info","ts":1793555074.7271037,"logger":"tls.obtain","msg":"lock acquired","identifier":"localhost"}
+caddy-1      | {"level":"info","ts":1793555074.7274084,"logger":"tls.obtain","msg":"obtaining certificate","identifier":"localhost"}
+caddy-1      | {"level":"info","ts":1793555074.727505,"logger":"tls","msg":"finished cleaning storage units"}
+caddy-1      | {"level":"warn","ts":1793555074.7352333,"logger":"pki.ca.local","msg":"installing root certificate (you might be prompted for password)","path":"storage:pki/authorities/local/root.crt"}
+caddy-1      | {"level":"info","ts":1793555074.7356944,"msg":"warning: \"certutil\" is not available, install \"certutil\" with \"apt install libnss3-tools\" or \"yum install nss-tools\" and try again"}
+caddy-1      | {"level":"info","ts":1793555074.735737,"msg":"define JAVA_HOME environment variable to use the Java trust"}
+caddy-1      | {"level":"info","ts":1793555074.7392154,"logger":"tls.obtain","msg":"certificate obtained successfully","identifier":"localhost","issuer":"local"}
+caddy-1      | {"level":"info","ts":1793555074.7393413,"logger":"tls.obtain","msg":"releasing lock","identifier":"localhost"}
+caddy-1      | {"level":"info","ts":1793555074.7559178,"msg":"certificate installed properly in linux trusts"}
+caddy-1      | {"level":"info","ts":1793555074.7561543,"msg":"autosaved config (load with --resume flag)","file":"/config/caddy/autosave.json"}
+caddy-1      | {"level":"info","ts":1793555074.7561905,"msg":"serving initial configuration"}

@@ -156,7 +156,7 @@ jobs:
         run: |
           mkdir -p ci-out
           set -o pipefail
-          .github/scripts/inject_traffic_config.sh config/dev.env
+          .github/scripts/inject_traffic_config.sh config/dev.env | tee -a ci-out/traffic_config.log
           flutter build apk --debug --target-platform android-arm64 --dart-define-from-file=config/dev.env 2>&1 | tee ci-out/build_apk.log
           cp build/app/outputs/flutter-apk/app-debug.apk ci-out/vigiroad-dev-debug.apk
           ls -la ci-out
@@ -184,7 +184,7 @@ jobs:
           VR_TRAFFIC_API_KEY: ${{ secrets.VR_TRAFFIC_API_KEY }}
         run: |
           set -o pipefail
-          .github/scripts/inject_traffic_config.sh config/prod.env
+          .github/scripts/inject_traffic_config.sh config/prod.env | tee -a ci-out/traffic_config.log
           if [ -n "$KEYSTORE_B64" ]; then
             echo "$KEYSTORE_B64" | base64 -d > "$RUNNER_TEMP/release.jks"
             export VR_KEYSTORE_PATH="$RUNNER_TEMP/release.jks"

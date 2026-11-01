@@ -1,5 +1,12 @@
 # VIGIROAD 1.2 — mot d'activation « Sentrix »
 
+## 1.2.1
+
+- **Trafic et limitations de vitesse activés** : l'application est reliée au serveur
+  VigiRoadTrafficAggregator du propriétaire (VPS, HTTPS). Perturbations Bison Futé sur la carte,
+  état « inconnu » hors couverture, annonces de SENTRIX sur l'itinéraire, panneau de limitation
+  pendant le guidage quand OpenStreetMap la connaît.
+
 ## Nouveautés
 
 - **Dites « Sentrix »** pour activer SENTRIX sans toucher l'écran, sur l'écran de navigation.

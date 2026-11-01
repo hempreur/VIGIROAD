@@ -1,0 +1,5 @@
+job=ocr-release
+sha=56e521461d2e1a2628a2a55547050adc1f109ea4
+ref=refs/heads/feature/ota-update
+run=https://github.com/hempreur/VIGIROAD/actions/runs/41272111554
+status=success

@@ -1,0 +1,47 @@
+00:00 +0: loading test/connectors_test.dart
+00:00 +0: test/speed_test.dart: balise maxspeed valeurs explicites et implicites légales
+00:00 +1: test/speed_test.dart: balise maxspeed valeurs ambiguës : inconnues
+00:00 +2: test/speed_test.dart: balise maxspeed sens de circulation
+00:00 +3: test/speed_test.dart: correspondance : bonne voie, bon sens, jamais la rue transversale ni la voie parallèle
+00:00 +4: test/speed_test.dart: voie la plus proche sans limitation : inconnue (pas celle de la voie voisine)
+00:00 +5: test/speed_test.dart: service Overpass tuiles en cache : une seule requête
+00:00 +6: test/speed_test.dart: service Overpass tuiles en cache : une seule requête
+00:00 +7: test/speed_test.dart: service Overpass tuiles en cache : une seule requête
+00:00 +8: test/speed_test.dart: service Overpass tuiles en cache : une seule requête
+00:00 +9: test/speed_test.dart: service Overpass tuiles en cache : une seule requête
+00:00 +10: test/connectors_test.dart: DATEX II (Bison Futé) lecture HTTP réelle via le client
+00:00 +11: test/connectors_test.dart: DATEX II (Bison Futé) lecture HTTP réelle via le client
+00:00 +12: test/connectors_test.dart: DATEX II (Bison Futé) lecture HTTP réelle via le client
+00:00 +13: test/speed_test.dart: API /v1/speedlimits limitations et mention OpenStreetMap
+00:00 +14: test/speed_test.dart: API /v1/speedlimits limitations et mention OpenStreetMap
+00:00 +15: test/speed_test.dart: API /v1/speedlimits limitations et mention OpenStreetMap
+00:00 +16: test/speed_test.dart: API /v1/speedlimits limitations et mention OpenStreetMap
+00:00 +17: test/speed_test.dart: API /v1/speedlimits limitations et mention OpenStreetMap
+00:00 +18: test/speed_test.dart: API /v1/speedlimits limitations et mention OpenStreetMap
+00:00 +19: test/speed_test.dart: API /v1/speedlimits service désactivé, tronçon trop long
+00:00 +20: test/reports_test.dart: signalements visible 2 h puis retiré
+00:00 +21: test/reports_test.dart: signalements route en face : sens concerné opposé
+00:00 +22: test/reports_test.dart: signalements même endroit et même sens : confirmation et 2 h de plus
+00:00 +23: test/aggregator_test.dart: fusion entre sources et respect de la fréquence autorisée
+00:00 +24: test/aggregator_test.dart: fusion entre sources et respect de la fréquence autorisée
+00:00 +25: test/aggregator_test.dart: fusion entre sources et respect de la fréquence autorisée
+00:00 +26: test/aggregator_test.dart: fusion entre sources et respect de la fréquence autorisée
+00:00 +27: test/reports_test.dart: signalements persistance : seuls position, sens et dates sont écrits
+00:00 +28: test/reports_test.dart: signalements persistance : seuls position, sens et dates sont écrits
+00:00 +29: test/reports_test.dart: signalements persistance : seuls position, sens et dates sont écrits
+00:00 +30: test/reports_test.dart: signalements persistance : seuls position, sens et dates sont écrits
+00:00 +31: test/reports_test.dart: signalements persistance : seuls position, sens et dates sont écrits
+00:00 +32: test/reports_test.dart: signalements persistance : seuls position, sens et dates sont écrits
+00:00 +33: test/aggregator_test.dart: API santé sans clé
+00:00 +34: test/reports_test.dart: API signaler puis voir le marqueur dans la zone
+00:00 +35: test/aggregator_test.dart: API clé obligatoire
+00:00 +36: test/reports_test.dart: API requêtes invalides
+00:00 +37: test/aggregator_test.dart: API événements d'une zone avec mentions des sources
+00:00 +38: test/aggregator_test.dart: API événements d'une zone avec mentions des sources
+00:00 +39: test/aggregator_test.dart: API zone sans source : état inconnu, aucun événement inventé
+00:00 +40: test/aggregator_test.dart: API zone couverte sans incident : connue, mention de la source tout de même
+00:00 +41: test/aggregator_test.dart: API zone invalide ou trop grande
+00:00 +42: test/aggregator_test.dart: API itinéraire
+00:00 +43: test/aggregator_test.dart: API limite de débit
+00:00 +44: test/aggregator_test.dart: configuration : sources selon les clés fournies, flux NAP additionnels
+00:00 +45: All tests passed!

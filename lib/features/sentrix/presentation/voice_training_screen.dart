@@ -10,7 +10,7 @@ import '../application/voice_training_controller.dart';
 import '../data/voice_samples.dart';
 
 /// Version affichée dans l'archive exportée.
-const _appVersion = '1.3.0';
+const _appVersion = '1.4.0';
 
 const _archive = VoiceTrainingController.archiveName;
 

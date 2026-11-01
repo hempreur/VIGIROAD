@@ -29,8 +29,15 @@ class Db {
     return Db(pool);
   }
 
+  /// Seuls les paramètres présents dans la requête sont transmis (le pilote
+  /// refuse les paramètres superflus).
+  static Map<String, Object?> _used(String sql, Map<String, Object?> params) => {
+    for (final e in params.entries)
+      if (RegExp('@${RegExp.escape(e.key)}(?![A-Za-z0-9_])').hasMatch(sql)) e.key: e.value,
+  };
+
   Future<List<Map<String, dynamic>>> query(String sql, [Map<String, Object?> params = const {}]) async {
-    final r = await _session.execute(Sql.named(sql), parameters: params);
+    final r = await _session.execute(Sql.named(sql), parameters: _used(sql, params));
     return [for (final row in r) row.toColumnMap()];
   }
 
@@ -40,13 +47,13 @@ class Db {
   }
 
   Future<T> scalar<T>(String sql, [Map<String, Object?> params = const {}]) async {
-    final r = await _session.execute(Sql.named(sql), parameters: params);
+    final r = await _session.execute(Sql.named(sql), parameters: _used(sql, params));
     return r.first.first as T;
   }
 
   /// Nombre de lignes modifiées.
   Future<int> exec(String sql, [Map<String, Object?> params = const {}]) async {
-    final r = await _session.execute(Sql.named(sql), parameters: params);
+    final r = await _session.execute(Sql.named(sql), parameters: _used(sql, params));
     return r.affectedRows;
   }
 

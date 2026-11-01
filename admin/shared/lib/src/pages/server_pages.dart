@@ -1000,7 +1000,7 @@ class _Errors extends StatelessWidget {
         if (items.isEmpty) return const EmptyState('Aucune erreur sur les dernières 24 h.', icon: Icons.verified_rounded);
         return Column(
           children: [
-            for (final (title, detail, when) in items.take(30))
+            for (final (title, detail, ago) in items.take(30))
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 5),
                 child: Row(
@@ -1017,7 +1017,7 @@ class _Errors extends StatelessWidget {
                         ],
                       ),
                     ),
-                    Text(when, style: VrText.caption),
+                    Text(ago, style: VrText.caption),
                   ],
                 ),
               ),

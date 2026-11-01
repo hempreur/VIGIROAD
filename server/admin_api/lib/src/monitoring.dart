@@ -360,21 +360,16 @@ class MonitoringService {
 
   Future<Response> _overview(Request req) async {
     await auth.authenticate(req);
-    Map<String, dynamic>? system, metrics;
-    String? error;
+    // Mesures fraîches (agent et trafic) avant le calcul des alertes.
+    await collectMetrics(store: false);
+    Map<String, dynamic>? system;
+    String? error = agentError;
     try {
-      final r = await Future.wait([agent.call('GET', '/system'), agent.call('GET', '/metrics')]);
-      system = r[0];
-      metrics = r[1];
+      system = await agent.call('GET', '/system');
     } on AgentUnavailable catch (e) {
       error = e.message;
     }
-    return jsonOk({
-      'system': system,
-      'metrics': metrics ?? lastMetrics,
-      'agentError': error,
-      'alerts': await alerts(),
-    });
+    return jsonOk({'system': system, 'metrics': lastMetrics, 'agentError': error, 'alerts': await alerts()});
   }
 
   Future<Response> _history(Request req) async {

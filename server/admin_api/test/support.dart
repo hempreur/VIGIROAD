@@ -176,6 +176,7 @@ class TestApp {
       ),
     );
     final text = await res.readAsString();
+    if (res.statusCode == 500 && ctx.recentErrors.isNotEmpty) stderr.writeln('ERREUR 500 : ${ctx.recentErrors.first}');
     final type = res.headers['content-type'] ?? '';
     return (res.statusCode, type.contains('json') && text.isNotEmpty ? jsonDecode(text) : text);
   }

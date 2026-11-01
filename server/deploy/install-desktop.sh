@@ -69,7 +69,7 @@ chown "$USER_NAME:$USER_NAME" "$HOME_DIR/.xsession"
 
 say "Application VIGIROAD SERVER CONTROL"
 URL=$(curl -fsSL "https://api.github.com/repos/$REPO/releases/latest" \
-  | grep -o '"browser_download_url": *"[^"]*vigiroad-server-control_[^"]*_amd64\.deb"' | head -1 | cut -d'"' -f4 || true)
+  | grep -o '"browser_download_url": *"[^"]*-server-control-amd64\.deb"' | head -1 | cut -d'"' -f4 || true)
 if [ -n "$URL" ]; then
   curl -fsSL "$URL" -o /tmp/vigiroad-server-control.deb
   apt-get install -y -qq /tmp/vigiroad-server-control.deb > /dev/null

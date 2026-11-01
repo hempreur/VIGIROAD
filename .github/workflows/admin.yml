@@ -400,3 +400,53 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           JOB_STATUS: ${{ job.status }}
         run: .github/scripts/publish_logs.sh windows-app ci-out
+
+  desktop-release:
+    name: Publication des applications de bureau (release)
+    needs: [linux-app, windows-app]
+    if: github.event_name == 'push' && (startsWith(github.ref, 'refs/heads/release/v') || startsWith(github.ref, 'refs/tags/v'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+      - name: Fichiers de la release et manifeste de mise à jour
+        run: |
+          set -euo pipefail
+          TAG="${GITHUB_REF_NAME#release/}"
+          VER="$(sed -n 's/^version: *\([^+]*\).*/\1/p' pubspec.yaml)"
+          mkdir -p out
+          cp artifacts/vigiroad-server-control-linux/*.deb "out/vigiroad-$VER-server-control-amd64.deb"
+          cp artifacts/vigiroad-server-control-linux/*.AppImage "out/vigiroad-$VER-server-control-x86_64.AppImage"
+          cp artifacts/vigiroad-admin-manager-windows/*-Setup.exe "out/vigiroad-$VER-admin-manager-setup.exe"
+          cp artifacts/vigiroad-admin-manager-windows/*-portable.zip "out/vigiroad-$VER-admin-manager-portable.zip"
+          python3 - "$TAG" "$GITHUB_REPOSITORY" "$VER" <<'PY'
+          import hashlib, json, re, sys
+          tag, repo, ver = sys.argv[1:4]
+          def version(p):
+              return re.search(r'^version:\s*([^+\s]+)', open(p).read(), re.M).group(1)
+          def f(name):
+              return {"url": f"https://github.com/{repo}/releases/download/{tag}/{name}",
+                      "sha256": hashlib.sha256(open(f"out/{name}", "rb").read()).hexdigest()}
+          notes = ["Comptes, appareils et sessions VIGIROAD", "Supervision temps réel du serveur", "Sauvegardes testées et journal d'audit"]
+          manifest = {
+              "admin-manager": {"version": version("admin/windows/pubspec.yaml"), "notes": notes,
+                                "files": {"windows-installer": f(f"vigiroad-{ver}-admin-manager-setup.exe")}},
+              "server-control": {"version": version("admin/linux/pubspec.yaml"), "notes": notes,
+                                 "files": {"deb": f(f"vigiroad-{ver}-server-control-amd64.deb"),
+                                           "appimage": f(f"vigiroad-{ver}-server-control-x86_64.AppImage")}},
+          }
+          json.dump(manifest, open("out/vigiroad-admin-update.json", "w"), ensure_ascii=False, indent=2)
+          print(json.dumps(manifest, ensure_ascii=False, indent=2))
+          PY
+          ls -la out
+          # La release est créée par le job Android (CI) : on l'attend.
+          for _ in $(seq 1 100); do
+            gh release view "$TAG" > /dev/null 2>&1 && break
+            sleep 30
+          done
+          gh release upload "$TAG" out/* --clobber

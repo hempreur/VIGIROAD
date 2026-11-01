@@ -241,7 +241,7 @@ jobs:
             # l'étiquette suit le commit compilé et les APK d'une autre version
             # sont retirés, pour qu'aucun fichier obsolète ne reste téléchargeable.
             gh api -X PATCH "repos/${GITHUB_REPOSITORY}/git/refs/tags/${TAG}" -f sha="$GITHUB_SHA" -F force=true > /dev/null
-            gh release view "$TAG" --json assets -q '.assets[].name' | { grep -v -F "vigiroad-$VER-" || true; } | while read -r old; do
+            gh release view "$TAG" --json assets -q '.assets[].name' | { grep -v -F -e "vigiroad-$VER-" -e "vigiroad-admin-update.json" || true; } | while read -r old; do
               echo "Retrait de l'APK obsolète : $old"
               gh release delete-asset "$TAG" "$old" --yes
             done

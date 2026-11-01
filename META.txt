@@ -1,0 +1,5 @@
+job=android
+sha=5537b3112a98840b1ba202742a76e297ddd0aab5
+ref=refs/heads/chore/release-1.2.1
+run=https://github.com/hempreur/VIGIROAD/actions/runs/41265618194
+status=success

@@ -1,0 +1,5 @@
+tags:
+  db:
+    timeout: 3x
+# Les scénarios « db » partagent une base : exécution séquentielle.
+concurrency: 1

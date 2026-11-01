@@ -28,6 +28,10 @@ class MainActivity : FlutterActivity() {
         ch.setMethodCallHandler { call, result ->
             when (call.method) {
                 "appInfo" -> result.success(appInfo())
+                // Compte VIGIROAD (facultatif) : marque, modèle, version d'Android.
+                "deviceInfo" -> result.success(
+                    mapOf("brand" to Build.MANUFACTURER, "model" to Build.MODEL, "osVersion" to Build.VERSION.RELEASE),
+                )
                 "canInstall" -> result.success(canInstall())
                 "openInstallSettings" -> {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

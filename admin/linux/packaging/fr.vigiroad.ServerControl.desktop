@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=VIGIROAD Server Control
+GenericName=Administration du serveur VIGIROAD
+Comment=Supervision du VPS, Docker, services VIGIROAD, maintenance et sauvegardes
+Exec=vigiroad-server-control
+Icon=vigiroad-server-control
+Terminal=false
+Categories=System;Monitor;Network;
+Keywords=VIGIROAD;serveur;VPS;Docker;supervision;
+StartupWMClass=fr.vigiroad.ServerControl

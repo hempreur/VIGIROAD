@@ -5,6 +5,7 @@ analyzer:
   exclude:
     - server/**
     - packages/**
+    - admin/**
   language:
     strict-casts: true
     strict-raw-types: true

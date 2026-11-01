@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../features/account/presentation/account_screen.dart';
 import '../features/history/presentation/history_screen.dart';
 import '../features/navigation/presentation/navigation_screen.dart';
 import '../features/onboarding/presentation/permissions_screen.dart';
@@ -19,6 +20,7 @@ abstract final class Routes {
   static const history = '/history';
   static const settings = '/settings';
   static const voiceTraining = '/settings/sentrix-voice';
+  static const account = '/settings/account';
 }
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -33,6 +35,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(path: Routes.history, builder: (context, state) => const HistoryScreen()),
       GoRoute(path: Routes.settings, builder: (context, state) => const SettingsScreen()),
       GoRoute(path: Routes.voiceTraining, builder: (context, state) => const VoiceTrainingScreen()),
+      GoRoute(path: Routes.account, builder: (context, state) => const AccountScreen()),
     ],
   );
   ref.onDispose(router.dispose);

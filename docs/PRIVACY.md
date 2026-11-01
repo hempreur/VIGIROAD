@@ -44,3 +44,17 @@ choisit où l'enregistrer ; « Tout effacer » supprime les enregistrements du t
 Au démarrage puis toutes les 6 heures, l'application télécharge le fichier de version public de la
 dernière release sur GitHub (github.com). Aucune donnée personnelle n'est envoyée ; comme pour tout
 téléchargement, GitHub voit l'adresse IP du téléphone.
+
+## Compte VIGIROAD facultatif (1.4)
+
+- L'application fonctionne entièrement **sans compte**. Le compte sert à retrouver ses appareils
+  et ses sessions ; il permet à l'exploitant de suivre l'utilisation du service.
+- Données : pseudonyme, e-mail et nom **facultatifs**, mot de passe haché (Argon2id), appareil
+  (marque, modèle, version du système, identifiant d'installation aléatoire et renouvelable — aucun
+  identifiant matériel), sessions et temps d'utilisation (battements de cœur toutes les 60 s quand
+  l'application est ouverte), réseau de connexion réduit (/24).
+- **Région** (pays d'après la connexion) et **position approximative** (≈ 5 km) : désactivées par
+  défaut, uniquement avec l'accord de l'utilisateur ; le retrait de l'accord efface ces données.
+- Jamais envoyé : images de caméra, plaques lues, enregistrements vocaux.
+- Droits : export de toutes ses données et suppression définitive du compte depuis l'application.
+- Conservation et sécurité : voir [docs/admin/SECURITE.md](admin/SECURITE.md).

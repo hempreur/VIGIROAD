@@ -13,6 +13,7 @@ import '../../../core/theme/vr_colors.dart';
 import '../../../core/theme/vr_typography.dart';
 import '../../../core/widgets/glow_panel.dart';
 import '../../../core/widgets/vr_page.dart';
+import '../../account/application/account_controller.dart';
 import '../../plates/application/alert_service.dart';
 import '../../plates/application/watchlist_controller.dart';
 import '../../plates/domain/watchlist_import.dart';
@@ -87,6 +88,21 @@ class SettingsScreen extends ConsumerWidget {
           _Action('Entraîner « Sentrix » avec ma voix', Icons.record_voice_over_rounded, () async {
             await context.push(Routes.voiceTraining);
           }),
+        ]),
+
+        const _Section('COMPTE VIGIROAD'),
+        _Panel([
+          _Action(
+            switch (ref.watch(accountProvider.select((a) => (a.status, a.user?['pseudonym'])))) {
+              (AccountStatus.signedIn, final String p) => 'Compte : $p',
+              (AccountStatus.unavailable, _) => 'Compte (serveur non configuré)',
+              _ => 'Se connecter ou créer un compte (facultatif)',
+            },
+            Icons.account_circle_rounded,
+            () async {
+              await context.push(Routes.account);
+            },
+          ),
         ]),
 
         const _Section('LECTURE DES PLAQUES'),
@@ -243,7 +259,7 @@ class SettingsScreen extends ConsumerWidget {
         const _Section('À PROPOS'),
         _Panel([
           InfoRow(label: 'Environnement', value: config.environment.name),
-          const InfoRow(label: 'Version', value: '1.3.0'),
+          const InfoRow(label: 'Version', value: '1.4.0'),
           const InfoRow(label: 'Éditeur', value: 'VIGIROAD INC (CODEX HEMPREUR)'),
           const InfoRow(label: 'Données cartographiques', value: '© contributeurs OpenStreetMap, style © CARTO'),
           _Action('Réinitialiser les réglages', Icons.restart_alt_rounded, () async {

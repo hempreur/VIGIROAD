@@ -1,0 +1,453 @@
+name: Administration
+
+# VIGIROAD Control Center : API d'administration, agent de supervision,
+# base PostgreSQL et sauvegardes (puis applications Linux et Windows).
+on:
+  push:
+    branches: [main, 'feature/admin**', 'release/**']
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: admin-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write  # publication des journaux sur ci-logs/*
+
+jobs:
+  backend:
+    name: API d'administration, agent, base, sauvegardes
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U postgres" --health-interval 5s --health-timeout 5s --health-retries 20
+    env:
+      PGHOST: localhost
+      PGUSER: postgres
+      PGPASSWORD: postgres
+    steps:
+      - uses: actions/checkout@v5
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: stable
+      - name: Agent de supervision
+        working-directory: server/monitoring
+        run: |
+          mkdir -p ../../ci-out
+          set -o pipefail
+          dart pub get 2>&1 | tee ../../ci-out/agent_pub_get.log
+          dart analyze --fatal-warnings 2>&1 | tee ../../ci-out/agent_analyze.log
+          dart test --reporter expanded 2>&1 | tee ../../ci-out/agent_test.log
+      - name: API d'administration (unitaires + PostgreSQL réel)
+        if: success() || failure()
+        working-directory: server/admin_api
+        env:
+          VR_TEST_DB_HOST: localhost
+        run: |
+          set -o pipefail
+          dart pub get 2>&1 | tee ../../ci-out/api_pub_get.log
+          cp pubspec.lock ../../ci-out/api_pubspec.lock
+          dart analyze --fatal-warnings 2>&1 | tee ../../ci-out/api_analyze.log
+          dart test --reporter expanded 2>&1 | tee ../../ci-out/api_test.log
+      - name: Requêtes SQL préparées sur la base migrée
+        if: success() || failure()
+        run: |
+          set -o pipefail
+          createdb vigiroad_sql
+          psql -q -v ON_ERROR_STOP=1 -d vigiroad_sql -c 'CREATE TABLE schema_migrations (version integer PRIMARY KEY, name text NOT NULL, applied_at timestamptz NOT NULL DEFAULT now())' \
+            -f server/database/migrations/001_init.sql
+          python3 server/database/tools/check_sql.py "dbname=vigiroad_sql" server/admin_api/lib/src/*.dart 2>&1 | tee ci-out/sql_check.log
+
+      # Pile complète comme sur le VPS (certificat local au lieu de Let's Encrypt).
+      - name: Déploiement Docker Compose complet
+        if: success()
+        working-directory: server/deploy
+        run: |
+          set -o pipefail
+          cat > .env <<CONF
+          VR_API_KEYS=cle-de-test-ci-1234567890
+          VR_DB_NAME=vigiroad
+          VR_DB_USER=vigiroad
+          VR_DB_PASSWORD=$(openssl rand -hex 16)
+          VR_ADMIN_SECRET=$(openssl rand -hex 32)
+          VR_AGENT_TOKEN=$(openssl rand -hex 24)
+          VR_ADMIN_SETUP_TOKEN=jeton-installation-ci
+          VR_REGISTER_LIMIT=100000
+          VR_SPEEDLIMITS=off
+          CONF
+          printf 'VR_DOMAIN=localhost\n' > .domain
+          mkdir -p "$RUNNER_TEMP/run" "$RUNNER_TEMP/backups" "$RUNNER_TEMP/geoip"
+          printf '172.16.0.0,172.31.255.255,FR\n' | gzip > "$RUNNER_TEMP/geoip/dbip-country-lite.csv.gz"
+          echo "VR_RUN_DIR=$RUNNER_TEMP/run" >> "$GITHUB_ENV"
+          echo "VR_BACKUP_DIR=$RUNNER_TEMP/backups" >> "$GITHUB_ENV"
+          echo "VR_GEOIP_DIR=$RUNNER_TEMP/geoip" >> "$GITHUB_ENV"
+          export VR_RUN_DIR=$RUNNER_TEMP/run VR_BACKUP_DIR=$RUNNER_TEMP/backups VR_GEOIP_DIR=$RUNNER_TEMP/geoip VR_BACKUP_POLL=2
+          VR_DOMAIN=localhost docker compose --env-file .env --env-file .domain up -d --build 2>&1 | tail -15 | tee ../../ci-out/compose.log
+          for _ in $(seq 1 60); do curl -fsSk https://localhost/admin/health > /dev/null 2>&1 && break; sleep 3; done
+          curl -fsSk https://localhost/admin/health | tee -a ../../ci-out/compose.log; echo
+          docker compose --env-file .env --env-file .domain ps | tee -a ../../ci-out/compose.log
+          # Seul Caddy publie des ports.
+          docker ps --format '{{.Names}} {{.Ports}}' | tee -a ../../ci-out/compose.log
+          published=$(docker ps --format '{{.Names}} {{.Ports}}' | grep '^deploy-' | grep -v caddy | grep -c -- '->' || true)
+          echo "ports publiés hors Caddy : $published" | tee -a ../../ci-out/compose.log
+          [ "$published" = 0 ]
+      - name: Bout en bout (HTTPS, TOTP, comptes, Docker réel, sauvegarde, restauration, SSE)
+        if: success()
+        working-directory: server/admin_api
+        env:
+          VR_APP_KEY: cle-de-test-ci-1234567890
+          VR_SETUP_TOKEN: jeton-installation-ci
+          VR_TOKEN_FILE: ${{ runner.temp }}/admin_token
+          VR_BACKUP_POLL: '2'
+        run: |
+          set -o pipefail
+          dart run tool/e2e.dart https://localhost 2>&1 | tee ../../ci-out/e2e.log
+          sudo ls -la "$RUNNER_TEMP/backups" | tee -a ../../ci-out/e2e.log
+          sudo cat "$RUNNER_TEMP/run/deploy.request" | tee -a ../../ci-out/e2e.log
+      - name: Test de charge
+        if: success()
+        working-directory: server/admin_api
+        env:
+          VR_APP_KEY: cle-de-test-ci-1234567890
+        run: |
+          set -o pipefail
+          VR_ADMIN_TOKEN=$(cat "$RUNNER_TEMP/admin_token") dart run tool/load_test.dart https://localhost 60 20 2>&1 | tee ../../ci-out/load_test.log
+      - name: Restauration complète (restore.sh)
+        if: success()
+        run: |
+          set -o pipefail
+          TOKEN=$(cat "$RUNNER_TEMP/admin_token")
+          before=$(curl -fsSk -H "Authorization: Bearer $TOKEN" https://localhost/admin/dashboard | jq .usersTotal)
+          echo "comptes avant restauration (avec test de charge) : $before" | tee ci-out/restore.log
+          sudo env VR_DEPLOY_DIR="$PWD/server/deploy" VR_BACKUP_DIR="$RUNNER_TEMP/backups" bash server/database/backup/restore.sh 2>&1 | tee -a ci-out/restore.log
+          for _ in $(seq 1 40); do curl -fsSk https://localhost/admin/health > /dev/null 2>&1 && break; sleep 3; done
+          after=$(curl -fsSk -H "Authorization: Bearer $TOKEN" https://localhost/admin/dashboard | jq .usersTotal)
+          echo "comptes après restauration de la sauvegarde : $after" | tee -a ci-out/restore.log
+          [ "$after" = 3 ]
+      - name: Journaux des conteneurs
+        if: always()
+        working-directory: server/deploy
+        run: docker compose --env-file .env --env-file .domain logs --tail 150 > ../../ci-out/containers.log 2>&1 || true
+      - name: Publier les journaux
+        if: always() && github.event_name == 'push'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          JOB_STATUS: ${{ job.status }}
+        run: .github/scripts/publish_logs.sh admin-backend ci-out
+
+  desktop-tests:
+    name: Applications de bureau (analyse, tests, captures)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: 3.47.9
+          cache: true
+      - name: Module partagé
+        working-directory: admin/shared
+        run: |
+          mkdir -p ../../ci-out
+          set -o pipefail
+          flutter pub get 2>&1 | tee ../../ci-out/shared_pub_get.log
+          flutter analyze --no-fatal-infos 2>&1 | tee ../../ci-out/shared_analyze.log
+          flutter test --reporter expanded 2>&1 | tee ../../ci-out/shared_test.log
+      - name: VIGIROAD ADMIN MANAGER (tests + captures)
+        if: success() || failure()
+        working-directory: admin/windows
+        run: |
+          set -o pipefail
+          flutter pub get > ../../ci-out/manager_pub_get.log 2>&1
+          flutter analyze --no-fatal-infos 2>&1 | tee ../../ci-out/manager_analyze.log
+          flutter test --update-goldens --reporter expanded 2>&1 | tee ../../ci-out/manager_test.log
+      - name: VIGIROAD SERVER CONTROL (tests + captures)
+        if: success() || failure()
+        working-directory: admin/linux
+        run: |
+          set -o pipefail
+          flutter pub get > ../../ci-out/control_pub_get.log 2>&1
+          flutter analyze --no-fatal-infos 2>&1 | tee ../../ci-out/control_analyze.log
+          flutter test --update-goldens --reporter expanded 2>&1 | tee ../../ci-out/control_test.log
+      - name: Captures
+        if: success() || failure()
+        run: |
+          mkdir -p ci-out/admin-manager ci-out/server-control
+          cp admin/windows/test/goldens/*.png ci-out/admin-manager/ 2>/dev/null || true
+          cp admin/linux/test/goldens/*.png ci-out/server-control/ 2>/dev/null || true
+          find admin -name '*_failures' -type d -exec cp -r {} ci-out/ \; 2>/dev/null || true
+      - name: Publier les journaux
+        if: always() && github.event_name == 'push'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          JOB_STATUS: ${{ job.status }}
+        run: .github/scripts/publish_logs.sh desktop-tests ci-out
+
+  linux-app:
+    name: SERVER CONTROL — Linux natif (.deb, AppImage, test réel)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U postgres" --health-interval 5s --health-timeout 5s --health-retries 20
+    env:
+      PGHOST: localhost
+      PGUSER: postgres
+      PGPASSWORD: postgres
+      VERSION: 1.0.0
+    steps:
+      - uses: actions/checkout@v5
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: 3.47.9
+          cache: true
+      - name: Outils de compilation Linux
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev xvfb imagemagick > /dev/null
+          mkdir -p ci-out dist
+      - name: Compilation native (GTK)
+        working-directory: admin/linux
+        run: |
+          set -o pipefail
+          flutter pub get > /dev/null
+          flutter build linux --release 2>&1 | tail -20 | tee ../../ci-out/build_linux.log
+          ls -la build/linux/x64/release/bundle | tee -a ../../ci-out/build_linux.log
+      - name: Paquets .deb et AppImage
+        run: |
+          set -o pipefail
+          bash admin/linux/packaging/build_deb.sh "$VERSION" dist 2>&1 | tee ci-out/package.log
+          curl -fsSL -o "$RUNNER_TEMP/appimagetool" https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage
+          chmod +x "$RUNNER_TEMP/appimagetool"
+          bash admin/linux/packaging/build_appimage.sh "$VERSION" dist "$RUNNER_TEMP/appimagetool" 2>&1 | tail -5 | tee -a ci-out/package.log
+          dpkg-deb -I dist/*.deb | tee -a ci-out/package.log
+          sudo apt-get install -y ./dist/vigiroad-server-control_${VERSION}_amd64.deb 2>&1 | tail -3 | tee -a ci-out/package.log
+          ls -la /usr/bin/vigiroad-server-control /usr/share/applications/fr.vigiroad.ServerControl.desktop | tee -a ci-out/package.log
+          sha256sum dist/* | tee -a ci-out/package.log
+      - name: Services réels (PostgreSQL, API, agent, trafic, conteneur Docker)
+        run: |
+          set -o pipefail
+          createdb vigiroad_linux
+          (cd server && dart pub get > /dev/null && dart compile exe bin/server.dart -o "$RUNNER_TEMP/traffic" > /dev/null)
+          (cd server/admin_api && dart pub get > /dev/null && dart compile exe bin/admin_api.dart -o "$RUNNER_TEMP/admin_api" > /dev/null)
+          (cd server/monitoring && dart pub get > /dev/null && dart compile exe bin/agent.dart -o "$RUNNER_TEMP/agent" > /dev/null)
+          mkdir -p "$RUNNER_TEMP/run"
+          docker run -d --name vigiroad-demo -l com.docker.compose.project=deploy -l com.docker.compose.service=traffic nginx:alpine > /dev/null
+          PORT=8080 VR_API_KEYS=cle-de-test-ci-1234567890 VR_SPEEDLIMITS=off nohup "$RUNNER_TEMP/traffic" > ci-out/traffic.log 2>&1 &
+          VR_AGENT_TOKEN=jeton-agent-ci-0123456789abcdef VR_HOST_PROC=/proc VR_HOST_SYS=/sys VR_HOST_ROOT=/ \
+            VR_RUN_DIR="$RUNNER_TEMP/run" VR_COMPOSE_PROJECT=deploy PORT=9100 nohup "$RUNNER_TEMP/agent" > ci-out/agent.log 2>&1 &
+          PORT=8081 VR_DB_HOST=localhost VR_DB_USER=postgres VR_DB_PASSWORD=postgres VR_DB_NAME=vigiroad_linux \
+            VR_MIGRATIONS_DIR="$PWD/server/database/migrations" VR_API_KEYS=cle-de-test-ci-1234567890 \
+            VR_ADMIN_SECRET=$(openssl rand -hex 32) VR_ADMIN_SETUP_TOKEN=jeton-installation-linux \
+            VR_AGENT_URL=http://127.0.0.1:9100 VR_AGENT_TOKEN=jeton-agent-ci-0123456789abcdef VR_TRAFFIC_URL=http://127.0.0.1:8080 \
+            nohup "$RUNNER_TEMP/admin_api" > ci-out/admin_api.log 2>&1 &
+          for _ in $(seq 1 60); do curl -fsS http://127.0.0.1:8081/admin/health > /dev/null 2>&1 && break; sleep 2; done
+          curl -fsS http://127.0.0.1:8081/admin/health | tee ci-out/services.log; echo
+          curl -fsS -H 'x-agent-token: jeton-agent-ci-0123456789abcdef' http://127.0.0.1:9100/system | tee -a ci-out/services.log; echo
+      - name: Test de bout en bout de l'application (Xvfb)
+        working-directory: admin/linux
+        run: |
+          set -o pipefail
+          xvfb-run -a -s "-screen 0 1600x1000x24" flutter test integration_test/app_test.dart -d linux \
+            --dart-define=VR_ADMIN_URL=http://127.0.0.1:8081 --dart-define=VR_SETUP_TOKEN=jeton-installation-linux 2>&1 | tee ../../ci-out/integration_linux.log
+      - name: Capture de l'application installée (.deb)
+        if: success() || failure()
+        run: |
+          Xvfb :99 -screen 0 1600x1000x24 > /dev/null 2>&1 &
+          sleep 2
+          DISPLAY=:99 nohup vigiroad-server-control > ci-out/app_run.log 2>&1 &
+          sleep 15
+          DISPLAY=:99 import -window root ci-out/server-control-natif.png || true
+          pgrep -a vigiroad || echo "application arrêtée" | tee -a ci-out/app_run.log
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: vigiroad-server-control-linux
+          path: dist/*
+      - name: Publier les journaux
+        if: always() && github.event_name == 'push'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          JOB_STATUS: ${{ job.status }}
+        run: .github/scripts/publish_logs.sh linux-app ci-out
+
+  windows-app:
+    name: ADMIN MANAGER — Windows natif (.exe, installateur, test réel)
+    runs-on: windows-latest
+    timeout-minutes: 60
+    env:
+      VERSION: 1.0.0
+    steps:
+      - uses: actions/checkout@v5
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: 3.47.9
+          cache: true
+      - name: Compilation native (Win32)
+        shell: bash
+        working-directory: admin/windows
+        run: |
+          mkdir -p ../../ci-out ../../dist
+          set -o pipefail
+          flutter pub get > /dev/null
+          flutter build windows --release 2>&1 | tail -20 | tee ../../ci-out/build_windows.log
+          ls -la build/windows/x64/runner/Release | tee -a ../../ci-out/build_windows.log
+      - name: Installateur (Inno Setup) et version portable
+        shell: pwsh
+        run: |
+          $iscc = "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe"
+          if (-not (Test-Path $iscc)) { choco install innosetup -y --no-progress | Out-Null }
+          & $iscc /Qp "/DAppVersion=$env:VERSION" "/DBuildDir=$PWD\admin\windows\build\windows\x64\runner\Release" "/DOutDir=$PWD\dist" admin\windows\installer\vigiroad-admin-manager.iss | Tee-Object ci-out\installer.log
+          Compress-Archive -Path admin\windows\build\windows\x64\runner\Release\* -DestinationPath "dist\VIGIROAD-Admin-Manager-$env:VERSION-portable.zip"
+          Get-FileHash dist\* -Algorithm SHA256 | Format-Table -AutoSize | Out-String -Width 200 | Tee-Object -Append ci-out\installer.log
+      - name: Installation silencieuse (vérification)
+        shell: pwsh
+        run: |
+          $setup = Get-ChildItem dist\*-Setup.exe | Select-Object -First 1
+          Start-Process $setup.FullName -ArgumentList '/VERYSILENT','/CURRENTUSER','/SUPPRESSMSGBOXES','/NORESTART' -Wait
+          $exe = "$env:LOCALAPPDATA\Programs\VIGIROAD Admin Manager\vigiroad_admin_manager.exe"
+          if (-not (Test-Path $exe)) { throw "Application non installée : $exe" }
+          (Get-Item $exe).VersionInfo | Format-List CompanyName, ProductName, FileDescription, LegalCopyright | Out-String | Tee-Object ci-out\installed.log
+          Get-ChildItem "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\VIGIROAD" | Tee-Object -Append ci-out\installed.log
+      - name: API réelle (PostgreSQL) et test de bout en bout de l'application (Windows)
+        shell: pwsh
+        run: |
+          $pg = Get-Service -Name postgresql*
+          Set-Service -InputObject $pg -Status running -StartupType automatic
+          $env:PGPASSWORD = 'root'
+          & "$env:PGBIN\pg_isready.exe" -h localhost
+          & "$env:PGBIN\createdb.exe" -h localhost -U postgres vigiroad_win
+          Push-Location server\admin_api
+          dart pub get | Out-Null
+          dart compile exe bin\admin_api.dart -o "$env:RUNNER_TEMP\admin_api.exe" | Out-Null
+          Pop-Location
+          Push-Location server
+          dart pub get | Out-Null
+          dart compile exe bin\server.dart -o "$env:RUNNER_TEMP\traffic.exe" | Out-Null
+          Pop-Location
+          $secret = -join ((1..64) | ForEach-Object { '{0:x}' -f (Get-Random -Maximum 16) })
+          $common = @{ VR_API_KEYS = 'cle-de-test-ci-1234567890' }
+          $env:VR_API_KEYS = 'cle-de-test-ci-1234567890'; $env:VR_SPEEDLIMITS = 'off'; $env:PORT = '8080'
+          Start-Process "$env:RUNNER_TEMP\traffic.exe" -RedirectStandardOutput ci-out\traffic.log -RedirectStandardError ci-out\traffic.err.log
+          $env:PORT = '8081'; $env:VR_DB_HOST = 'localhost'; $env:VR_DB_USER = 'postgres'; $env:VR_DB_PASSWORD = 'root'
+          $env:VR_DB_NAME = 'vigiroad_win'; $env:VR_MIGRATIONS_DIR = "$PWD\server\database\migrations"
+          $env:VR_ADMIN_SECRET = $secret; $env:VR_ADMIN_SETUP_TOKEN = 'jeton-installation-windows'
+          $env:VR_TRAFFIC_URL = 'http://127.0.0.1:8080'
+          Start-Process "$env:RUNNER_TEMP\admin_api.exe" -RedirectStandardOutput ci-out\admin_api.log -RedirectStandardError ci-out\admin_api.err.log
+          for ($i = 0; $i -lt 60; $i++) {
+            try { Invoke-RestMethod http://127.0.0.1:8081/admin/health | ConvertTo-Json | Tee-Object ci-out\services.log; break } catch { Start-Sleep 2 }
+          }
+          # Les processus lancés ici s'arrêtent à la fin de l'étape (Windows) :
+          # comptes de test et test de l'application dans la même étape.
+          for ($i = 1; $i -le 3; $i++) {
+            $body = @{
+              pseudonym = "ci_mobile_$i"; email = "mobile$i@vigiroad.test"; password = 'Conduite2026'; appVersion = '1.4.0'
+              device = @{ installationId = "ci-windows-installation-$i"; brand = 'Samsung'; model = 'Galaxy S24'; os = 'android'; osVersion = '15' }
+            } | ConvertTo-Json -Depth 4
+            $r = Invoke-RestMethod -Method Post -Uri http://127.0.0.1:8081/v1/account/register -ContentType 'application/json' `
+              -Headers @{ 'x-api-key' = 'cle-de-test-ci-1234567890'; 'x-forwarded-for' = "198.51.100.$i" } -Body $body
+            Invoke-RestMethod -Method Post -Uri http://127.0.0.1:8081/v1/account/heartbeat -ContentType 'application/json' `
+              -Headers @{ authorization = "Bearer $($r.token)" } -Body '{}' | Out-Null
+          }
+          "3 comptes créés" | Tee-Object -Append ci-out\services.log
+          Push-Location admin\windows
+          flutter test integration_test/app_test.dart -d windows `
+            --dart-define=VR_ADMIN_URL=http://127.0.0.1:8081 --dart-define=VR_SETUP_TOKEN=jeton-installation-windows 2>&1 | Tee-Object ..\..\ci-out\integration_windows.log
+          $code = $LASTEXITCODE
+          Pop-Location
+          if ($code -ne 0) { throw "Test de bout en bout en échec ($code)" }
+      - name: Capture de l'application installée
+        if: success() || failure()
+        shell: pwsh
+        run: |
+          $exe = "$env:LOCALAPPDATA\Programs\VIGIROAD Admin Manager\vigiroad_admin_manager.exe"
+          if (Test-Path $exe) {
+            $p = Start-Process $exe -PassThru
+            Start-Sleep 12
+            Add-Type -AssemblyName System.Windows.Forms, System.Drawing
+            $b = [System.Windows.Forms.Screen]::PrimaryScreen.Bounds
+            $bmp = New-Object System.Drawing.Bitmap $b.Width, $b.Height
+            $g = [System.Drawing.Graphics]::FromImage($bmp)
+            $g.CopyFromScreen($b.Location, [System.Drawing.Point]::Empty, $b.Size)
+            $bmp.Save("$PWD\ci-out\admin-manager-natif.png")
+            "Processus actif : $(-not $p.HasExited)" | Tee-Object ci-out\app_run.log
+            Stop-Process -Id $p.Id -ErrorAction SilentlyContinue
+          }
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: vigiroad-admin-manager-windows
+          path: dist/*
+      - name: Publier les journaux
+        if: always() && github.event_name == 'push'
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          JOB_STATUS: ${{ job.status }}
+        run: .github/scripts/publish_logs.sh windows-app ci-out
+
+  desktop-release:
+    name: Publication des applications de bureau (release)
+    needs: [linux-app, windows-app]
+    if: github.event_name == 'push' && (startsWith(github.ref, 'refs/heads/release/v') || startsWith(github.ref, 'refs/tags/v'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+      - name: Fichiers de la release et manifeste de mise à jour
+        run: |
+          set -euo pipefail
+          TAG="${GITHUB_REF_NAME#release/}"
+          VER="$(sed -n 's/^version: *\([^+]*\).*/\1/p' pubspec.yaml)"
+          mkdir -p out
+          cp artifacts/vigiroad-server-control-linux/*.deb "out/vigiroad-$VER-server-control-amd64.deb"
+          cp artifacts/vigiroad-server-control-linux/*.AppImage "out/vigiroad-$VER-server-control-x86_64.AppImage"
+          cp artifacts/vigiroad-admin-manager-windows/*-Setup.exe "out/vigiroad-$VER-admin-manager-setup.exe"
+          cp artifacts/vigiroad-admin-manager-windows/*-portable.zip "out/vigiroad-$VER-admin-manager-portable.zip"
+          python3 - "$TAG" "$GITHUB_REPOSITORY" "$VER" <<'PY'
+          import hashlib, json, re, sys
+          tag, repo, ver = sys.argv[1:4]
+          def version(p):
+              return re.search(r'^version:\s*([^+\s]+)', open(p).read(), re.M).group(1)
+          def f(name):
+              return {"url": f"https://github.com/{repo}/releases/download/{tag}/{name}",
+                      "sha256": hashlib.sha256(open(f"out/{name}", "rb").read()).hexdigest()}
+          notes = ["Comptes, appareils et sessions VIGIROAD", "Supervision temps réel du serveur", "Sauvegardes testées et journal d'audit"]
+          manifest = {
+              "admin-manager": {"version": version("admin/windows/pubspec.yaml"), "notes": notes,
+                                "files": {"windows-installer": f(f"vigiroad-{ver}-admin-manager-setup.exe")}},
+              "server-control": {"version": version("admin/linux/pubspec.yaml"), "notes": notes,
+                                 "files": {"deb": f(f"vigiroad-{ver}-server-control-amd64.deb"),
+                                           "appimage": f(f"vigiroad-{ver}-server-control-x86_64.AppImage")}},
+          }
+          json.dump(manifest, open("out/vigiroad-admin-update.json", "w"), ensure_ascii=False, indent=2)
+          print(json.dumps(manifest, ensure_ascii=False, indent=2))
+          PY
+          ls -la out
+          # La release est créée par le job Android (CI) : on l'attend.
+          for _ in $(seq 1 100); do
+            gh release view "$TAG" > /dev/null 2>&1 && break
+            sleep 30
+          done
+          gh release upload "$TAG" out/* --clobber

@@ -1,5 +1,12 @@
-# VigiRoadTrafficAggregator sur un VPS : serveur + Caddy (HTTPS automatique).
+# VIGIROAD sur un VPS : serveur de trafic, API d'administration, PostgreSQL,
+# agent de supervision, sauvegardes et Caddy (HTTPS automatique).
 # Installé et mis à jour par install.sh ; secrets dans .env (jamais versionné).
+#
+# Réseaux :
+#   default  — Caddy, trafic et API (accès Internet sortant : sources, GitHub)
+#   backend  — interne, sans Internet : PostgreSQL, agent, sauvegardes
+# Seul Caddy publie des ports (80/443). PostgreSQL, l'agent et le socket
+# Docker ne sont jamais exposés.
 services:
   traffic:
     build:
@@ -12,14 +19,95 @@ services:
     restart: unless-stopped
     expose:
       - "8080"
-    logging:
+    logging: &logs
       driver: json-file
       options: { max-size: "10m", max-file: "3" }
+
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${VR_DB_NAME:-vigiroad}
+      POSTGRES_USER: ${VR_DB_USER:-vigiroad}
+      POSTGRES_PASSWORD: ${VR_DB_PASSWORD:?VR_DB_PASSWORD manquant}
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    networks: [backend]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    shm_size: 128mb
+    logging: *logs
+
+  admin-api:
+    build:
+      context: ../..
+      dockerfile: server/admin_api/Dockerfile
+    image: vigiroad-admin-api:local
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      PORT: "8081"
+      VR_DB_HOST: postgres
+      VR_AGENT_URL: http://agent:9100
+      VR_TRAFFIC_URL: http://traffic:8080
+      VR_DOMAIN: ${VR_DOMAIN}
+      VR_GEOIP_FILE: /geoip/dbip-country-lite.csv.gz
+    volumes:
+      - ${VR_GEOIP_DIR:-/opt/vigiroad/geoip}:/geoip:ro
+    depends_on:
+      postgres: { condition: service_healthy }
+    expose:
+      - "8081"
+    networks: [default, backend]
+    logging: *logs
+
+  # Agent local : métriques de l'hôte et opérations Docker autorisées, sur le
+  # réseau interne uniquement, protégé par jeton.
+  agent:
+    build:
+      context: ../..
+      dockerfile: server/monitoring/Dockerfile
+    image: vigiroad-agent:local
+    restart: unless-stopped
+    environment:
+      VR_AGENT_TOKEN: ${VR_AGENT_TOKEN:?VR_AGENT_TOKEN manquant}
+      PORT: "9100"
+    pid: host
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/host/root:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${VR_RUN_DIR:-/opt/vigiroad/run}:/run/vigiroad
+    networks: [backend]
+    logging: *logs
+
+  backup:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    entrypoint: ["sh", "/backup.sh"]
+    environment:
+      VR_DB_HOST: postgres
+      VR_DB_NAME: ${VR_DB_NAME:-vigiroad}
+      VR_DB_USER: ${VR_DB_USER:-vigiroad}
+      VR_DB_PASSWORD: ${VR_DB_PASSWORD}
+      VR_BACKUP_HOUR: ${VR_BACKUP_HOUR:-3}
+      VR_BACKUP_POLL: ${VR_BACKUP_POLL:-15}
+    volumes:
+      - ../database/backup/backup.sh:/backup.sh:ro
+      - ${VR_BACKUP_DIR:-/opt/vigiroad/backups}:/backups
+    depends_on:
+      postgres: { condition: service_healthy }
+    networks: [backend]
+    logging: *logs
 
   caddy:
     image: caddy:2
     restart: unless-stopped
-    depends_on: [traffic]
+    depends_on: [traffic, admin-api]
     ports:
       - "80:80"
       - "443:443"
@@ -30,10 +118,13 @@ services:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy_data:/data
       - caddy_config:/config
-    logging:
-      driver: json-file
-      options: { max-size: "10m", max-file: "3" }
+    logging: *logs
+
+networks:
+  backend:
+    internal: true
 
 volumes:
+  pg_data:
   caddy_data:
   caddy_config:

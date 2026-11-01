@@ -4,6 +4,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../core/theme/vr_theme.dart';
+import '../features/account/application/account_controller.dart';
 import '../features/navigation/application/navigation_providers.dart';
 import '../features/update/presentation/update_gate.dart';
 import 'providers.dart';
@@ -46,6 +47,8 @@ class _VigiroadAppState extends ConsumerState<VigiroadApp> {
 
   @override
   Widget build(BuildContext context) {
+    // Compte facultatif : session restaurée au démarrage (temps d'utilisation).
+    ref.listen(accountProvider.select((s) => s.status), (_, _) {});
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: VrTheme.overlay,
       child: MaterialApp.router(

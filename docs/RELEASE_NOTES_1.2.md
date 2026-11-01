@@ -6,6 +6,8 @@
   VigiRoadTrafficAggregator du propriétaire (VPS, HTTPS). Perturbations Bison Futé sur la carte,
   état « inconnu » hors couverture, annonces de SENTRIX sur l'itinéraire, panneau de limitation
   pendant le guidage quand OpenStreetMap la connaît.
+- **Version iPhone** jointe à la release (`…-ios-non-signe.ipa`, iOS 16 ou plus) : à installer
+  avec Sideloadly ou AltStore et un identifiant Apple ; voir [`INSTALL_IOS.md`](INSTALL_IOS.md).
 
 ## Nouveautés
 

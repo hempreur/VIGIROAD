@@ -38,8 +38,12 @@ apt-get install -y -qq --no-install-recommends \
     xfce4 xfce4-terminal xfce4-taskmanager dbus-x11 xorgxrdp xrdp fonts-dejavu-core libgtk-3-0 curl ca-certificates > /dev/null
 
 say "Bureau à distance limité à l'ordinateur local (127.0.0.1:3389)"
-sed -i -E 's|^port=.*|port=tcp://127.0.0.1:3389|' /etc/xrdp/xrdp.ini
-grep -q '^port=tcp://127.0.0.1:3389' /etc/xrdp/xrdp.ini
+# Seul le port général ([Globals], première ligne « port= ») change : les
+# sections de session (Xorg, Xvnc) gardent « port=-1 ». Répare aussi une
+# installation faite avec l'ancienne version de ce script.
+sed -i 's|^port=tcp://127.0.0.1:3389$|port=-1|' /etc/xrdp/xrdp.ini
+sed -i '0,/^port=/s|^port=.*|port=tcp://127.0.0.1:3389|' /etc/xrdp/xrdp.ini
+[ "$(grep -c '^port=tcp://127.0.0.1:3389' /etc/xrdp/xrdp.ini)" = 1 ]
 adduser xrdp ssl-cert > /dev/null 2>&1 || true
 # Évite la demande d'authentification « profil de couleur » dans les sessions distantes.
 mkdir -p /etc/polkit-1/rules.d

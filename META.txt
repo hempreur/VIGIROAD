@@ -1,0 +1,5 @@
+job=android
+sha=4eaa25ef773004239ef43651aa6a792f6b5d97ea
+ref=refs/heads/feature/ui-3d-car
+run=https://github.com/hempreur/VIGIROAD/actions/runs/41360179471
+status=success

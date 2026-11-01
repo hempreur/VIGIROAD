@@ -1,0 +1,5 @@
+job=android
+sha=608a515565199ad57e5940225b91362462471ba0
+ref=refs/heads/chore/deploy-vps
+run=https://github.com/hempreur/VIGIROAD/actions/runs/41255699207
+status=success

@@ -63,3 +63,11 @@ tools/wakeword/work/
 # Déploiement VPS : secrets et domaine générés sur le serveur.
 server/deploy/.env
 server/deploy/.domain
+
+# Applications d'administration (bureau)
+admin/*/build/
+admin/*/test/goldens/
+admin/*/test/failures/
+admin/*/linux/flutter/ephemeral/
+admin/*/windows/flutter/ephemeral/
+dist/

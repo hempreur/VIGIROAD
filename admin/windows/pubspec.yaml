@@ -1,0 +1,26 @@
+name: vigiroad_admin_manager
+description: VIGIROAD ADMIN MANAGER — gestion des utilisateurs, appareils et sessions VIGIROAD (application Windows native).
+publish_to: none
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.13.7
+
+dependencies:
+  flutter:
+    sdk: flutter
+  http: ^1.6.0
+  vigiroad_admin_core:
+    path: ../shared
+
+dev_dependencies:
+  crypto: ^3.0.6
+  flutter_lints: ^6.0.0
+  flutter_test:
+    sdk: flutter
+  integration_test:
+    sdk: flutter
+  shared_preferences: ^2.5.6
+
+flutter:
+  uses-material-design: true

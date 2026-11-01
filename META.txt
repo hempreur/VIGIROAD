@@ -1,0 +1,5 @@
+job=ocr-release
+sha=22428db23a4594783e9d496f9a777eb3d80f86ba
+ref=refs/heads/feature/admin-desktop
+run=https://github.com/hempreur/VIGIROAD/actions/runs/41325380346
+status=success

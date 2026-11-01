@@ -1,0 +1,5 @@
+job=wakeword
+sha=ebc80a253badca13e3614f230a80795b7f42c5ac
+ref=refs/heads/feature/wakeword-v1.2
+run=https://github.com/hempreur/VIGIROAD/actions/runs/41250301226
+status=success

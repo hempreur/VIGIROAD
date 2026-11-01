@@ -1,0 +1,5 @@
+job=android
+sha=7eda878989136b072749681866f57d2644a55c8a
+ref=refs/heads/fix/caddy-reload
+run=https://github.com/hempreur/VIGIROAD/actions/runs/41334219782
+status=success

@@ -1,0 +1,5 @@
+job=admin-backend
+sha=2d0a232f7eef343adb606050fc4efb22bb1a41e1
+ref=refs/heads/release/v1.4.0
+run=https://github.com/hempreur/VIGIROAD/actions/runs/41327265321
+status=success

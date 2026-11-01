@@ -1,0 +1,11 @@
+Building Windows application...                                    92.3s
+√ Built build\windows\x64\runner\Release\vigiroad_admin_manager.exe
+total 21340
+drwxr-xr-x 1 runneradmin 197121        0 Nov  1 16:19 .
+drwxr-xr-x 1 runneradmin 197121        0 Nov  1 16:19 ..
+-rwxr-xr-x 1 runneradmin 197121    58368 Nov  1 16:19 dartjni.dll
+drwxr-xr-x 1 runneradmin 197121        0 Nov  1 16:19 data
+-rwxr-xr-x 1 runneradmin 197121   110592 Nov  1 16:19 file_selector_windows_plugin.dll
+-rwxr-xr-x 1 runneradmin 197121 21289472 Oct 29 12:04 flutter_windows.dll
+-rwxr-xr-x 1 runneradmin 197121    98304 Nov  1 16:19 url_launcher_windows_plugin.dll
+-rwxr-xr-x 1 runneradmin 197121   282624 Nov  1 16:19 vigiroad_admin_manager.exe

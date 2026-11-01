@@ -1,0 +1,7 @@
+VigiRoadTrafficAggregator : port 8080, sources : fr-bison-fute, fr-pan-transport-data-gouv
+2026-11-01T16:19:53.218689  0:00:00.000132 GET     [200] /health
+2026-11-01T16:19:53.219444  0:00:00.000251 GET     [200] /v1/sources
+2026-11-01T16:20:53.218603  0:00:00.000033 GET     [200] /health
+2026-11-01T16:20:53.219607  0:00:00.000069 GET     [200] /v1/metrics
+2026-11-01T16:20:55.508531  0:00:00.000045 GET     [200] /health
+2026-11-01T16:20:55.509528  0:00:00.000087 GET     [200] /v1/sources

@@ -1,0 +1,11 @@
+00:00 +0: loading /home/runner/work/VIGIROAD/VIGIROAD/admin/shared/test/core_test.dart
+00:00 +0: mise en forme nombres, octets, débits, durées
+00:00 +1: mise en forme dates relatives
+00:00 +2: mise en forme pays et drapeaux
+00:00 +3: client HTTPS obligatoire sauf ordinateur local
+00:00 +4: client erreurs de l'API et session expirée
+00:00 +5: client flux temps réel (SSE)
+00:00 +6: mises à jour comparaison de versions
+00:00 +7: mises à jour manifeste : version plus récente uniquement
+00:00 +8: session : connexion au serveur, étape suivante
+00:00 +9: All tests passed!

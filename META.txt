@@ -1,0 +1,5 @@
+job=server
+sha=dd4203c75ff56f9ba02897a904b80c2a18df88d7
+ref=refs/heads/fix/ota-install
+run=https://github.com/hempreur/VIGIROAD/actions/runs/41335067407
+status=success

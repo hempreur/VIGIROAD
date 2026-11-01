@@ -1,0 +1,75 @@
+ Container deploy-admin-api-1 Starting 
+ Container deploy-backup-1 Started 
+ Container deploy-admin-api-1 Started 
+ Container deploy-caddy-1 Starting 
+ Container deploy-caddy-1 Started 
+{"status":"ok","sources":2,"coverage":["FR"]}sans clé : HTTP 401
+{"sources":[{"id":"fr-bison-fute","name":"Bison Futé — réseau routier national non concédé","countries":["FR"],"licence":"Licence de réutilisation des données d'information routière (Bison Futé) / Licence Ouverte 2.0","attribution":"Information fournie par Bison Futé","minIntervalSeconds":120,"homepage":"https://www.bison-fute.gouv.fr/s-abonner.html","areas":[[-5.3,41.3,9.7,51.2]],"covecaddy-1      | {"level":"info","ts":1793556679.708075,"msg":"maxprocs: Leaving GOMAXPROCS=4: CPU quota undefined"}
+caddy-1      | {"level":"info","ts":1793556679.7080917,"msg":"GOMEMLIMIT is updated","GOMEMLIMIT":15083499110,"previous":9223372036854775807}
+caddy-1      | {"level":"info","ts":1793556679.708096,"msg":"using config from file","file":"/etc/caddy/Caddyfile"}
+caddy-1      | {"level":"info","ts":1793556679.708099,"msg":"adapted config to JSON","adapter":"caddyfile"}
+postgres-1   | 2026-11-01 18:11:09.729 UTC [41] LOG:  database system is ready to accept connections
+postgres-1   |  done
+postgres-1   | server started
+admin-api-1  | Migrations appliquées : 1
+admin-api-1  | API d'administration VIGIROAD 1.0.0 : port 8081
+backup-1     | 2026-11-01T18:11:19Z service de sauvegarde démarré (sauvegarde quotidienne vers 3 h UTC)
+caddy-1      | {"level":"info","ts":1793556679.7089498,"logger":"admin","msg":"admin endpoint started","address":"localhost:2019","enforce_origin":false,"origins":["//localhost:2019","//[::1]:2019","//127.0.0.1:2019"]}
+caddy-1      | {"level":"info","ts":1793556679.7090905,"logger":"http.auto_https","msg":"server is listening only on the HTTPS port but has no TLS connection policies; adding one to enable TLS","server_name":"srv0","https_port":443}
+caddy-1      | {"level":"info","ts":1793556679.7091072,"logger":"http.auto_https","msg":"enabling automatic HTTP->HTTPS redirects","server_name":"srv0"}
+caddy-1      | {"level":"info","ts":1793556679.709264,"logger":"tls.cache.maintenance","msg":"started background certificate maintenance","cache":"0x21dacd423500"}
+caddy-1      | {"level":"info","ts":1793556679.7184925,"logger":"tls","msg":"cleaning storage unit","storage":"FileStorage:/data/caddy"}
+caddy-1      | {"level":"info","ts":1793556679.7190907,"logger":"tls","msg":"finished cleaning storage units"}
+caddy-1      | {"level":"warn","ts":1793556679.7336822,"logger":"pki.ca.local","msg":"installing root certificate (you might be prompted for password)","path":"storage:pki/authorities/local/root.crt"}
+caddy-1      | {"level":"info","ts":1793556679.7339675,"msg":"warning: \"certutil\" is not available, install \"certutil\" with \"apt install libnss3-tools\" or \"yum install nss-tools\" and try again"}
+caddy-1      | {"level":"info","ts":1793556679.7339778,"msg":"define JAVA_HOME environment variable to use the Java trust"}
+caddy-1      | {"level":"info","ts":1793556679.7608614,"msg":"certificate installed properly in linux trusts"}
+caddy-1      | {"level":"info","ts":1793556679.7610483,"logger":"http","msg":"enabling HTTP/3 listener","addr":":443"}
+caddy-1      | {"level":"info","ts":1793556679.7611926,"msg":"failed to sufficiently increase receive buffer size (was: 1024 kiB, wanted: 7168 kiB, got: 2048 kiB). See https://github.com/quic-go/quic-go/wiki/UDP-Buffer-Sizes for details."}
+caddy-1      | {"level":"info","ts":1793556679.7613368,"logger":"http.log","msg":"server running","name":"srv0","protocols":["h1","h2","h3"]}
+caddy-1      | {"level":"warn","ts":1793556679.7615025,"logger":"http","msg":"HTTP/2 skipped because it requires TLS","network":"tcp","addr":":80"}
+postgres-1   | CREATE DATABASE
+postgres-1   | 
+postgres-1   | 
+postgres-1   | /usr/local/bin/docker-entrypoint.sh: ignoring /docker-entrypoint-initdb.d/*
+postgres-1   | 
+postgres-1   | waiting for server to shut down....2026-11-01 18:11:09.866 UTC [41] LOG:  received fast shutdown request
+postgres-1   | 2026-11-01 18:11:09.867 UTC [41] LOG:  aborting any active transactions
+postgres-1   | 2026-11-01 18:11:09.870 UTC [41] LOG:  background worker "logical replication launcher" (PID 47) exited with exit code 1
+postgres-1   | 2026-11-01 18:11:09.872 UTC [42] LOG:  shutting down
+postgres-1   | 2026-11-01 18:11:09.872 UTC [42] LOG:  checkpoint starting: shutdown immediate
+postgres-1   | 2026-11-01 18:11:09.888 UTC [42] LOG:  checkpoint complete: wrote 926 buffers (5.7%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.013 s, sync=0.002 s, total=0.016 s; sync files=301, longest=0.001 s, average=0.001 s; distance=4283 kB, estimate=4283 kB; lsn=0/1925D68, redo lsn=0/1925D68
+postgres-1   | 2026-11-01 18:11:09.896 UTC [41] LOG:  database system is shut down
+postgres-1   |  done
+postgres-1   | server stopped
+postgres-1   | 
+postgres-1   | PostgreSQL init process complete; ready for start up.
+postgres-1   | 
+postgres-1   | 2026-11-01 18:11:09.989 UTC [1] LOG:  starting PostgreSQL 16.15 on x86_64-pc-linux-musl, compiled by gcc (Alpine 15.2.0) 15.2.0, 64-bit
+postgres-1   | 2026-11-01 18:11:09.989 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+postgres-1   | 2026-11-01 18:11:09.989 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+postgres-1   | 2026-11-01 18:11:09.990 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+postgres-1   | 2026-11-01 18:11:09.992 UTC [57] LOG:  database system was shut down at 2026-11-01 18:11:09 UTC
+postgres-1   | 2026-11-01 18:11:09.997 UTC [1] LOG:  database system is ready to accept connections
+postgres-1   | 2026-11-01 18:11:19.385 UTC [68] ERROR:  relation "backup_jobs" does not exist at character 15
+postgres-1   | 2026-11-01 18:11:19.385 UTC [68] STATEMENT:  SELECT 1 FROM backup_jobs LIMIT 1
+postgres-1   | 2026-11-01 18:11:19.409 UTC [69] ERROR:  relation "backup_jobs" does not exist at character 22
+postgres-1   | 2026-11-01 18:11:19.409 UTC [69] STATEMENT:  SELECT count(*) FROM backup_jobs
+agent-1      | Agent de supervision VIGIROAD : port 9100, projet deploy
+traffic-1    | VigiRoadTrafficAggregator : port 8080, sources : fr-bison-fute, fr-pan-transport-data-gouv
+caddy-1      | {"level":"warn","ts":1793556679.7615135,"logger":"http","msg":"HTTP/3 skipped because it requires TLS","network":"tcp","addr":":80"}
+caddy-1      | {"level":"info","ts":1793556679.761517,"logger":"http.log","msg":"server running","name":"remaining_auto_https_redirects","protocols":["h1","h2","h3"]}
+caddy-1      | {"level":"info","ts":1793556679.7615225,"logger":"http","msg":"enabling automatic TLS certificate management","domains":["localhost"]}
+caddy-1      | {"level":"info","ts":1793556679.7616293,"msg":"autosaved config (load with --resume flag)","file":"/config/caddy/autosave.json"}
+caddy-1      | {"level":"info","ts":1793556679.7617123,"msg":"serving initial configuration"}
+caddy-1      | {"level":"info","ts":1793556679.7624495,"logger":"tls.obtain","msg":"acquiring lock","identifier":"localhost"}
+caddy-1      | {"level":"info","ts":1793556679.762976,"logger":"tls.obtain","msg":"lock acquired","identifier":"localhost"}
+caddy-1      | {"level":"info","ts":1793556679.7630746,"logger":"tls.obtain","msg":"obtaining certificate","identifier":"localhost"}
+caddy-1      | {"level":"info","ts":1793556679.7659652,"logger":"tls.obtain","msg":"certificate obtained successfully","identifier":"localhost","issuer":"local"}
+caddy-1      | {"level":"info","ts":1793556679.7660267,"logger":"tls.obtain","msg":"releasing lock","identifier":"localhost"}
+traffic-1    | 2026-11-01T18:11:19.658967  0:00:00.001396 GET     [200] /v1/sources
+traffic-1    | 2026-11-01T18:11:19.661319  0:00:00.000026 GET     [200] /health
+traffic-1    | 2026-11-01T18:11:21.705862  0:00:00.000042 GET     [200] /health
+traffic-1    | 2026-11-01T18:11:21.719071  0:00:00.000032 GET     [200] /health
+traffic-1    | 2026-11-01T18:11:21.730989  0:00:00.000054 GET     [401] /v1/sources
+traffic-1    | 2026-11-01T18:11:21.746049  0:00:00.000156 GET     [200] /v1/sources

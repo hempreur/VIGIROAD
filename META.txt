@@ -1,0 +1,5 @@
+job=ocr-release
+sha=f85d56962417efb5bb2e86e50da73695d01ffa8e
+ref=refs/heads/release/v1.5.0
+run=https://github.com/hempreur/VIGIROAD/actions/runs/41351718309
+status=success

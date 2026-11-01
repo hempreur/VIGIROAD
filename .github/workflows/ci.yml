@@ -244,7 +244,22 @@ jobs:
             done
             gh release edit "$TAG" --title "VIGIROAD ${TAG#v}" --notes-file "$RUNNER_TEMP/notes.md"
           fi
-          gh release upload "$TAG" "ci-out/vigiroad-$VER-arm64.apk" "ci-out/vigiroad-$VER-arm32.apk" --clobber
+          # Fichier de version lu par les applications installées (mise à jour obligatoire).
+          BUILD="$(sed -n 's/^version: *[^+]*+\([0-9]*\).*/\1/p' pubspec.yaml)"
+          python3 .github/scripts/update_manifest.py "$VER" "$BUILD" "$TAG" "$GITHUB_REPOSITORY" \
+            "ci-out/vigiroad-$VER-arm64.apk" "ci-out/vigiroad-$VER-arm32.apk" ci-out/vigiroad-update.json
+          gh release upload "$TAG" "ci-out/vigiroad-$VER-arm64.apk" "ci-out/vigiroad-$VER-arm32.apk" \
+            ci-out/vigiroad-update.json --clobber
+          # Vérification : ce que les applications liront réellement.
+          sleep 10
+          curl -fsSL "https://github.com/${GITHUB_REPOSITORY}/releases/latest/download/vigiroad-update.json" -o "$RUNNER_TEMP/latest.json"
+          python3 - "$RUNNER_TEMP/latest.json" "$VER" "ci-out/vigiroad-$VER-arm64.apk" <<'PY'
+          import hashlib, json, sys
+          m = json.load(open(sys.argv[1]))
+          assert m["version"] == sys.argv[2], f"latest = {m['version']}, attendu {sys.argv[2]}"
+          assert m["apks"]["arm64-v8a"]["sha256"] == hashlib.sha256(open(sys.argv[3], "rb").read()).hexdigest()
+          print("Fichier de mise à jour publié et cohérent :", m["version"], m["build"])
+          PY
       - name: Publier les journaux
         if: always() && github.event_name == 'push'
         env:

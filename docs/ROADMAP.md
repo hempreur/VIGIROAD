@@ -26,6 +26,11 @@ voir [`RELEASE_NOTES_1.1.md`](RELEASE_NOTES_1.1.md).
   0,12 fausse activation/h de parole, 0,19/h de musique ou bruit. Voir
   [`WAKE_WORD.md`](WAKE_WORD.md) et [`RELEASE_NOTES_1.2.md`](RELEASE_NOTES_1.2.md).
 
+## Version 1.3 (livrée)
+
+- **Mises à jour automatiques** hors Play Store (Android) : fenêtre obligatoire, téléchargement
+  vérifié, installation confirmée par Android ; voir [`UPDATES.md`](UPDATES.md).
+
 ## Limitations connues
 
 Voir aussi [`RELEASE_NOTES_1.0.md`](RELEASE_NOTES_1.0.md) et [`RELEASE_NOTES_1.1.md`](RELEASE_NOTES_1.1.md).

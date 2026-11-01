@@ -21,6 +21,10 @@ import 'package:vigiroad/features/search/data/photon_geocoder.dart';
 import 'package:vigiroad/features/search/presentation/search_screen.dart';
 import 'package:vigiroad/features/sentrix/domain/sentrix_state.dart';
 import 'package:vigiroad/features/sentrix/presentation/sentrix_head.dart';
+import 'package:vigiroad/features/update/application/update_controller.dart';
+import 'package:vigiroad/features/update/data/update_platform.dart';
+import 'package:vigiroad/features/update/data/update_source.dart';
+import 'package:vigiroad/features/update/domain/update_manifest.dart';
 
 import '../helpers/fakes.dart';
 import '../helpers/pump_app.dart';
@@ -122,6 +126,22 @@ void main() {
     await expectLater(find.byType(MaterialApp), matchesGoldenFile('goldens/06_search.png'));
   });
 
+  testWidgets('09 mise à jour obligatoire', (tester) async {
+    usePhoneSurface(tester);
+    await pumpVigiroad(
+      tester,
+      FakePermissionService.allGranted(),
+      location: FakeLocationSource(testFix()),
+      extraOverrides: [
+        updatePlatformProvider.overrideWithValue(_ShotUpdatePlatform()),
+        updateSourceProvider.overrideWithValue(_ShotUpdateSource()),
+      ],
+    );
+    await passSplash(tester);
+    await tester.pump(const Duration(milliseconds: 600));
+    await expectLater(find.byType(MaterialApp), matchesGoldenFile('goldens/09_update.png'));
+  });
+
   for (final (name, route) in [('07_settings', '/settings'), ('08_plates', '/plates')]) {
     testWidgets(name, (tester) async {
       usePhoneSurface(tester);
@@ -163,5 +183,36 @@ void main() {
     );
     await tester.pump(const Duration(milliseconds: 300));
     await expectLater(find.byType(MaterialApp), matchesGoldenFile('goldens/04_sentrix_states.png'));
+  });
+}
+
+
+class _ShotUpdatePlatform implements UpdatePlatform {
+  @override
+  Future<InstalledApp> appInfo() async => const InstalledApp(versionName: '1.2.1', versionCode: 2007, abis: ['arm64-v8a']);
+  @override
+  Future<bool> canInstall() async => true;
+  @override
+  Future<void> openInstallSettings() async {}
+  @override
+  Future<void> install(String apkPath) async {}
+  @override
+  Stream<String> get installFailures => const Stream.empty();
+}
+
+class _ShotUpdateSource extends UpdateSource {
+  _ShotUpdateSource() : super(manifestUrl: 'https://example.org/u.json', userAgent: 'test');
+  @override
+  Future<UpdateManifest> manifest() async => UpdateManifest.fromJson({
+    'version': '1.3.0',
+    'build': 8,
+    'notes': [
+      'Mises à jour automatiques directement depuis l\'application',
+      'Téléchargement vérifié et installation confirmée par Android',
+      'Jamais d\'interruption pendant un guidage',
+    ],
+    'apks': {
+      'arm64-v8a': {'url': 'https://example.org/a.apk', 'sha256': 'ab', 'size': 1},
+    },
   });
 }

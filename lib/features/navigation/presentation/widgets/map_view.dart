@@ -109,6 +109,57 @@ class _VrMapViewState extends State<VrMapView> {
     }
   }
 
+  static const _buildingsLayer = 'vr-buildings-3d';
+
+  /// Bâtiments en relief (hauteurs OpenStreetMap), sous les noms de rues.
+  ///
+  /// Le style sombre CARTO (source « protomaps », couche « buildings ») et
+  /// les styles OpenMapTiles (couche « building ») sont reconnus ; un
+  /// bâtiment sans hauteur connue reçoit 3 étages (≈ 9 m).
+  Future<void> _add3dBuildings() async {
+    final c = _controller;
+    if (c == null) return;
+    try {
+      final sources = await c.getSourceIds();
+      final (String source, String layer)? target = sources.contains('protomaps')
+          ? ('protomaps', 'buildings')
+          : sources.contains('carto')
+          ? ('carto', 'building')
+          : sources.contains('openmaptiles')
+          ? ('openmaptiles', 'building')
+          : null;
+      if (target == null) return;
+      final layers = [for (final l in await c.getLayerIds()) '$l'];
+      if (layers.contains(_buildingsLayer)) return;
+      final firstLabel = layers.where((l) => l.contains('label') || l.contains('place') || l.contains('poi')).firstOrNull;
+      await c.addFillExtrusionLayer(
+        target.$1,
+        _buildingsLayer,
+        const FillExtrusionLayerProperties(
+          fillExtrusionColor: [
+            'interpolate', ['linear'], ['coalesce', ['get', 'height'], ['get', 'render_height'], 9],
+            0, '#16222D',
+            40, '#1E3346',
+            120, '#29506E',
+          ],
+          fillExtrusionHeight: [
+            'interpolate', ['linear'], ['zoom'],
+            14.5, 0,
+            15.5, ['coalesce', ['get', 'height'], ['get', 'render_height'], 9],
+          ],
+          fillExtrusionBase: ['coalesce', ['get', 'min_height'], ['get', 'render_min_height'], 0],
+          fillExtrusionOpacity: 0.88,
+        ),
+        sourceLayer: target.$2,
+        minzoom: 14.5,
+        belowLayerId: firstLabel,
+        enableInteraction: false,
+      );
+    } on Object catch (e) {
+      debugPrint('VIGIROAD carte : bâtiments 3D indisponibles ($e)');
+    }
+  }
+
   /// Marqueurs 🍗 des signalements, visibles 2 h.
   Future<void> _syncReports() async {
     final c = _controller;
@@ -224,9 +275,10 @@ class _VrMapViewState extends State<VrMapView> {
       CameraUpdate.newCameraPosition(
         CameraPosition(
           target: LatLng(fix.point.latitude, fix.point.longitude),
-          zoom: a.tilted ? 16.5 : 15,
+          zoom: a.tilted ? 17 : 15,
           bearing: a.tilted && fix.headingReliable ? fix.headingDeg! : 0,
-          tilt: a.tilted ? 55 : 0,
+          // Vue conduite : forte inclinaison pour voir les bâtiments en relief.
+          tilt: a.tilted ? 60 : 0,
         ),
       ),
       duration: const Duration(milliseconds: 900),
@@ -284,6 +336,7 @@ class _VrMapViewState extends State<VrMapView> {
           unawaited(_syncTraffic());
           _markerImage = false;
           unawaited(_syncReports());
+          unawaited(_add3dBuildings());
           if (widget.args.following) unawaited(_follow());
         },
       ),

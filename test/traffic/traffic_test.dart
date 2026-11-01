@@ -323,22 +323,54 @@ void main() {
   });
 
   group('légende', () {
-    Future<void> pump(WidgetTester t, TrafficState s) => t.pumpWidget(wrapDark(Center(child: TrafficLegend(state: s))));
+    Future<void> pump(WidgetTester t, TrafficState s, {bool route = true, double? along}) =>
+        t.pumpWidget(wrapDark(Center(child: TrafficLegend(state: s, hasRoute: route, alongM: along))));
+
+    TrafficEvent ev(String id, Severity sev) => TrafficEvent(
+      id: id,
+      type: TrafficEventType.roadworks,
+      severity: sev,
+      position: const LatLng(48.9, 2.35),
+      sources: const ['fr-bison-fute'],
+      updatedAt: DateTime(2026, 10, 30, 14),
+      fetchedAt: DateTime(2026, 10, 30, 14),
+    );
 
     testWidgets('zone inconnue : jamais « fluide »', (t) async {
       await pump(t, const TrafficState(status: TrafficStatus.unknown));
-      expect(find.text('État inconnu ici'), findsOneWidget);
-      expect(find.textContaining('Fluide'), findsNothing);
+      expect(find.text('État inconnu'), findsOneWidget);
+      expect(find.textContaining('luide'), findsNothing);
     });
 
-    testWidgets('zone couverte sans incident : mention et heure de mise à jour', (t) async {
-      await pump(t, TrafficState(
-        status: TrafficStatus.known,
-        attributions: const [_bison],
-        updatedAt: DateTime(2026, 10, 30, 14, 2),
-      ));
-      expect(find.text('Aucun incident signalé'), findsOneWidget);
-      expect(find.textContaining('Information fournie par Bison Futé · Mise à jour 14:02'), findsOneWidget);
+    testWidgets('sans trajet : aucun compte', (t) async {
+      await pump(t, const TrafficState(status: TrafficStatus.known), route: false);
+      expect(find.text('Aucun trajet'), findsOneWidget);
+    });
+
+    testWidgets('compte les seules perturbations du trajet encore devant, sans mention de source', (t) async {
+      await pump(
+        t,
+        TrafficState(
+          status: TrafficStatus.known,
+          attributions: const [_bison],
+          updatedAt: DateTime(2026, 10, 30, 14, 2),
+          nearby: [ev('zone', Severity.high)],
+          onRoute: [
+            RouteTrafficEvent(ev('passee', Severity.high), 500),
+            RouteTrafficEvent(ev('a', Severity.low), 4000),
+            RouteTrafficEvent(ev('b', Severity.medium), 9000),
+          ],
+        ),
+        along: 2000,
+      );
+      expect(find.text('2 perturbations'), findsOneWidget);
+      expect(find.textContaining('Information fournie'), findsNothing);
+      expect(find.textContaining('Mise à jour'), findsNothing);
+    });
+
+    testWidgets('trajet sans perturbation', (t) async {
+      await pump(t, const TrafficState(status: TrafficStatus.known));
+      expect(find.text('0 perturbation'), findsOneWidget);
     });
   });
 }

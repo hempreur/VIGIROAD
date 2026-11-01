@@ -5,9 +5,6 @@
 -dontwarn com.google.mlkit.vision.text.japanese.**
 -dontwarn com.google.mlkit.vision.text.korean.**
 
-# ONNX Runtime (mot d'activation « Sentrix ») : JNI.
--keep class ai.onnxruntime.** { *; }
-
 # MapLibre (classes appelées par réflexion depuis le code natif).
 -keep class org.maplibre.** { *; }
 -dontwarn org.maplibre.**

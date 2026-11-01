@@ -6,98 +6,86 @@ import '../../../../core/theme/vr_typography.dart';
 import '../../../../core/widgets/glow_panel.dart';
 import '../../../traffic/application/traffic_controller.dart';
 import '../../../traffic/domain/traffic_labels.dart';
-import '../../../traffic/presentation/traffic_format.dart';
 
-/// Légende « Trafic en temps réel ».
+/// Encadré compact « Trafic » : nombre de perturbations **sur le trajet
+/// défini par l'utilisateur**, encore devant lui.
 ///
-/// Elle ne montre que ce que disent les sources officielles : « état
-/// inconnu » hors de leur couverture, « aucun incident signalé » (et non
-/// « fluide ») quand une source à jour ne signale rien. Les mentions des
-/// sources et l'heure de mise à jour sont toujours affichées avec les données.
+/// Rien n'est inventé : « état inconnu » hors de la couverture des sources,
+/// « aucune perturbation » (jamais « fluide ») quand une source à jour ne
+/// signale rien. Les mentions des sources sont dans le détail de chaque
+/// perturbation (toucher son point sur la carte).
 class TrafficLegend extends StatelessWidget {
-  const TrafficLegend({super.key, required this.state});
+  const TrafficLegend({super.key, required this.state, this.hasRoute = false, this.alongM});
 
   final TrafficState state;
+
+  /// Un trajet est en cours.
+  final bool hasRoute;
+
+  /// Distance déjà parcourue sur le trajet (les perturbations dépassées ne
+  /// sont plus comptées).
+  final double? alongM;
+
+  /// Perturbations du trajet encore devant le véhicule.
+  List<TrafficEvent> get ahead => [
+    for (final r in state.onRoute)
+      if (alongM == null || r.alongM >= alongM! - 50) r.event,
+  ];
 
   @override
   Widget build(BuildContext context) {
     final s = state;
-    final hasData = s.status == TrafficStatus.known || s.status == TrafficStatus.unknown;
-    final events = s.visible.length;
+    final ahead = this.ahead;
+    final worst = ahead.isEmpty
+        ? null
+        : ahead.map((e) => e.severity).reduce((a, b) => a.index >= b.index ? a : b);
     final (String line, Color dot) = switch (s.status) {
-      TrafficStatus.disabled => ('Source non configurée', VrColors.textMuted),
+      TrafficStatus.disabled => ('Non configuré', VrColors.textMuted),
       TrafficStatus.waiting => ('Chargement…', VrColors.textMuted),
       TrafficStatus.error => ('Indisponible', VrColors.textMuted),
-      TrafficStatus.unknown => ('État inconnu ici', VrColors.textMuted),
-      TrafficStatus.known when events == 0 => ('Aucun incident signalé', VrColors.cyan),
-      TrafficStatus.known => (events == 1 ? '1 perturbation' : '$events perturbations', VrColors.trafficSlow),
+      _ when !hasRoute => ('Aucun trajet', VrColors.textMuted),
+      TrafficStatus.unknown when ahead.isEmpty => ('État inconnu', VrColors.textMuted),
+      _ when ahead.isEmpty => ('0 perturbation', VrColors.cyan),
+      _ => (ahead.length == 1 ? '1 perturbation' : '${ahead.length} perturbations', TrafficLabels.color(worst!)),
     };
-    final mentions = [for (final a in s.attributions) a.text];
 
-    return ConstrainedBox(
-      constraints: const BoxConstraints(maxWidth: 168),
-      child: GlowPanel(
-        padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
-        radius: 14,
-        opacity: 0.88,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text('Trafic en temps réel', style: VrText.label.copyWith(fontSize: 12.5)),
-            const SizedBox(height: 6),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(width: 8, height: 8, decoration: BoxDecoration(color: dot, shape: BoxShape.circle)),
-                const SizedBox(width: 6),
-                Flexible(
-                  child: Text(
-                    line,
-                    style: VrText.caption.copyWith(
-                      fontSize: 11.5,
-                      color: s.status == TrafficStatus.known ? VrColors.textPrimary : VrColors.textMuted,
+    return Semantics(
+      label: 'Trafic sur le trajet : $line',
+      excludeSemantics: true,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 132),
+        child: GlowPanel(
+          padding: const EdgeInsets.fromLTRB(9, 6, 10, 6),
+          radius: 11,
+          opacity: 0.88,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('Trafic trajet', style: VrText.caption.copyWith(fontSize: 10, color: VrColors.textMuted, height: 1.1)),
+              const SizedBox(height: 2),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(width: 7, height: 7, decoration: BoxDecoration(color: dot, shape: BoxShape.circle)),
+                  const SizedBox(width: 5),
+                  Flexible(
+                    child: Text(
+                      line,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: VrText.caption.copyWith(
+                        fontSize: 11.5,
+                        fontWeight: FontWeight.w600,
+                        color: ahead.isNotEmpty ? VrColors.textPrimary : VrColors.textMuted,
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-            if (hasData && events > 0) ...[
-              const SizedBox(height: 4),
-              _row(Severity.high, 'Grave'),
-              _row(Severity.medium, 'Modérée'),
-              _row(Severity.low, 'Faible'),
-            ],
-            if (hasData && mentions.isNotEmpty) ...[
-              const SizedBox(height: 5),
-              Text(
-                [
-                  ...mentions,
-                  if (s.updatedAt case final t?) 'Mise à jour ${hhmm(t)}',
-                ].join(' · '),
-                style: VrText.caption.copyWith(fontSize: 10, color: VrColors.textMuted, height: 1.25),
+                ],
               ),
             ],
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _row(Severity sev, String label) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 1.5),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 16,
-            height: 8,
-            decoration: BoxDecoration(color: TrafficLabels.color(sev), borderRadius: BorderRadius.circular(2)),
           ),
-          const SizedBox(width: 8),
-          Text(label, style: VrText.caption.copyWith(fontSize: 11, color: VrColors.textPrimary)),
-        ],
+        ),
       ),
     );
   }

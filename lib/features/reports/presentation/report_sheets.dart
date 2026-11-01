@@ -52,7 +52,7 @@ class ChickenReportSheet extends StatelessWidget {
           children: [
             const Row(
               children: [
-                SizedBox.square(dimension: 46, child: CustomPaint(painter: ChickenHeadPainter())),
+                ChickenIcon(),
                 SizedBox(width: 12),
                 Expanded(child: Text('Signaler un Chicken', style: VrText.label)),
               ],

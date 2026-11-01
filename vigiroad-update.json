@@ -1,0 +1,20 @@
+{
+  "version": "1.4.1",
+  "build": 10,
+  "minBuild": 10,
+  "notes": [
+    "Mise à jour automatique"
+  ],
+  "apks": {
+    "arm64-v8a": {
+      "url": "https://github.com/hempreur/VIGIROAD/releases/download/v1.4.1/vigiroad-1.4.1-arm64.apk",
+      "sha256": "32b5544da6b2625e31ea287e2dc0c6804f0b262593a7a63399d3939b92462f43",
+      "size": 84555550
+    },
+    "armeabi-v7a": {
+      "url": "https://github.com/hempreur/VIGIROAD/releases/download/v1.4.1/vigiroad-1.4.1-arm32.apk",
+      "sha256": "9e8f5c6e8dd63e1257cbc7e4c4c59f795a4ba844063b9aef8d154fc4c58036ff",
+      "size": 65073564
+    }
+  }
+}

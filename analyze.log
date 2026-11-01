@@ -1,0 +1,6 @@
+Analyzing VIGIROAD...                                           
+
+   info • The import of 'package:cross_file/cross_file.dart' is unnecessary because all of the used elements are also provided by the import of 'package:share_plus/share_plus.dart'. Try removing the import directive • lib/features/sentrix/application/voice_training_controller.dart:5:8 • unnecessary_import
+   info • Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation • lib/features/sentrix/presentation/voice_training_screen.dart:91:9 • prefer_const_constructors
+
+2 issues found. (ran in 20.1s)

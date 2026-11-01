@@ -1,0 +1,152 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 820B done
+#1 DONE 0.0s
+
+#2 [auth] library/dart:pull token for registry-1.docker.io
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/dart:stable
+#3 DONE 0.3s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 171B done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 153.39kB 0.0s done
+#5 DONE 0.0s
+
+#6 [build 1/8] FROM docker.io/library/dart:stable@sha256:ca3ef5fe9194012074a24b03515b2c5b58dd7d4ae8c87bf463d61b5d0647f426
+#6 resolve docker.io/library/dart:stable@sha256:ca3ef5fe9194012074a24b03515b2c5b58dd7d4ae8c87bf463d61b5d0647f426 0.0s done
+#6 sha256:5fa55e040b04655e2a07dfec9b6c01efa235ff56ba231616cd3d806522667372 1.87MB / 1.87MB 0.1s done
+#6 sha256:7da0c2e19ae4c3211f00dcdfea21c0d8941f6ec069edd676cd2643fc72b83925 22.02MB / 242.51MB 0.2s
+#6 sha256:00c5166c2953609fd9f58d6907bcce613d030ffb7d7c7b844bab5ac5f1848d5a 20.97MB / 42.53MB 0.2s
+#6 sha256:6fc242d221a673263eabd14a9ad9584d3177c96e5cb504c891497338e2f912f5 29.86MB / 29.86MB 0.2s done
+#6 sha256:7da0c2e19ae4c3211f00dcdfea21c0d8941f6ec069edd676cd2643fc72b83925 99.61MB / 242.51MB 0.5s
+#6 sha256:00c5166c2953609fd9f58d6907bcce613d030ffb7d7c7b844bab5ac5f1848d5a 42.53MB / 42.53MB 0.3s done
+#6 extracting sha256:6fc242d221a673263eabd14a9ad9584d3177c96e5cb504c891497338e2f912f5
+#6 sha256:7da0c2e19ae4c3211f00dcdfea21c0d8941f6ec069edd676cd2643fc72b83925 140.51MB / 242.51MB 0.6s
+#6 sha256:7da0c2e19ae4c3211f00dcdfea21c0d8941f6ec069edd676cd2643fc72b83925 183.50MB / 242.51MB 0.8s
+#6 sha256:7da0c2e19ae4c3211f00dcdfea21c0d8941f6ec069edd676cd2643fc72b83925 230.69MB / 242.51MB 0.9s
+#6 sha256:7da0c2e19ae4c3211f00dcdfea21c0d8941f6ec069edd676cd2643fc72b83925 242.51MB / 242.51MB 1.2s done
+#6 extracting sha256:6fc242d221a673263eabd14a9ad9584d3177c96e5cb504c891497338e2f912f5 1.0s done
+#6 extracting sha256:00c5166c2953609fd9f58d6907bcce613d030ffb7d7c7b844bab5ac5f1848d5a
+#6 extracting sha256:00c5166c2953609fd9f58d6907bcce613d030ffb7d7c7b844bab5ac5f1848d5a 1.6s done
+#6 DONE 2.9s
+
+#6 [build 1/8] FROM docker.io/library/dart:stable@sha256:ca3ef5fe9194012074a24b03515b2c5b58dd7d4ae8c87bf463d61b5d0647f426
+#6 extracting sha256:5fa55e040b04655e2a07dfec9b6c01efa235ff56ba231616cd3d806522667372
+#6 extracting sha256:5fa55e040b04655e2a07dfec9b6c01efa235ff56ba231616cd3d806522667372 0.2s done
+#6 extracting sha256:4f4fb700ef54461cfa02571ae0db9a0dc1e0cdb5577484a6d75e68dc38e8acc1
+#6 extracting sha256:4f4fb700ef54461cfa02571ae0db9a0dc1e0cdb5577484a6d75e68dc38e8acc1 done
+#6 extracting sha256:7da0c2e19ae4c3211f00dcdfea21c0d8941f6ec069edd676cd2643fc72b83925
+#6 extracting sha256:7da0c2e19ae4c3211f00dcdfea21c0d8941f6ec069edd676cd2643fc72b83925 2.9s done
+#6 DONE 6.0s
+
+#7 [build 2/8] WORKDIR /app
+#7 DONE 2.5s
+
+#8 [build 3/8] COPY packages/vigiroad_traffic /app/packages/vigiroad_traffic
+#8 DONE 0.0s
+
+#9 [build 4/8] COPY server/pubspec.yaml /app/server/
+#9 DONE 0.0s
+
+#10 [build 5/8] WORKDIR /app/server
+#10 DONE 0.0s
+
+#11 [build 6/8] RUN dart pub get
+#11 0.182 Resolving dependencies...
+#11 0.472 Downloading packages...
+#11 1.638 + _fe_analyzer_shared 111.0.0
+#11 1.638 + analyzer 14.7.0
+#11 1.638 + args 2.7.0
+#11 1.638 + async 2.13.1
+#11 1.638 + boolean_selector 2.1.2
+#11 1.638 + cli_config 0.2.0
+#11 1.638 + cli_util 0.6.0
+#11 1.638 + collection 1.19.1
+#11 1.638 + convert 3.1.2
+#11 1.638 + coverage 1.16.0
+#11 1.638 + crypto 3.0.8
+#11 1.638 + ffi 2.2.0
+#11 1.638 + file 7.0.1
+#11 1.638 + frontend_server_client 4.2.0
+#11 1.638 + glob 2.2.0
+#11 1.638 + http 1.6.0
+#11 1.638 + http_multi_server 3.2.3
+#11 1.638 + http_parser 4.1.2
+#11 1.638 + io 1.1.0
+#11 1.638 + lints 6.1.0
+#11 1.638 + logging 1.3.0
+#11 1.638 + matcher 0.12.20
+#11 1.638 + meta 1.19.0
+#11 1.638 + mime 2.1.0
+#11 1.638 + node_preamble 2.0.2
+#11 1.638 + package_config 3.0.0
+#11 1.638 + path 1.9.1
+#11 1.638 + petitparser 7.1.0
+#11 1.638 + pool 1.5.3
+#11 1.638 + pub_semver 2.2.1
+#11 1.638 + shelf 1.4.3
+#11 1.638 + shelf_packages_handler 3.0.2
+#11 1.638 + shelf_static 1.2.0
+#11 1.638 + shelf_web_socket 3.0.0
+#11 1.638 + source_map_stack_trace 2.1.2
+#11 1.638 + source_maps 0.10.14
+#11 1.638 + source_span 1.10.2
+#11 1.638 + stack_trace 1.12.2
+#11 1.638 + stream_channel 2.1.4
+#11 1.638 + string_scanner 1.4.1
+#11 1.638 + term_glyph 1.2.2
+#11 1.638 + test 1.33.0
+#11 1.638 + test_api 0.7.15
+#11 1.638 + test_core 0.6.21
+#11 1.638 + typed_data 1.4.0
+#11 1.638 + vigiroad_traffic 1.0.0 from path ../packages/vigiroad_traffic
+#11 1.638 + vm_service 15.4.0
+#11 1.638 + watcher 1.2.1
+#11 1.638 + web 1.1.2
+#11 1.638 + web_socket 1.0.1
+#11 1.638 + web_socket_channel 3.0.3
+#11 1.638 + webkit_inspection_protocol 1.2.1
+#11 1.638 + xml 6.6.1 (7.1.0 available)
+#11 1.638 + yaml 3.1.4
+#11 1.638 Changed 54 dependencies!
+#11 1.638 1 package has newer versions incompatible with dependency constraints.
+#11 1.638 Try `dart pub outdated` for more information.
+#11 DONE 1.8s
+
+#12 [build 7/8] COPY server /app/server
+#12 DONE 0.0s
+
+#13 [build 8/8] RUN mkdir -p /app/bin && dart pub get --offline && dart compile exe bin/server.dart -o /app/bin/server
+#13 0.154 Resolving dependencies...
+#13 0.254 Downloading packages...
+#13 0.259 Got dependencies!
+#13 4.744 Generated: /app/bin/server
+#13 DONE 4.8s
+
+#14 [stage-1 1/3] COPY --from=build /runtime/ /
+#14 DONE 0.0s
+
+#15 [stage-1 2/3] COPY --from=build /app/bin/server /app/bin/server
+#15 DONE 0.0s
+
+#16 [stage-1 3/3] COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
+#16 DONE 0.0s
+
+#17 exporting to image
+#17 exporting layers
+#17 exporting layers 0.4s done
+#17 exporting manifest sha256:717acb3f613a7da52b8e8c1063a0c1ea7489ce3a1bee857f3a46e3dd38f40365 done
+#17 exporting config sha256:1deeccd31adc3c8efa3f51420c6db34124cb01fa531719aaf41ac39677baf5cf done
+#17 exporting attestation manifest sha256:d85bcd82441a83e0a48099dce11b8deaf97c046208844208183c8d9452eb7bfd done
+#17 exporting manifest list sha256:0a0275aa5009552be6ddd1685b5e41f8c8308f53821f993529b89d2ce6f1bffc done
+#17 naming to docker.io/library/vigiroad-traffic:ci done
+#17 unpacking to docker.io/library/vigiroad-traffic:ci 0.1s done
+#17 DONE 0.5s
+IMAGE                 ID             DISK USAGE   CONTENT SIZE   EXTRA
+vigiroad-traffic:ci   0a0275aa5009       17.9MB         5.33MB        

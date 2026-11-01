@@ -1,0 +1,5 @@
+job=ocr-release
+sha=1fcba75bbdeeb8bb4778a91c9a58a2f3ff58f6a2
+ref=refs/heads/chore/vps-monitor
+run=https://github.com/hempreur/VIGIROAD/actions/runs/41311254513
+status=success

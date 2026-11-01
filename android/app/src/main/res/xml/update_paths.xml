@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- APK de mise à jour (dossier temporaire de l'application), partagé avec
+     l'installateur du système en secours (MIUI / HyperOS). -->
+<paths>
+    <cache-path name="updates" path="." />
+</paths>

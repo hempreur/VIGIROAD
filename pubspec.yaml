@@ -2,7 +2,7 @@ name: vigiroad
 description: "VIGIROAD - GPS intelligent avec reconnaissance de plaques et assistant vocal SENTRIX."
 publish_to: 'none'
 
-version: 1.4.0+9
+version: 1.4.1+10
 
 environment:
   sdk: ^3.13.7

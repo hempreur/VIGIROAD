@@ -47,6 +47,16 @@
         </activity>
         <!-- Résultat de l'installation d'une mise à jour (PackageInstaller) -->
         <receiver android:name=".InstallResultReceiver" android:exported="false"/>
+        <!-- Installation de secours par l'installateur du système (MIUI, HyperOS…). -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.updates"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/update_paths"/>
+        </provider>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data

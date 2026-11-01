@@ -33,7 +33,6 @@ import 'widgets/map_view.dart';
 import 'widgets/position_puck.dart';
 import 'widgets/speed_gauge.dart';
 import 'widgets/traffic_legend.dart';
-import '../../sentrix/application/wake_word_controller.dart';
 import '../../traffic/application/traffic_announcer.dart';
 import '../../traffic/application/speed_limit_controller.dart';
 import '../../traffic/application/traffic_controller.dart';
@@ -104,8 +103,6 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
     final traffic = ref.watch(trafficProvider);
     final reports = ref.watch(reportsProvider);
     ref.watch(trafficAnnouncerProvider);
-    // Mot d'activation « Sentrix » : écoute tant que cet écran est affiché (si activé).
-    ref.watch(wakeWordProvider);
     final locationGranted =
         ref.watch(permissionsProvider).value?[AppCapability.location] == CapabilityStatus.granted;
     final mapBuilder = ref.watch(mapViewBuilderProvider);
@@ -155,9 +152,15 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
           const _Scrims(),
           if (_following && fix != null)
             Positioned(
-              left: size.width / 2 - 27,
-              top: puckY - 27,
-              child: const IgnorePointer(child: PositionPuck()),
+              left: size.width / 2 - 32,
+              top: puckY - 32 * CarPuck.aspect,
+              child: IgnorePointer(
+                child: CarPuck(
+                  width: 64,
+                  // Vue à plat (nord en haut) : la voiture tourne avec le cap.
+                  headingDeg: !_tilted && fix.headingReliable ? fix.headingDeg : null,
+                ),
+              ),
             ),
 
           // --- Haut : cartouche + colonne de boutons ---------------------------
@@ -222,7 +225,7 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
           Positioned(
             top: pad.top + _side + 3 * _button + 3 * _gap + 6,
             right: _side,
-            child: TrafficLegend(state: traffic),
+            child: TrafficLegend(state: traffic, hasRoute: nav.hasRoute, alongM: nav.progress?.alongM),
           ),
 
           if (position.hasError)
@@ -461,13 +464,6 @@ class _SentrixMenu extends StatelessWidget {
               VrButton(label: 'Plaques à surveiller', icon: Icons.storage_rounded, expanded: true, onPressed: () => go(Routes.plates)),
               const SizedBox(height: 8),
               VrButton(label: 'Historique des détections', icon: Icons.history_rounded, expanded: true, onPressed: () => go(Routes.history)),
-              const SizedBox(height: 8),
-              VrButton(
-                label: 'Entraîner « Sentrix » avec ma voix',
-                icon: Icons.record_voice_over_rounded,
-                expanded: true,
-                onPressed: () => go(Routes.voiceTraining),
-              ),
               const SizedBox(height: 8),
               VrButton(label: 'Réglages', icon: Icons.settings_rounded, expanded: true, onPressed: () => go(Routes.settings)),
             ],

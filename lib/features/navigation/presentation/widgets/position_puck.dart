@@ -62,3 +62,38 @@ class _PuckPainter extends CustomPainter {
   @override
   bool shouldRepaint(_PuckPainter oldDelegate) => false;
 }
+
+/// Voiture du suivi GPS (vue arrière, fournie par le propriétaire de
+/// VIGIROAD), à la place du marqueur rond.
+///
+/// En vue conduite 3D, la carte tourne avec le cap : la voiture reste droite.
+/// En vue à plat (nord en haut), elle est tournée selon le cap.
+class CarPuck extends StatelessWidget {
+  const CarPuck({super.key, this.width = 64, this.headingDeg});
+
+  static const asset = 'assets/icons/car_puck.png';
+
+  /// Proportions de l'image (256 × 227).
+  static const aspect = 227 / 256;
+
+  final double width;
+
+  /// Rotation à appliquer (vue à plat), null = droite.
+  final double? headingDeg;
+
+  double get height => width * aspect;
+
+  @override
+  Widget build(BuildContext context) {
+    Widget car = DecoratedBox(
+      decoration: BoxDecoration(
+        // Ombre portée : la voiture se détache de la carte sombre.
+        boxShadow: [BoxShadow(color: VrColors.electric.withValues(alpha: 0.45), blurRadius: 18, spreadRadius: -6)],
+      ),
+      child: Image.asset(asset, width: width, height: height, filterQuality: FilterQuality.medium, excludeFromSemantics: true),
+    );
+    final h = headingDeg;
+    if (h != null) car = Transform.rotate(angle: h * 3.141592653589793 / 180, child: car);
+    return Semantics(label: 'Votre position', child: car);
+  }
+}

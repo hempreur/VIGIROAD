@@ -210,7 +210,7 @@ void main() {
 
     testWidgets('dessin du bouton', (tester) async {
       await tester.pumpWidget(wrapDark(Center(child: ChickenButton(onPressed: () {}))));
-      expect(find.byType(CustomPaint), findsWidgets);
+      expect(find.byType(Image), findsOneWidget);
       expect(tester.takeException(), isNull);
     });
   });

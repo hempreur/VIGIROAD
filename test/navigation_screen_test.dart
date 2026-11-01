@@ -28,7 +28,7 @@ void main() {
     expect(find.byType(NavigationScreen), findsOneWidget);
     expect(find.text('82'), findsOneWidget);
     expect(find.text('Où allez-vous ?'), findsOneWidget);
-    expect(find.text('Source non configurée'), findsOneWidget, reason: 'pas de faux trafic');
+    expect(find.text('Non configuré'), findsOneWidget, reason: 'pas de faux trafic');
     expect(find.text('Lecture des plaques arrêtée'), findsOneWidget);
   });
 

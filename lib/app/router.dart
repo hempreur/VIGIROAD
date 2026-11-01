@@ -7,7 +7,6 @@ import '../features/navigation/presentation/navigation_screen.dart';
 import '../features/onboarding/presentation/permissions_screen.dart';
 import '../features/plates/presentation/plates_screen.dart';
 import '../features/search/presentation/search_screen.dart';
-import '../features/sentrix/presentation/voice_training_screen.dart';
 import '../features/settings/presentation/settings_screen.dart';
 import '../features/splash/presentation/splash_screen.dart';
 
@@ -19,7 +18,6 @@ abstract final class Routes {
   static const plates = '/plates';
   static const history = '/history';
   static const settings = '/settings';
-  static const voiceTraining = '/settings/sentrix-voice';
   static const account = '/settings/account';
 }
 
@@ -34,7 +32,6 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(path: Routes.plates, builder: (context, state) => const PlatesScreen()),
       GoRoute(path: Routes.history, builder: (context, state) => const HistoryScreen()),
       GoRoute(path: Routes.settings, builder: (context, state) => const SettingsScreen()),
-      GoRoute(path: Routes.voiceTraining, builder: (context, state) => const VoiceTrainingScreen()),
       GoRoute(path: Routes.account, builder: (context, state) => const AccountScreen()),
     ],
   );

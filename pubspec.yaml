@@ -2,7 +2,7 @@ name: vigiroad
 description: "VIGIROAD - GPS intelligent avec reconnaissance de plaques et assistant vocal SENTRIX."
 publish_to: 'none'
 
-version: 1.2.1+7
+version: 1.3.0+8
 
 environment:
   sdk: ^3.13.7
@@ -22,6 +22,8 @@ dependencies:
   maplibre_gl: ^0.27.1
   geolocator: ^14.0.1
   http: ^1.6.0
+  # Empreinte SHA-256 des mises à jour téléchargées.
+  crypto: ^3.0.6
   # Modèle d'événement partagé avec le serveur VigiRoadTrafficAggregator.
   vigiroad_traffic:
     path: packages/vigiroad_traffic

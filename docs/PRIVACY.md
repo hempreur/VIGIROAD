@@ -38,3 +38,9 @@ Facultatifs. Les extraits (« Sentrix », lecture d'un texte, bruit de la voitur
 uniquement quand l'utilisateur appuie sur « Enregistrer », stockés dans l'espace privé de
 l'application, jamais envoyés automatiquement. L'export (.zip) est déclenché par l'utilisateur, qui
 choisit où l'enregistrer ; « Tout effacer » supprime les enregistrements du téléphone.
+
+## Vérification des mises à jour (1.3)
+
+Au démarrage puis toutes les 6 heures, l'application télécharge le fichier de version public de la
+dernière release sur GitHub (github.com). Aucune donnée personnelle n'est envoyée ; comme pour tout
+téléchargement, GitHub voit l'adresse IP du téléphone.

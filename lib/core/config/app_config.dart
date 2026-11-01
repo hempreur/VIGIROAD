@@ -17,6 +17,7 @@ class AppConfig {
     required this.userAgent,
     this.trafficApiUrl = '',
     this.trafficApiKey = '',
+    this.updateManifestUrl = '',
   });
 
   /// Lit les valeurs `--dart-define`. Les valeurs par défaut pointent vers des
@@ -49,6 +50,10 @@ class AppConfig {
       ),
       trafficApiUrl: const String.fromEnvironment('VR_TRAFFIC_API_URL'),
       trafficApiKey: const String.fromEnvironment('VR_TRAFFIC_API_KEY'),
+      updateManifestUrl: const String.fromEnvironment(
+        'VR_UPDATE_MANIFEST_URL',
+        defaultValue: 'https://github.com/hempreur/VIGIROAD/releases/latest/download/vigiroad-update.json',
+      ),
     );
   }
 
@@ -72,6 +77,10 @@ class AppConfig {
   /// embarquée dans l'application, n'est pas un secret : les clés des
   /// fournisseurs (TfL, 511…) restent sur le serveur.
   final String trafficApiKey;
+
+  /// Fichier de version publié avec chaque release (mises à jour hors Play
+  /// Store, Android). Vide = désactivé.
+  final String updateManifestUrl;
 
   bool get trafficEnabled => trafficApiUrl.isNotEmpty && trafficApiKey.isNotEmpty;
 

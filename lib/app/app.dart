@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../core/theme/vr_theme.dart';
 import '../features/navigation/application/navigation_providers.dart';
+import '../features/update/presentation/update_gate.dart';
 import 'providers.dart';
 import 'router.dart';
 
@@ -57,6 +58,8 @@ class _VigiroadAppState extends ConsumerState<VigiroadApp> {
         locale: const Locale('fr'),
         supportedLocales: const [Locale('fr'), Locale('en')],
         localizationsDelegates: GlobalMaterialLocalizations.delegates,
+        // Fenêtre de mise à jour obligatoire, au-dessus de toutes les pages.
+        builder: (context, child) => UpdateGate(child: child ?? const SizedBox.shrink()),
       ),
     );
   }

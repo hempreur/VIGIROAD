@@ -1,0 +1,5 @@
+Test de charge : 60 utilisateurs simultanés, 1304 requêtes en 8 s, 0 erreur(s)
+  administration  n=   44  p50=19 ms  p95=767 ms  max=793 ms
+  inscription     n=   60  p50=4453 ms  p95=4579 ms  max=4617 ms
+  battement       n= 1200  p50=25 ms  p95=73 ms  max=779 ms
+Seuils respectés (0 erreur, battement p95 < 500 ms).

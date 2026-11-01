@@ -1,0 +1,30 @@
+ Container deploy-postgres-1 Starting 
+ Container deploy-traffic-1 Starting 
+ Container deploy-agent-1 Started 
+ Container deploy-postgres-1 Started 
+ Container deploy-postgres-1 Waiting 
+ Container deploy-postgres-1 Waiting 
+ Container deploy-traffic-1 Started 
+ Container deploy-postgres-1 Healthy 
+ Container deploy-backup-1 Starting 
+ Container deploy-postgres-1 Healthy 
+ Container deploy-admin-api-1 Starting 
+ Container deploy-backup-1 Started 
+ Container deploy-admin-api-1 Started 
+ Container deploy-caddy-1 Starting 
+ Container deploy-caddy-1 Started 
+{"status":"ok","service":"vigiroad-admin-api","version":"1.0.0"}NAME                 IMAGE                      COMMAND                  SERVICE     CREATED          STATUS                    PORTS
+deploy-admin-api-1   vigiroad-admin-api:local   "/app/bin/admin_api"     admin-api   14 seconds ago   Up 3 seconds              8081/tcp
+deploy-agent-1       vigiroad-agent:local       "/app/bin/agent"         agent       14 seconds ago   Up 14 seconds             9100/tcp
+deploy-backup-1      postgres:16-alpine         "sh /backup.sh"          backup      14 seconds ago   Up 3 seconds              5432/tcp
+deploy-caddy-1       caddy:2                    "caddy run --config …"   caddy       14 seconds ago   Up 3 seconds              0.0.0.0:80->80/tcp, [::]:80->80/tcp, 0.0.0.0:443->443/tcp, [::]:443->443/tcp, 0.0.0.0:443->443/udp, [::]:443->443/udp, 2019/tcp
+deploy-postgres-1    postgres:16-alpine         "docker-entrypoint.s…"   postgres    14 seconds ago   Up 14 seconds (healthy)   5432/tcp
+deploy-traffic-1     vigiroad-traffic:local     "/app/bin/server"        traffic     14 seconds ago   Up 14 seconds             8080/tcp
+deploy-caddy-1 0.0.0.0:80->80/tcp, [::]:80->80/tcp, 0.0.0.0:443->443/tcp, [::]:443->443/tcp, 0.0.0.0:443->443/udp, [::]:443->443/udp, 2019/tcp
+deploy-backup-1 5432/tcp
+deploy-admin-api-1 8081/tcp
+deploy-postgres-1 5432/tcp
+deploy-traffic-1 8080/tcp
+deploy-agent-1 9100/tcp
+d6dd875e7c2b403c926db0d24c284b7e_postgres16_759252 0.0.0.0:5432->5432/tcp, [::]:5432->5432/tcp
+ports publiés hors Caddy : 0

@@ -1,0 +1,134 @@
+agent-1     | Agent de supervision VIGIROAD : port 9100, projet deploy
+postgres-1  | The files belonging to this database system will be owned by user "postgres".
+postgres-1  | This user must also own the server process.
+postgres-1  | 
+postgres-1  | The database cluster will be initialized with locale "en_US.utf8".
+postgres-1  | The default database encoding has accordingly been set to "UTF8".
+postgres-1  | The default text search configuration will be set to "english".
+postgres-1  | 
+postgres-1  | Data page checksums are disabled.
+postgres-1  | 
+postgres-1  | fixing permissions on existing directory /var/lib/postgresql/data ... ok
+admin-api-1  | Migrations appliquées : 1
+admin-api-1  | API d'administration VIGIROAD 1.0.0 : port 8081
+admin-api-1  | Création du premier administrateur possible (jeton d'installation).
+admin-api-1  | GeoIP : 1 plages
+admin-api-1  | API d'administration VIGIROAD 1.0.0 : port 8081
+admin-api-1  | Création du premier administrateur possible (jeton d'installation).
+admin-api-1  | GeoIP : 1 plages
+caddy-1      | {"level":"info","ts":1793549812.5341008,"msg":"maxprocs: Leaving GOMAXPROCS=4: CPU quota undefined"}
+caddy-1      | {"level":"info","ts":1793549812.5341191,"msg":"GOMEMLIMIT is updated","GOMEMLIMIT":15083499110,"previous":9223372036854775807}
+caddy-1      | {"level":"info","ts":1793549812.5341241,"msg":"using config from file","file":"/etc/caddy/Caddyfile"}
+caddy-1      | {"level":"info","ts":1793549812.5341275,"msg":"adapted config to JSON","adapter":"caddyfile"}
+caddy-1      | {"level":"info","ts":1793549812.5350902,"logger":"admin","msg":"admin endpoint started","address":"localhost:2019","enforce_origin":false,"origins":["//localhost:2019","//[::1]:2019","//127.0.0.1:2019"]}
+caddy-1      | {"level":"info","ts":1793549812.535354,"logger":"http.auto_https","msg":"server is listening only on the HTTPS port but has no TLS connection policies; adding one to enable TLS","server_name":"srv0","https_port":443}
+caddy-1      | {"level":"info","ts":1793549812.5353725,"logger":"http.auto_https","msg":"enabling automatic HTTP->HTTPS redirects","server_name":"srv0"}
+caddy-1      | {"level":"info","ts":1793549812.535459,"logger":"tls.cache.maintenance","msg":"started background certificate maintenance","cache":"0x29c8a8daed80"}
+caddy-1      | {"level":"info","ts":1793549812.5430737,"logger":"tls","msg":"cleaning storage unit","storage":"FileStorage:/data/caddy"}
+caddy-1      | {"level":"info","ts":1793549812.5435863,"logger":"tls","msg":"finished cleaning storage units"}
+caddy-1      | {"level":"warn","ts":1793549812.5584626,"logger":"pki.ca.local","msg":"installing root certificate (you might be prompted for password)","path":"storage:pki/authorities/local/root.crt"}
+caddy-1      | {"level":"info","ts":1793549812.5588107,"msg":"warning: \"certutil\" is not available, install \"certutil\" with \"apt install libnss3-tools\" or \"yum install nss-tools\" and try again"}
+caddy-1      | {"level":"info","ts":1793549812.5588257,"msg":"define JAVA_HOME environment variable to use the Java trust"}
+caddy-1      | {"level":"info","ts":1793549812.5854814,"msg":"certificate installed properly in linux trusts"}
+caddy-1      | {"level":"info","ts":1793549812.58563,"logger":"http","msg":"enabling HTTP/3 listener","addr":":443"}
+caddy-1      | {"level":"info","ts":1793549812.5857306,"msg":"failed to sufficiently increase receive buffer size (was: 1024 kiB, wanted: 7168 kiB, got: 2048 kiB). See https://github.com/quic-go/quic-go/wiki/UDP-Buffer-Sizes for details."}
+caddy-1      | {"level":"info","ts":1793549812.5858552,"logger":"http.log","msg":"server running","name":"srv0","protocols":["h1","h2","h3"]}
+caddy-1      | {"level":"warn","ts":1793549812.5859199,"logger":"http","msg":"HTTP/2 skipped because it requires TLS","network":"tcp","addr":":80"}
+caddy-1      | {"level":"warn","ts":1793549812.5860648,"logger":"http","msg":"HTTP/3 skipped because it requires TLS","network":"tcp","addr":":80"}
+caddy-1      | {"level":"info","ts":1793549812.586079,"logger":"http.log","msg":"server running","name":"remaining_auto_https_redirects","protocols":["h1","h2","h3"]}
+caddy-1      | {"level":"info","ts":1793549812.5860848,"logger":"http","msg":"enabling automatic TLS certificate management","domains":["localhost"]}
+caddy-1      | {"level":"info","ts":1793549812.5861692,"msg":"autosaved config (load with --resume flag)","file":"/config/caddy/autosave.json"}
+caddy-1      | {"level":"info","ts":1793549812.5861795,"msg":"serving initial configuration"}
+caddy-1      | {"level":"info","ts":1793549812.587099,"logger":"tls.obtain","msg":"acquiring lock","identifier":"localhost"}
+caddy-1      | {"level":"info","ts":1793549812.5875463,"logger":"tls.obtain","msg":"lock acquired","identifier":"localhost"}
+caddy-1      | {"level":"info","ts":1793549812.5875883,"logger":"tls.obtain","msg":"obtaining certificate","identifier":"localhost"}
+caddy-1      | {"level":"info","ts":1793549812.590594,"logger":"tls.obtain","msg":"certificate obtained successfully","identifier":"localhost","issuer":"local"}
+caddy-1      | {"level":"info","ts":1793549812.5906482,"logger":"tls.obtain","msg":"releasing lock","identifier":"localhost"}
+caddy-1      | {"level":"warn","ts":1793549830.0231392,"logger":"http.handlers.reverse_proxy","msg":"aborting with incomplete response","upstream":"admin-api:8081","duration":0.001735938,"request":{"remote_ip":"172.20.0.1","remote_port":"51658","client_ip":"172.20.0.1","proto":"HTTP/1.1","method":"GET","host":"localhost","uri":"/admin/events","headers":{"User-Agent":["Dart/3.13 (dart:io)"],"X-Forwarded-For":["172.20.0.1"],"X-Forwarded-Proto":["https"],"X-Forwarded-Host":["localhost"],"Via":["1.1 Caddy"],"Accept-Encoding":["gzip"],"Authorization":["REDACTED"]},"tls":{"resumed":false,"version":772,"cipher_suite":4865,"proto":"","server_name":"localhost","ech":false}},"error":"reading: context canceled"}
+caddy-1      | {"level":"error","ts":1793549840.9948514,"logger":"http.log.error","msg":"dial tcp 172.20.0.3:8081: connect: connection refused","request":{"remote_ip":"172.20.0.1","remote_port":"40958","client_ip":"172.20.0.1","proto":"HTTP/2.0","method":"GET","host":"localhost","uri":"/admin/health","headers":{"Accept":["*/*"],"User-Agent":["curl/8.18.0"]},"tls":{"resumed":false,"version":772,"cipher_suite":4865,"proto":"h2","server_name":"localhost","ech":false}},"duration":0.001243629,"status":502,"err_id":"98rrazjei","err_trace":"reverseproxy.statusError (reverseproxy.go:1695)"}
+postgres-1   | creating subdirectories ... ok
+postgres-1   | selecting dynamic shared memory implementation ... posix
+postgres-1   | selecting default max_connections ... 100
+postgres-1   | selecting default shared_buffers ... 128MB
+postgres-1   | selecting default time zone ... UTC
+postgres-1   | creating configuration files ... ok
+postgres-1   | running bootstrap script ... ok
+postgres-1   | sh: locale: not found
+postgres-1   | 2026-11-01 16:16:41.991 UTC [35] WARNING:  no usable system locales were found
+postgres-1   | performing post-bootstrap initialization ... ok
+postgres-1   | syncing data to disk ... ok
+postgres-1   | 
+postgres-1   | 
+postgres-1   | Success. You can now start the database server using:
+postgres-1   | 
+postgres-1   |     pg_ctl -D /var/lib/postgresql/data -l logfile start
+postgres-1   | 
+postgres-1   | initdb: warning: enabling "trust" authentication for local connections
+postgres-1   | initdb: hint: You can change this by editing pg_hba.conf or using the option -A, or --auth-local and --auth-host, the next time you run initdb.
+postgres-1   | waiting for server to start....2026-11-01 16:16:42.557 UTC [41] LOG:  starting PostgreSQL 16.15 on x86_64-pc-linux-musl, compiled by gcc (Alpine 15.2.0) 15.2.0, 64-bit
+postgres-1   | 2026-11-01 16:16:42.558 UTC [41] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+postgres-1   | 2026-11-01 16:16:42.560 UTC [44] LOG:  database system was shut down at 2026-11-01 16:16:42 UTC
+postgres-1   | 2026-11-01 16:16:42.564 UTC [41] LOG:  database system is ready to accept connections
+postgres-1   |  done
+postgres-1   | server started
+postgres-1   | CREATE DATABASE
+postgres-1   | 
+postgres-1   | 
+postgres-1   | /usr/local/bin/docker-entrypoint.sh: ignoring /docker-entrypoint-initdb.d/*
+postgres-1   | 
+postgres-1   | waiting for server to shut down....2026-11-01 16:16:42.706 UTC [41] LOG:  received fast shutdown request
+postgres-1   | 2026-11-01 16:16:42.706 UTC [41] LOG:  aborting any active transactions
+postgres-1   | 2026-11-01 16:16:42.709 UTC [41] LOG:  background worker "logical replication launcher" (PID 47) exited with exit code 1
+postgres-1   | 2026-11-01 16:16:42.710 UTC [42] LOG:  shutting down
+postgres-1   | 2026-11-01 16:16:42.711 UTC [42] LOG:  checkpoint starting: shutdown immediate
+postgres-1   | 2026-11-01 16:16:42.726 UTC [42] LOG:  checkpoint complete: wrote 926 buffers (5.7%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.013 s, sync=0.002 s, total=0.016 s; sync files=301, longest=0.001 s, average=0.001 s; distance=4283 kB, estimate=4283 kB; lsn=0/1925D68, redo lsn=0/1925D68
+postgres-1   | 2026-11-01 16:16:42.734 UTC [41] LOG:  database system is shut down
+postgres-1   |  done
+postgres-1   | server stopped
+postgres-1   | 
+postgres-1   | PostgreSQL init process complete; ready for start up.
+postgres-1   | 
+postgres-1   | 2026-11-01 16:16:42.827 UTC [1] LOG:  starting PostgreSQL 16.15 on x86_64-pc-linux-musl, compiled by gcc (Alpine 15.2.0) 15.2.0, 64-bit
+postgres-1   | 2026-11-01 16:16:42.828 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+postgres-1   | 2026-11-01 16:16:42.828 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+postgres-1   | 2026-11-01 16:16:42.828 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+postgres-1   | 2026-11-01 16:16:42.831 UTC [57] LOG:  database system was shut down at 2026-11-01 16:16:42 UTC
+postgres-1   | 2026-11-01 16:16:42.835 UTC [1] LOG:  database system is ready to accept connections
+postgres-1   | 2026-11-01 16:16:52.238 UTC [68] ERROR:  relation "backup_jobs" does not exist at character 15
+postgres-1   | 2026-11-01 16:16:52.238 UTC [68] STATEMENT:  SELECT 1 FROM backup_jobs LIMIT 1
+postgres-1   | 2026-11-01 16:16:52.259 UTC [69] ERROR:  relation "backup_jobs" does not exist at character 22
+postgres-1   | 2026-11-01 16:16:52.259 UTC [69] STATEMENT:  SELECT count(*) FROM backup_jobs
+postgres-1   | 2026-11-01 16:16:58.178 UTC [55] LOG:  checkpoint starting: immediate force wait
+postgres-1   | 2026-11-01 16:16:58.196 UTC [55] LOG:  checkpoint complete: wrote 147 buffers (0.9%); 1 WAL file(s) added, 0 removed, 0 recycled; write=0.005 s, sync=0.002 s, total=0.019 s; sync files=145, longest=0.001 s, average=0.001 s; distance=5466 kB, estimate=5466 kB; lsn=0/1E7C5C0, redo lsn=0/1E7C588
+postgres-1   | 2026-11-01 16:17:09.302 UTC [55] LOG:  checkpoint starting: immediate force wait
+postgres-1   | 2026-11-01 16:17:09.306 UTC [55] LOG:  checkpoint complete: wrote 73 buffers (0.4%); 0 WAL file(s) added, 0 removed, 1 recycled; write=0.002 s, sync=0.001 s, total=0.005 s; sync files=46, longest=0.001 s, average=0.001 s; distance=4811 kB, estimate=5400 kB; lsn=0/232F420, redo lsn=0/232F3E8
+postgres-1   | 2026-11-01 16:17:19.949 UTC [55] LOG:  checkpoint starting: immediate force wait
+postgres-1   | 2026-11-01 16:17:19.952 UTC [55] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.003 s; sync files=2, longest=0.001 s, average=0.001 s; distance=1773 kB, estimate=5037 kB; lsn=0/24EA8F8, redo lsn=0/24EA8C0
+postgres-1   | 2026-11-01 16:17:19.984 UTC [184] FATAL:  database "vigiroad" does not exist
+postgres-1   | 2026-11-01 16:17:19.984 UTC [184] DETAIL:  It seems to have just been dropped or renamed.
+postgres-1   | 2026-11-01 16:17:20.002 UTC [186] FATAL:  database "vigiroad" does not exist
+postgres-1   | 2026-11-01 16:17:20.019 UTC [187] FATAL:  database "vigiroad" does not exist
+postgres-1   | 2026-11-01 16:17:20.035 UTC [188] FATAL:  database "vigiroad" does not exist
+traffic-1    | VigiRoadTrafficAggregator : port 8080, sources : fr-bison-fute, fr-pan-transport-data-gouv
+traffic-1    | 2026-11-01T16:16:52.504054  0:00:00.000187 GET     [200] /health
+traffic-1    | 2026-11-01T16:16:52.504560  0:00:00.000128 GET     [200] /v1/sources
+traffic-1    | 2026-11-01T16:16:58.707491  0:00:00.000033 GET     [200] /health
+traffic-1    | 2026-11-01T16:16:59.273992  0:00:00.000034 GET     [200] /health
+traffic-1    | 2026-11-01T16:17:02.301181  0:00:00.000032 GET     [200] /health
+traffic-1    | VigiRoadTrafficAggregator : port 8080, sources : fr-bison-fute, fr-pan-transport-data-gouv
+traffic-1    | 2026-11-01T16:17:04.680269  0:00:00.000080 GET     [200] /health
+traffic-1    | 2026-11-01T16:17:05.911196  0:00:00.000031 GET     [200] /health
+traffic-1    | 2026-11-01T16:17:05.911647  0:00:00.000122 GET     [200] /v1/sources
+traffic-1    | 2026-11-01T16:17:09.951834  0:00:00.000065 GET     [200] /health
+traffic-1    | 2026-11-01T16:17:10.001595  0:00:00.000079 GET     [200] /v1/sources
+traffic-1    | 2026-11-01T16:17:21.018179  0:00:00.000051 GET     [200] /health
+traffic-1    | 2026-11-01T16:17:21.018583  0:00:00.000101 GET     [200] /v1/sources
+backup-1     | 2026-11-01T16:16:52Z service de sauvegarde démarré (sauvegarde quotidienne vers 3 h UTC)
+backup-1     | 2026-11-01T16:16:57Z sauvegarde vigiroad-20261101-161657.dump (42662 octets)
+backup-1     | 2026-11-01T16:16:58Z test de restauration de vigiroad-20261101-161657.dump : v1, 17 tables
+backup-1     | 2026-11-01T16:17:06Z sauvegarde vigiroad-20261101-161706.dump (45074 octets)
+backup-1     | 2026-11-01T16:17:09Z test de restauration de vigiroad-20261101-161706.dump : v1, 17 tables
+backup-1     | psql: error: connection to server at "postgres" (172.19.0.2), port 5432 failed: FATAL:  database "vigiroad" does not exist
+backup-1     | DETAIL:  It seems to have just been dropped or renamed.
+backup-1     | psql: error: connection to server at "postgres" (172.19.0.2), port 5432 failed: FATAL:  database "vigiroad" does not exist
+backup-1     | psql: error: connection to server at "postgres" (172.19.0.2), port 5432 failed: FATAL:  database "vigiroad" does not exist

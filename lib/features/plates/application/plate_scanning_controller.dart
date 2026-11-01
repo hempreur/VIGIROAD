@@ -10,7 +10,6 @@ import '../../settings/application/settings_controller.dart';
 import '../data/plate_scanner.dart';
 import '../domain/plate_models.dart';
 import '../domain/plate_voter.dart';
-import 'plates_providers.dart';
 import 'watchlist_controller.dart';
 
 enum ScanStatus { off, starting, running, paused, error }

@@ -92,7 +92,7 @@ class VoiceQueue {
   }
 
   Future<void> _pump() async {
-    if (_pending.isNotEmpty && _current == null) _speakingChanges.add(true);
+    var announced = false;
     while (_pending.isNotEmpty && _current == null) {
       final u = _pending.removeFirst();
       if (_clock().difference(u.queuedAt) > maxWait) {
@@ -100,6 +100,11 @@ class VoiceQueue {
         continue;
       }
       _current = u;
+      if (!announced) {
+        // Après _current : les auditeurs voient déjà `speaking == true`.
+        announced = true;
+        _speakingChanges.add(true);
+      }
       var completed = true;
       try {
         // Garde-fou : un moteur vocal qui ne signale pas la fin ne doit pas
@@ -121,7 +126,7 @@ class VoiceQueue {
       }
       if (!u.done.isCompleted) u.done.complete(completed && !interrupted);
     }
-    if (_current == null) {
+    if (announced && _current == null) {
       _lastEnd = _clock();
       _speakingChanges.add(false);
     }

@@ -1,6 +1,5 @@
 import 'dart:math' as math;
 
-import 'geo.dart';
 import 'traffic_event.dart';
 
 /// Sens signalé par le conducteur au moment du signalement.

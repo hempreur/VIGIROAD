@@ -88,6 +88,7 @@ class ReportsController extends Notifier<ReportsState> {
   List<ChickenReport> _alive(Iterable<ChickenReport> rs) => [for (final r in rs) if (r.activeAt(_now())) r];
 
   Future<void> refresh() async {
+    if (!ref.mounted) return;
     final client = ref.read(reportsClientProvider);
     final fix = ref.read(positionProvider).value;
     if (client == null || fix == null || _busy || !ref.read(appSettingsProvider).chickenReports) return;
@@ -141,6 +142,7 @@ class ReportsController extends Notifier<ReportsState> {
 
   /// Annonce (une fois chacun) les signalements devant le véhicule.
   void _checkAhead() {
+    if (!ref.mounted) return;
     if (!ref.read(appSettingsProvider).chickenReports || !ref.read(voiceGuidanceProvider)) return;
     final fix = ref.read(positionProvider).value;
     if (fix == null || !fix.headingReliable) return;

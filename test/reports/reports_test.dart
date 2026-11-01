@@ -192,7 +192,8 @@ void main() {
       await passSplash(tester);
 
       await tester.tap(find.byType(ChickenButton));
-      await tester.pumpAndSettle();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 500));
       expect(find.text('Signaler un Chicken'), findsOneWidget);
       expect(find.byIcon(Icons.arrow_upward_rounded), findsOneWidget);
       expect(find.byIcon(Icons.arrow_downward_rounded), findsOneWidget);
@@ -200,7 +201,9 @@ void main() {
       expect(find.text('Route en face'), findsOneWidget);
 
       await tester.tap(find.text('Route en face'));
-      await tester.pumpAndSettle();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 500));
+      await tester.pump(const Duration(milliseconds: 500));
       expect(client.submitted.single.side, ReportSide.opposite);
       expect(find.textContaining('Chicken signalé en face'), findsOneWidget);
     });

@@ -1,0 +1,8 @@
+00:00 +0: loading /home/runner/work/VIGIROAD/VIGIROAD/admin/linux/test/app_test.dart
+00:00 +0: (setUpAll)
+00:00 +0: connexion puis supervision temps réel
+00:02 +1: toutes les pages : processus, Docker, services, maintenance…
+00:04 +2: Docker : redémarrage contrôlé avec confirmation, journaux
+00:04 +3: maintenance : sauvegarde à la demande
+00:05 +4: (tearDownAll)
+00:05 +4: All tests passed!

@@ -127,6 +127,9 @@ say "Construction et démarrage (première fois : plusieurs minutes)"
 cd "$DEPLOY"
 dc() { VR_DOMAIN=$DOMAIN docker compose --env-file "$ENV" --env-file "$DEPLOY/.domain" "$@"; }
 dc up -d --build --remove-orphans
+# Caddy relit sa configuration (le fichier monté peut avoir changé sans que
+# Docker ne recrée le conteneur).
+dc exec -T caddy caddy reload --config /etc/caddy/Caddyfile > /dev/null 2>&1 || dc restart caddy
 docker image prune -f > /dev/null
 COMMIT=$(git -C "$DIR" rev-parse HEAD)
 printf '{"commit":"%s","date":"%s","deployedAt":"%s"}\n' "$COMMIT" "$(git -C "$DIR" log -1 --format=%cI)" "$(date -u +%FT%TZ)" > "$RUN/deployed.json"

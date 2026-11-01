@@ -53,6 +53,9 @@ class FakeSource extends UpdateSource {
   int checks = 0;
   bool corrupt = false;
 
+  /// Tests d'interface : pas d'écriture disque (horloge simulée).
+  bool writeFile = true;
+
   @override
   Future<UpdateManifest> manifest() async {
     checks++;
@@ -64,7 +67,7 @@ class FakeSource extends UpdateSource {
   Future<File> download(UpdateApk apk, File dest, {void Function(double progress)? onProgress}) async {
     onProgress?.call(0.5);
     if (corrupt) throw const UpdateException('Fichier téléchargé invalide (empreinte différente)');
-    await dest.writeAsBytes(apkBytes);
+    if (writeFile) await dest.writeAsBytes(apkBytes);
     onProgress?.call(1);
     return dest;
   }
@@ -207,7 +210,7 @@ void main() {
     await tester.pumpWidget(ProviderScope(
       overrides: [
         updatePlatformProvider.overrideWithValue(platform),
-        updateSourceProvider.overrideWithValue(FakeSource()),
+        updateSourceProvider.overrideWithValue(FakeSource()..writeFile = false),
         updateDownloadDirProvider.overrideWithValue(() async => tmp),
       ],
       child: MaterialApp(
@@ -235,9 +238,8 @@ void main() {
     await tester.ensureVisible(button);
     await tester.pump();
     await tester.tap(button);
-    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 200)));
     await tester.pump();
-    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 200)));
+    await tester.pump();
     await tester.pump();
     expect(platform.installs, hasLength(1));
     expect(find.text('Installation…'), findsOneWidget);

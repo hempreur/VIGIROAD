@@ -1,0 +1,75 @@
+ Container deploy-backup-1 Starting 
+ Container deploy-backup-1 Started 
+ Container deploy-admin-api-1 Started 
+ Container deploy-caddy-1 Starting 
+ Container deploy-caddy-1 Started 
+{"status":"ok","sources":2,"coverage":["FR"]}sans clé : HTTP 401
+{"sources":[{"id":"fr-bison-fute","name":"Bison Futé — réseau routier national non concédé","countries":["FR"],"licence":"Licence de réutilisation des données d'information routière (Bison Futé) / Licence Ouverte 2.0","attribution":"Information fournie par Bison Futé","minIntervalSeconds":120,"homepage":"https://www.bison-fute.gouv.fr/s-abonner.html","areas":[[-5.3,41.3,9.7,51.2]],"covecaddy-1     | {"level":"info","ts":1793551119.4197428,"msg":"maxprocs: Leaving GOMAXPROCS=4: CPU quota undefined"}
+postgres-1  | 2026-11-01 16:38:29.434 UTC [41] LOG:  database system is ready to accept connections
+postgres-1  |  done
+postgres-1  | server started
+postgres-1  | CREATE DATABASE
+postgres-1  | 
+caddy-1     | {"level":"info","ts":1793551119.4197848,"msg":"GOMEMLIMIT is updated","GOMEMLIMIT":15082566451,"previous":9223372036854775807}
+postgres-1  | 
+caddy-1     | {"level":"info","ts":1793551119.4197886,"msg":"using config from file","file":"/etc/caddy/Caddyfile"}
+caddy-1     | {"level":"info","ts":1793551119.4197903,"msg":"adapted config to JSON","adapter":"caddyfile"}
+caddy-1     | {"level":"info","ts":1793551119.4205823,"logger":"admin","msg":"admin endpoint started","address":"localhost:2019","enforce_origin":false,"origins":["//localhost:2019","//[::1]:2019","//127.0.0.1:2019"]}
+caddy-1     | {"level":"info","ts":1793551119.4207275,"logger":"http.auto_https","msg":"server is listening only on the HTTPS port but has no TLS connection policies; adding one to enable TLS","server_name":"srv0","https_port":443}
+caddy-1     | {"level":"info","ts":1793551119.4207792,"logger":"http.auto_https","msg":"enabling automatic HTTP->HTTPS redirects","server_name":"srv0"}
+caddy-1     | {"level":"info","ts":1793551119.4207983,"logger":"tls.cache.maintenance","msg":"started background certificate maintenance","cache":"0x2c9edbfbc600"}
+caddy-1     | {"level":"info","ts":1793551119.4246368,"logger":"http","msg":"enabling HTTP/3 listener","addr":":443"}
+caddy-1     | {"level":"info","ts":1793551119.424739,"msg":"failed to sufficiently increase receive buffer size (was: 1024 kiB, wanted: 7168 kiB, got: 2048 kiB). See https://github.com/quic-go/quic-go/wiki/UDP-Buffer-Sizes for details."}
+caddy-1     | {"level":"info","ts":1793551119.4249542,"logger":"http.log","msg":"server running","name":"srv0","protocols":["h1","h2","h3"]}
+caddy-1     | {"level":"warn","ts":1793551119.425016,"logger":"http","msg":"HTTP/2 skipped because it requires TLS","network":"tcp","addr":":80"}
+caddy-1     | {"level":"warn","ts":1793551119.4250295,"logger":"http","msg":"HTTP/3 skipped because it requires TLS","network":"tcp","addr":":80"}
+caddy-1     | {"level":"info","ts":1793551119.425039,"logger":"http.log","msg":"server running","name":"remaining_auto_https_redirects","protocols":["h1","h2","h3"]}
+caddy-1     | {"level":"info","ts":1793551119.4250495,"logger":"http","msg":"enabling automatic TLS certificate management","domains":["localhost"]}
+caddy-1     | {"level":"info","ts":1793551119.4259062,"logger":"tls","msg":"cleaning storage unit","storage":"FileStorage:/data/caddy"}
+caddy-1     | {"level":"info","ts":1793551119.4260974,"logger":"tls.obtain","msg":"acquiring lock","identifier":"localhost"}
+caddy-1     | {"level":"info","ts":1793551119.426563,"logger":"tls.obtain","msg":"lock acquired","identifier":"localhost"}
+caddy-1     | {"level":"info","ts":1793551119.4266558,"logger":"tls.obtain","msg":"obtaining certificate","identifier":"localhost"}
+caddy-1     | {"level":"info","ts":1793551119.4267151,"logger":"tls","msg":"finished cleaning storage units"}
+caddy-1     | {"level":"warn","ts":1793551119.435254,"logger":"pki.ca.local","msg":"installing root certificate (you might be prompted for password)","path":"storage:pki/authorities/local/root.crt"}
+caddy-1     | {"level":"info","ts":1793551119.4355128,"msg":"warning: \"certutil\" is not available, install \"certutil\" with \"apt install libnss3-tools\" or \"yum install nss-tools\" and try again"}
+postgres-1  | /usr/local/bin/docker-entrypoint.sh: ignoring /docker-entrypoint-initdb.d/*
+caddy-1     | {"level":"info","ts":1793551119.4355612,"msg":"define JAVA_HOME environment variable to use the Java trust"}
+postgres-1  | 
+caddy-1     | {"level":"info","ts":1793551119.4378421,"logger":"tls.obtain","msg":"certificate obtained successfully","identifier":"localhost","issuer":"local"}
+caddy-1     | {"level":"info","ts":1793551119.4379194,"logger":"tls.obtain","msg":"releasing lock","identifier":"localhost"}
+caddy-1     | {"level":"info","ts":1793551119.4567971,"msg":"certificate installed properly in linux trusts"}
+caddy-1     | {"level":"info","ts":1793551119.4569917,"msg":"autosaved config (load with --resume flag)","file":"/config/caddy/autosave.json"}
+caddy-1     | {"level":"info","ts":1793551119.4570117,"msg":"serving initial configuration"}
+postgres-1  | waiting for server to shut down....2026-11-01 16:38:29.554 UTC [41] LOG:  received fast shutdown request
+postgres-1  | 2026-11-01 16:38:29.555 UTC [41] LOG:  aborting any active transactions
+postgres-1  | 2026-11-01 16:38:29.557 UTC [41] LOG:  background worker "logical replication launcher" (PID 47) exited with exit code 1
+backup-1    | 2026-11-01T16:38:39Z service de sauvegarde démarré (sauvegarde quotidienne vers 3 h UTC)
+postgres-1  | 2026-11-01 16:38:29.558 UTC [42] LOG:  shutting down
+postgres-1  | 2026-11-01 16:38:29.559 UTC [42] LOG:  checkpoint starting: shutdown immediate
+postgres-1  | 2026-11-01 16:38:29.663 UTC [42] LOG:  checkpoint complete: wrote 926 buffers (5.7%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.065 s, sync=0.039 s, total=0.105 s; sync files=301, longest=0.037 s, average=0.001 s; distance=4283 kB, estimate=4283 kB; lsn=0/1925D68, redo lsn=0/1925D68
+postgres-1  | 2026-11-01 16:38:29.668 UTC [41] LOG:  database system is shut down
+postgres-1  |  done
+postgres-1  | server stopped
+postgres-1  | 
+postgres-1  | PostgreSQL init process complete; ready for start up.
+postgres-1  | 
+postgres-1  | 2026-11-01 16:38:29.771 UTC [1] LOG:  starting PostgreSQL 16.15 on x86_64-pc-linux-musl, compiled by gcc (Alpine 15.2.0) 15.2.0, 64-bit
+postgres-1  | 2026-11-01 16:38:29.772 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+postgres-1  | 2026-11-01 16:38:29.772 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+postgres-1  | 2026-11-01 16:38:29.773 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+postgres-1  | 2026-11-01 16:38:29.775 UTC [57] LOG:  database system was shut down at 2026-11-01 16:38:29 UTC
+postgres-1  | 2026-11-01 16:38:29.778 UTC [1] LOG:  database system is ready to accept connections
+postgres-1  | 2026-11-01 16:38:39.081 UTC [68] ERROR:  relation "backup_jobs" does not exist at character 15
+postgres-1  | 2026-11-01 16:38:39.081 UTC [68] STATEMENT:  SELECT 1 FROM backup_jobs LIMIT 1
+postgres-1  | 2026-11-01 16:38:39.098 UTC [69] ERROR:  relation "backup_jobs" does not exist at character 22
+postgres-1  | 2026-11-01 16:38:39.098 UTC [69] STATEMENT:  SELECT count(*) FROM backup_jobs
+admin-api-1  | Migrations appliquées : 1
+admin-api-1  | API d'administration VIGIROAD 1.0.0 : port 8081
+agent-1      | Agent de supervision VIGIROAD : port 9100, projet deploy
+traffic-1    | VigiRoadTrafficAggregator : port 8080, sources : fr-bison-fute, fr-pan-transport-data-gouv
+traffic-1    | 2026-11-01T16:38:39.246743  0:00:00.000112 GET     [200] /health
+traffic-1    | 2026-11-01T16:38:39.247210  0:00:00.000134 GET     [200] /v1/sources
+traffic-1    | 2026-11-01T16:38:39.446188  0:00:00.000043 GET     [200] /health
+traffic-1    | 2026-11-01T16:38:39.457124  0:00:00.000026 GET     [200] /health
+traffic-1    | 2026-11-01T16:38:39.466808  0:00:00.000041 GET     [401] /v1/sources
+traffic-1    | 2026-11-01T16:38:39.478483  0:00:00.000064 GET     [200] /v1/sources

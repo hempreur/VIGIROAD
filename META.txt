@@ -1,0 +1,5 @@
+job=admin-scaffold
+sha=792dfdac45ab7610b7087a2e54fb05f318a4c17d
+ref=refs/heads/chore/admin-scaffold
+run=https://github.com/hempreur/VIGIROAD/actions/runs/41314755875
+status=success

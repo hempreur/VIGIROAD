@@ -1,11 +1,15 @@
 import 'dart:async';
 import 'dart:io' show Platform;
+import 'dart:math' as math;
 import 'dart:ui' show Rect, Size;
 
 import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart' show DeviceOrientation;
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
+import 'package:sensors_plus/sensors_plus.dart';
+
+import '../domain/camera_tuning.dart';
 
 import '../domain/frame_analysis.dart';
 import '../domain/plate_format.dart';
@@ -20,6 +24,8 @@ class ScanFrame {
     required this.brightness,
     required this.took,
     required this.analyzed,
+    this.zoom = 1,
+    this.motion,
   });
 
   final List<PlateObservation> observations;
@@ -32,7 +38,19 @@ class ScanFrame {
 
   /// `false` si l'image a été écartée (floue) sans OCR.
   final bool analyzed;
+
+  /// Zoom de la caméra au moment de l'image.
+  final double zoom;
+
+  /// Vitesse angulaire (rad/s) mesurée par le gyroscope, null sans capteur.
+  final double? motion;
 }
+
+/// Mesures du gyroscope (x, y, z en rad/s).
+typedef GyroSource = Stream<({double x, double y, double z})> Function();
+
+Stream<({double x, double y, double z})> _systemGyro() =>
+    gyroscopeEventStream(samplingPeriod: SensorInterval.gameInterval).map((e) => (x: e.x, y: e.y, z: e.z));
 
 enum ScannerIssue { noCamera, permissionDenied, cameraError }
 
@@ -67,11 +85,25 @@ class MlKitPlateScanner implements PlateScanner {
     this.minSharpness = 12,
     this.formats = PlateFormats.all,
     Duration minInterval = const Duration(milliseconds: 150),
-  }) : _throttle = FrameThrottle(minInterval: minInterval);
+    GyroSource? gyro,
+    this.autoZoom = true,
+  }) : _throttle = FrameThrottle(minInterval: minInterval),
+       _gyroSource = gyro ?? _systemGyro,
+       _sharpGate = SharpnessGate(floor: minSharpness);
 
   /// Seuil de netteté (variance du laplacien) sous lequel l'image est ignorée.
   final double minSharpness;
   final List<PlateFormat> formats;
+
+  /// Zoom et mise au point automatiques sur les plaques repérées.
+  final bool autoZoom;
+
+  final GyroSource _gyroSource;
+  final SharpnessGate _sharpGate;
+  final _motion = MotionGate();
+  StreamSubscription<({double x, double y, double z})>? _gyroSub;
+  CameraTuner _tuner = CameraTuner();
+  bool _tuning = false;
 
   final _frames = StreamController<ScanFrame>.broadcast();
   final _errors = StreamController<String>.broadcast();
@@ -113,6 +145,7 @@ class MlKitPlateScanner implements PlateScanner {
     try {
       await controller.initialize();
       await controller.setFocusMode(FocusMode.auto);
+      await controller.setExposureMode(ExposureMode.auto);
     } on CameraException catch (e) {
       await controller.dispose();
       if (e.code.contains('Denied') || e.code.contains('denied')) {
@@ -121,14 +154,75 @@ class MlKitPlateScanner implements PlateScanner {
       throw ScannerException(ScannerIssue.cameraError, e.description ?? e.code);
     }
     _controller = controller;
+    await _stabilize(controller);
     _recognizer ??= TextRecognizer(script: TextRecognitionScript.latin);
+    _sharpGate.reset();
+    _gyroSub ??= _safeGyro();
     await controller.startImageStream(_onImage);
+  }
+
+  /// Stabilisation de l'image par le téléphone (optique ou électronique,
+  /// selon l'appareil) et bornes du zoom automatique. Rien n'est bloquant :
+  /// un appareil qui ne gère pas une fonction lit quand même les plaques.
+  Future<void> _stabilize(CameraController c) async {
+    try {
+      await c.setVideoStabilizationMode(VideoStabilizationMode.level2);
+    } on Object catch (e) {
+      debugPrint('VIGIROAD caméra : stabilisation indisponible ($e)');
+    }
+    var minZ = 1.0, maxZ = 1.0;
+    try {
+      minZ = await c.getMinZoomLevel();
+      maxZ = await c.getMaxZoomLevel();
+    } on Object {
+      // Zoom non pris en charge.
+    }
+    // Au-delà de ×3 le zoom numérique dégrade la plaque plus qu'il n'aide.
+    final lo = math.max(1.0, minZ);
+    _tuner = CameraTuner(minZoom: lo, maxZoom: math.min(maxZ, 3.0));
+    try {
+      await c.setZoomLevel(lo);
+    } on Object {
+      // Ignoré.
+    }
+  }
+
+  StreamSubscription<({double x, double y, double z})>? _safeGyro() {
+    try {
+      return _gyroSource().listen((g) => _motion.addGyro(g.x, g.y, g.z), onError: (Object _) {});
+    } on Object {
+      return null; // Pas de gyroscope : seule la netteté filtre les images.
+    }
+  }
+
+  /// Applique zoom et mise au point (une seule commande à la fois).
+  Future<void> _tune(CameraController c, TuningAction a) async {
+    if (a.isEmpty || _tuning) return;
+    _tuning = true;
+    try {
+      if (a.zoom case final z?) await c.setZoomLevel(z);
+      if (a.focus case final p?) {
+        await c.setFocusPoint(p);
+        await c.setExposurePoint(p);
+      } else if (a.resetFocus) {
+        await c.setFocusPoint(null);
+        await c.setExposurePoint(null);
+        await c.setFocusMode(FocusMode.auto);
+      }
+    } on Object catch (e) {
+      debugPrint('VIGIROAD caméra : réglage impossible ($e)');
+    } finally {
+      _tuning = false;
+    }
   }
 
   @override
   Future<void> stop() async {
     final c = _controller;
     _controller = null;
+    await _gyroSub?.cancel();
+    _gyroSub = null;
+    _tuner.reset();
     if (c == null) return;
     try {
       if (c.value.isStreamingImages) await c.stopImageStream();
@@ -160,6 +254,8 @@ class MlKitPlateScanner implements PlateScanner {
     final c = _controller;
     final recognizer = _recognizer;
     if (c == null || recognizer == null || !_throttle.shouldProcess(now)) return;
+    // Secousse en cours : on attend l'image suivante, prise au calme.
+    if (!_motion.shouldAnalyze(now)) return;
     _throttle.begin(now);
     final watch = Stopwatch()..start();
     try {
@@ -179,8 +275,18 @@ class MlKitPlateScanner implements PlateScanner {
       final sharp = laplacianVariance(luma, width: image.width, height: image.height, rowStride: stride, pixelStride: px);
       final bright = meanLuma(luma, width: image.width, height: image.height, rowStride: stride, pixelStride: px);
 
-      if (sharp < minSharpness) {
-        _emit(ScanFrame(observations: const [], uprightSize: upright, sharpness: sharp, brightness: bright, took: watch.elapsed, analyzed: false));
+      final motion = _motion.hasSensor ? _motion.level : null;
+      if (!_sharpGate.accept(sharp)) {
+        _emit(ScanFrame(
+          observations: const [],
+          uprightSize: upright,
+          sharpness: sharp,
+          brightness: bright,
+          took: watch.elapsed,
+          analyzed: false,
+          zoom: _tuner.zoom,
+          motion: motion,
+        ));
         return;
       }
 
@@ -220,6 +326,14 @@ class MlKitPlateScanner implements PlateScanner {
           }
         }
       }
+      final zoomAtCapture = _tuner.zoom;
+      if (autoZoom && upright.width > 0 && upright.height > 0) {
+        final boxes = [
+          for (final o in observations)
+            if (o.box case final b?) Rect.fromLTRB(b.left / upright.width, b.top / upright.height, b.right / upright.width, b.bottom / upright.height),
+        ];
+        unawaited(_tune(c, _tuner.update(boxes, now)));
+      }
       _emit(ScanFrame(
         observations: observations,
         uprightSize: upright,
@@ -227,6 +341,8 @@ class MlKitPlateScanner implements PlateScanner {
         brightness: bright,
         took: watch.elapsed,
         analyzed: true,
+        zoom: zoomAtCapture,
+        motion: motion,
       ));
     } catch (e, st) {
       debugPrint('VIGIROAD OCR: $e\n$st');

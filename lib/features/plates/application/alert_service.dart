@@ -97,11 +97,15 @@ class AlertService extends Notifier<List<MatchOutcome>> {
     final index = ref.read(watchlistIndexProvider);
     final outcome = _decider.examine(reading, (p) => index[p], ref.read(clockProvider)());
     state = [outcome, ...state.take(19)];
+    // Seule une plaque dangereuse (présente dans la liste) est affichée.
+    if (outcome is Suppressed) ref.read(lastReadingProvider.notifier).update(reading);
     if (outcome is! Raise) return;
 
     final alert = outcome.alert;
     final settings = ref.read(alertSettingsProvider);
-    ref.read(activeAlertProvider.notifier).raise(alert);
+    ref.read(lastReadingProvider.notifier).update(reading);
+    // Plusieurs plaques dangereuses en même temps : la plus prioritaire en tête.
+    ref.read(activeAlertProvider.notifier).raise(ref.read(recentAlertsProvider.notifier).add(alert));
 
     if (settings.sound) unawaited(ref.read(alertSoundProvider).play(volume: settings.volume));
     if (settings.announce) {

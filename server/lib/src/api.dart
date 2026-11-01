@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io' show HttpConnectionInfo;
 
 import 'package:shelf/shelf.dart';
 import 'package:vigiroad_traffic/vigiroad_traffic.dart';
 
 import 'aggregator.dart';
+import 'reports.dart';
 import 'request_stats.dart';
 import 'speed/speed_limit_service.dart';
 
@@ -49,6 +51,9 @@ bool _secureEquals(String a, String b) {
 /// - `GET  /v1/events?bbox=minLng,minLat,maxLng,maxLat` : événements d'une zone
 /// - `POST /v1/events/route` `{"route": [[lng,lat],…], "bufferMeters": 150}` :
 ///   perturbations sur un itinéraire, dans l'ordre de rencontre
+/// - `GET  /v1/reports?bbox=…` : signalements « Chicken » actifs d'une zone
+/// - `POST /v1/reports` `{"position": [lng,lat], "heading": 87.5, "side": "mine"|"opposite"}` :
+///   nouveau signalement (visible 2 h)
 ///
 /// Authentification par en-tête `X-Api-Key`, limite de débit par clé, zone
 /// interrogée plafonnée. Le transport HTTPS est assuré par l'hébergeur.
@@ -60,8 +65,13 @@ class TrafficApi {
     this.maxBoxKm2 = 250000,
     this.speedLimits,
     RequestStats? stats,
+    ReportStore? reports,
   }) : limiter = limiter ?? RateLimiter(),
-       stats = stats ?? RequestStats();
+       stats = stats ?? RequestStats(),
+       reports = reports ?? ReportStore();
+
+  /// Signalements « Chicken » des conducteurs.
+  final ReportStore reports;
 
   /// Requêtes et latence par minute (lues par l'API d'administration).
   final RequestStats stats;
@@ -69,7 +79,7 @@ class TrafficApi {
   /// Modèle de route pour les statistiques.
   static String routeOf(Request req) {
     final path = '/${req.url.path}';
-    const known = {'/health', '/v1/sources', '/v1/events', '/v1/events/route', '/v1/speedlimits', '/v1/metrics'};
+    const known = {'/health', '/v1/sources', '/v1/events', '/v1/events/route', '/v1/speedlimits', '/v1/metrics', '/v1/reports'};
     return known.contains(path) ? path : 'autre';
   }
 
@@ -100,7 +110,10 @@ class TrafficApi {
 
     final key = req.headers['x-api-key'] ?? '';
     if (!apiKeys.any((k) => _secureEquals(k, key))) return _error(401, 'Clé API absente ou invalide');
-    if (!limiter.allow(key)) return _error(429, 'Trop de requêtes');
+    // Débit limité par clé et par connexion : tous les téléphones partagent
+    // la même clé, chacun a donc sa propre limite.
+    final client = clientOf(req);
+    if (!limiter.allow('$key|$client')) return _error(429, 'Trop de requêtes');
 
     try {
       switch ((req.method, path)) {
@@ -129,6 +142,34 @@ class TrafficApi {
             ..._payload([for (final h in hits) h.event], BBox.around(route)),
             'along': [for (final h in hits) {'id': h.event.id, 'alongMeters': h.along.round(), 'offsetMeters': h.offset.round()}],
           });
+        case ('GET', '/v1/reports'):
+          final box = BBox.tryParse(req.url.queryParameters['bbox']);
+          if (box == null) return _error(400, 'Paramètre bbox=minLng,minLat,maxLng,maxLat attendu');
+          if (box.areaKm2 > maxBoxKm2) return _error(400, 'Zone trop grande');
+          return _ok({
+            'generatedAt': DateTime.now().toUtc().toIso8601String(),
+            'lifetimeMinutes': ChickenReport.lifetime.inMinutes,
+            'reports': [for (final r in reports.inBox(box)) r.toJson()],
+          });
+        case ('POST', '/v1/reports'):
+          final body = jsonDecode(await req.readAsString());
+          if (body is! Map<String, dynamic>) return _error(400, 'Objet JSON attendu');
+          final pos = body['position'];
+          final side = ReportSide.tryParse(body['side']);
+          if (pos is! List || pos.length != 2 || side == null) {
+            return _error(400, 'position [lng, lat] et side ("mine" ou "opposite") attendus');
+          }
+          try {
+            final r = reports.submit(
+              position: LatLng.fromJson(pos),
+              heading: (body['heading'] as num?)?.toDouble(),
+              side: side,
+              client: client,
+            );
+            return Response(201, body: jsonEncode({'report': r.toJson()}), headers: _json);
+          } on ReportRejected catch (e) {
+            return _error(e.status, e.message);
+          }
         case ('POST', '/v1/speedlimits'):
           final service = speedLimits;
           if (service == null) return _error(503, 'Limitations de vitesse désactivées');
@@ -159,6 +200,16 @@ class TrafficApi {
       return _error(400, 'Requête mal formée');
     }
   };
+
+  /// Connexion d'origine : première adresse de `X-Forwarded-For` (posée par
+  /// Caddy, seul point d'entrée), sinon l'adresse de la connexion.
+  static String clientOf(Request req) {
+    final fwd = req.headers['x-forwarded-for'];
+    if (fwd != null && fwd.trim().isNotEmpty) return fwd.split(',').first.trim();
+    final info = req.context['shelf.io.connection_info'];
+    if (info is HttpConnectionInfo) return info.remoteAddress.address;
+    return 'inconnu';
+  }
 
   /// Réponse avec événements, état de la zone demandée et mentions
   /// obligatoires des sources utilisées.

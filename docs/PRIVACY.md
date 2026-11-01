@@ -58,3 +58,12 @@ téléchargement, GitHub voit l'adresse IP du téléphone.
 - Jamais envoyé : images de caméra, plaques lues, enregistrements vocaux.
 - Droits : export de toutes ses données et suppression définitive du compte depuis l'application.
 - Conservation et sécurité : voir [docs/admin/SECURITE.md](admin/SECURITE.md).
+
+## Signalements Chicken (1.5)
+
+- Un signalement contient uniquement une position (arrondie à ~1 m), un sens de circulation et des dates ; aucun compte, identifiant d'appareil ni photo.
+- Il est supprimé du serveur 2 h après le dernier signalement au même endroit.
+- L'adresse IP sert seulement à limiter les abus (1 par minute, 12 par heure), sous forme d'empreinte gardée en mémoire ; elle n'est jamais écrite sur disque.
+- Les signalements des autres conducteurs sont demandés pour une zone d'environ 30 km autour de la position, qui n'est pas conservée par le serveur.
+- Option désactivable : Réglages → Signalements Chicken.
+- Cadre légal (France) : l'exploitant d'un service d'aide à la conduite doit suspendre, à la demande des autorités, la diffusion des signalements dans les zones et pour les durées fixées par arrêté (décret n° 2021-468 du 19 avril 2021, contrôles routiers). VIGIROAD n'intègre pas encore ce flux de demandes : à prévoir avant une diffusion publique.

@@ -10,9 +10,12 @@ import '../../domain/plate_models.dart';
 /// Placé en bas d'écran pour ne jamais masquer le cartouche de guidage
 /// (règle 7).
 class AlertBanner extends StatelessWidget {
-  const AlertBanner({super.key, required this.alert, this.thumbnail, this.onDismiss});
+  const AlertBanner({super.key, required this.alert, this.thumbnail, this.onDismiss, this.others = 0});
 
   final PlateAlert alert;
+
+  /// Autres plaques dangereuses vues en même temps (lecture multi-plaques).
+  final int others;
 
   /// Vignette du véhicule (si l'enregistrement d'image est activé).
   final Widget? thumbnail;
@@ -56,7 +59,7 @@ class AlertBanner extends StatelessWidget {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      '${alert.reading.display}  •  ${alert.category}',
+                      '${alert.reading.display}  •  ${alert.category}${others > 0 ? '  •  +$others autre${others > 1 ? 's' : ''}' : ''}',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: VrText.label.copyWith(color: VrColors.alertText.withValues(alpha: 0.85)),

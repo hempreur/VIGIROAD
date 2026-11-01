@@ -48,6 +48,8 @@ class AppSettings {
     this.saveLocation = true,
     this.retention = Retention.days30,
     this.allowExport = false,
+    this.autoZoom = true,
+    this.chickenReports = true,
   });
 
   /// Lancer la lecture des plaques à l'ouverture de l'écran de navigation.
@@ -83,6 +85,12 @@ class AppSettings {
   /// Autoriser l'export de l'historique (désactivé par défaut : données personnelles).
   final bool allowExport;
 
+  /// Zoom et mise au point automatiques sur les plaques repérées.
+  final bool autoZoom;
+
+  /// Signalements « Chicken » des autres conducteurs : carte et annonce vocale.
+  final bool chickenReports;
+
   AppSettings copyWith({
     bool? autoStartDetection,
     PerformanceMode? performance,
@@ -99,6 +107,8 @@ class AppSettings {
     bool? saveLocation,
     Retention? retention,
     bool? allowExport,
+    bool? autoZoom,
+    bool? chickenReports,
   }) => AppSettings(
     autoStartDetection: autoStartDetection ?? this.autoStartDetection,
     performance: performance ?? this.performance,
@@ -115,6 +125,8 @@ class AppSettings {
     saveLocation: saveLocation ?? this.saveLocation,
     retention: retention ?? this.retention,
     allowExport: allowExport ?? this.allowExport,
+    autoZoom: autoZoom ?? this.autoZoom,
+    chickenReports: chickenReports ?? this.chickenReports,
   );
 
   Map<String, Object> toJson() => {
@@ -133,6 +145,8 @@ class AppSettings {
     'saveLocation': saveLocation,
     'retention': retention.name,
     'allowExport': allowExport,
+    'autoZoom': autoZoom,
+    'chickenReports': chickenReports,
   };
 
   /// Lecture tolérante : toute valeur absente ou invalide reprend sa valeur
@@ -159,6 +173,8 @@ class AppSettings {
       saveLocation: pick('saveLocation', d.saveLocation),
       retention: pickEnum('retention', Retention.values, d.retention),
       allowExport: pick('allowExport', d.allowExport),
+      autoZoom: pick('autoZoom', d.autoZoom),
+      chickenReports: pick('chickenReports', d.chickenReports),
     );
   }
 }

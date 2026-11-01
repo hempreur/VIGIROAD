@@ -28,6 +28,7 @@ final wakeWordEngineFactoryProvider = Provider<Future<WakeWordEngine> Function()
       mic: RecordMicStream(),
       threshold: info.threshold,
       patience: info.patience,
+      gate: SpeechGate(),
     );
   };
 });
@@ -38,18 +39,30 @@ final wakeWordInfoProvider = FutureProvider<WakeWordModelInfo>((ref) => WakeWord
 
 final wakeWordProvider = NotifierProvider.autoDispose<WakeWordController, WakeWordState>(WakeWordController.new);
 
+/// Silence à respecter après une annonce de l'application avant de
+/// réécouter (écho, réverbération, fin de phrase encore dans le tampon).
+final wakeWordVoiceTailProvider = Provider<Duration>((ref) => const Duration(milliseconds: 1500));
+
+/// Pause après une activation sans commande (fausse détection probable).
+final wakeWordFalseTriggerPauseProvider = Provider<Duration>((ref) => const Duration(seconds: 10));
+
 /// Mot d'activation « Sentrix » : écoute sur le téléphone, rien n'est envoyé.
 ///
 /// Actif seulement si l'option est activée, l'écran de navigation affiché,
-/// l'application au premier plan et le micro autorisé. Suspendu pendant que
-/// SENTRIX écoute ou parle (le micro sert alors à la commande, et la voix de
-/// l'application ne doit pas la déclencher).
+/// l'application au premier plan et le micro autorisé. Coupé pendant que
+/// SENTRIX écoute ou parle, et pendant toute annonce de l'application
+/// (guidage, alertes de plaques, perturbations) puis 1,5 s après : le modèle
+/// ne doit jamais analyser la voix de l'application elle-même, ni un reste
+/// de cette voix dans son tampon de 1,3 s (cause des activations « toutes
+/// seules » de la version 1.4).
 class WakeWordController extends Notifier<WakeWordState> {
   WakeWordEngine? _engine;
   StreamSubscription<double>? _det;
   StreamSubscription<Object>? _err;
   bool _visible = true;
   int _gen = 0;
+  Timer? _resume;
+  DateTime? _quietUntil;
 
   @override
   WakeWordState build() {
@@ -65,8 +78,14 @@ class WakeWordController extends Notifier<WakeWordState> {
       },
     );
     ref.listen(sentrixProvider.select((s) => s.busy || s.visual == SentrixState.speaking), (_, _) => unawaited(_sync()));
+    final voice = ref.read(voiceQueueProvider).speakingChanges.listen((speaking) {
+      if (!speaking) _holdFor(ref.read(wakeWordVoiceTailProvider));
+      unawaited(_sync());
+    });
     ref.onDispose(() {
       lifecycle.dispose();
+      unawaited(voice.cancel());
+      _resume?.cancel();
       _gen++;
       final e = _engine;
       _engine = null;
@@ -84,11 +103,27 @@ class WakeWordController extends Notifier<WakeWordState> {
     return s.busy || s.visual == SentrixState.speaking;
   }
 
+  // Horloge réelle : la reprise est pilotée par un minuteur.
+  DateTime get _now => DateTime.now();
+
+  /// Écoute suspendue jusqu'à [d] à partir de maintenant.
+  void _holdFor(Duration d) {
+    final until = _now.add(d);
+    if (_quietUntil == null || until.isAfter(_quietUntil!)) _quietUntil = until;
+    _resume?.cancel();
+    _resume = Timer(d, () => unawaited(_sync()));
+  }
+
+  bool get _quiet {
+    final q = _quietUntil;
+    return q != null && _now.isBefore(q);
+  }
+
   Future<void> _sync() async {
     if (!ref.mounted) return;
     if (!ref.read(appSettingsProvider).wakeWord) return;
     final gen = ++_gen;
-    final shouldListen = _visible && !_sentrixBusy;
+    final shouldListen = _visible && !_sentrixBusy && !ref.read(voiceQueueProvider).speaking && !_quiet;
     if (!shouldListen) {
       await _engine?.stop();
       if (gen == _gen && ref.mounted && state.status != WakeWordStatus.unavailable) {
@@ -125,10 +160,15 @@ class WakeWordController extends Notifier<WakeWordState> {
 
   Future<void> _onDetected() async {
     // La voix de l'application (guidage, alertes) ne doit pas déclencher SENTRIX.
-    if (ref.read(voiceQueueProvider).speaking || _sentrixBusy) return;
+    if (ref.read(voiceQueueProvider).speaking || _sentrixBusy || _quiet || state.status != WakeWordStatus.listening) return;
     await _engine?.stop();
     if (!ref.mounted) return;
     // SENTRIX prend le micro ; l'écoute du mot reprend quand il a fini.
-    await ref.read(sentrixProvider.notifier).listen();
+    final heard = await ref.read(sentrixProvider.notifier).listen(fromWakeWord: true);
+    if (!ref.mounted) return;
+    // Rien entendu après « Sentrix » : sans doute une fausse détection
+    // (radio, passager) ; on n'insiste pas pendant quelques secondes.
+    if (!heard) _holdFor(ref.read(wakeWordFalseTriggerPauseProvider));
+    unawaited(_sync());
   }
 }

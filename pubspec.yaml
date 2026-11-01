@@ -2,7 +2,7 @@ name: vigiroad
 description: "VIGIROAD - GPS intelligent avec reconnaissance de plaques et assistant vocal SENTRIX."
 publish_to: 'none'
 
-version: 1.4.1+10
+version: 1.5.0+11
 
 environment:
   sdk: ^3.13.7
@@ -31,6 +31,8 @@ dependencies:
   # Caméra & OCR (analyse locale)
   camera: ^0.12.2
   google_mlkit_text_recognition: ^0.17.1
+  # Gyroscope : images analysées seulement entre deux vibrations.
+  sensors_plus: ^7.1.1
 
   # Données
   sqflite_sqlcipher: ^3.4.1

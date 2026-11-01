@@ -51,7 +51,13 @@ class SentrixController extends Notifier<SentrixUi> {
   }
 
   /// Bouton SENTRIX : démarre l'écoute, ou l'annule si elle est en cours.
-  Future<void> toggleListening() => state.busy ? cancel() : listen();
+  Future<void> toggleListening() async {
+    if (state.busy) {
+      await cancel();
+    } else {
+      await listen();
+    }
+  }
 
   Future<void> cancel() async {
     _session++;
@@ -59,15 +65,20 @@ class SentrixController extends Notifier<SentrixUi> {
     state = const SentrixUi();
   }
 
-  Future<void> listen() async {
+  /// Écoute une commande. Renvoie `true` si une phrase a été entendue.
+  ///
+  /// [fromWakeWord] : écoute ouverte par le mot « Sentrix ». Si rien n'est
+  /// dit (fausse détection probable), SENTRIX se referme sans rien afficher
+  /// ni dire ; une phrase non comprise est affichée sans être prononcée.
+  Future<bool> listen({bool fromWakeWord = false}) async {
     final session = ++_session;
     _bubbleTimer?.cancel();
 
     final mic = await ref.read(permissionsProvider.notifier).request(AppCapability.microphone);
-    if (session != _session) return;
+    if (session != _session) return false;
     if (mic != CapabilityStatus.granted) {
       await _reply(session, const CommandResult.failure('Autorisez le microphone pour me parler.'), speak: false);
-      return;
+      return false;
     }
 
     // Pas d'écoute pendant ses propres réponses : SENTRIX s'entendrait.
@@ -85,15 +96,20 @@ class SentrixController extends Notifier<SentrixUi> {
         },
       );
     } on SpeechUnavailable catch (e) {
-      await _reply(session, CommandResult.failure(e.message));
-      return;
+      await _reply(session, CommandResult.failure(e.message), speak: !fromWakeWord);
+      return false;
     }
-    if (session != _session) return;
+    if (session != _session) return false;
     if (heard == null) {
-      await _reply(session, const CommandResult.failure('Je n\'ai rien entendu.'), speak: false);
-      return;
+      if (fromWakeWord) {
+        state = const SentrixUi();
+      } else {
+        await _reply(session, const CommandResult.failure('Je n\'ai rien entendu.'), speak: false);
+      }
+      return false;
     }
-    await execute(heard, session: session);
+    await execute(heard, session: session, speakFailure: !fromWakeWord);
+    return true;
   }
 
   /// Annonce spontanée de SENTRIX (perturbation sur l'itinéraire…) :
@@ -120,7 +136,7 @@ class SentrixController extends Notifier<SentrixUi> {
   }
 
   /// Interprète et exécute une phrase (aussi utilisé par les tests).
-  Future<CommandResult> execute(String utterance, {int? session}) async {
+  Future<CommandResult> execute(String utterance, {int? session, bool speakFailure = true}) async {
     final s = session ?? ++_session;
     state = SentrixUi(visual: SentrixState.thinking, transcript: utterance);
     final match = ref.read(sentrixEngineProvider).match(utterance);
@@ -137,7 +153,7 @@ class SentrixController extends Notifier<SentrixUi> {
         return const CommandResult.failure('Une erreur est survenue.');
       }
     }
-    await _reply(s, result, transcript: utterance);
+    await _reply(s, result, transcript: utterance, speak: result.success || speakFailure);
     return result;
   }
 

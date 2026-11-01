@@ -78,11 +78,26 @@ void main() {
 
   test('plaque non répertoriée : aucune alerte, aucune trace', () async {
     await see('EE-789-FF');
-    expect(c.read(lastReadingProvider)?.normalized, 'EE789FF', reason: 'bien lue…');
+    expect(c.read(alertServiceProvider).single, isA<NotListed>(), reason: 'bien lue…');
     expect(c.read(activeAlertProvider), isNull, reason: '…mais absente de la liste');
+    expect(c.read(lastReadingProvider), isNull, reason: 'jamais affichée');
     expect(sound.plays, 0);
     expect(log.records, isEmpty);
     expect(c.read(alertServiceProvider).single, isA<NotListed>());
+  });
+
+  test('deux plaques dangereuses et une ordinaire en même temps', () async {
+    for (var i = 0; i < 3; i++) {
+      now = now.add(const Duration(milliseconds: 250));
+      scanner.push(['CC-456-DD', 'EE-789-FF', 'AA-123-BB'], at: now);
+      await pumpEventQueue();
+    }
+    await pumpEventQueue();
+    expect(sound.plays, 2);
+    expect(log.records.map((r) => r.plate), unorderedEquals(['AA123BB', 'CC456DD']));
+    expect(c.read(recentAlertsProvider), hasLength(2));
+    expect(c.read(activeAlertProvider)?.reading.normalized, 'AA123BB', reason: 'priorité haute en tête');
+    expect(c.read(lastReadingProvider)?.normalized, isIn(['AA123BB', 'CC456DD']));
   });
 
   test('lecture insuffisante (2 images) : aucune alerte', () async {

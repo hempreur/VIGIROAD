@@ -18,6 +18,7 @@ class CameraPanel extends StatelessWidget {
     this.onTap,
     this.warning,
     this.diagnostic,
+    this.zoom,
   });
 
   final bool active;
@@ -33,6 +34,9 @@ class CameraPanel extends StatelessWidget {
 
   /// Mesures affichées en version de développement (temps d'analyse…).
   final String? diagnostic;
+
+  /// Zoom automatique en cours (affiché au-delà de ×1,1).
+  final double? zoom;
 
   @override
   Widget build(BuildContext context) {
@@ -84,6 +88,23 @@ class CameraPanel extends StatelessWidget {
                 ),
               ),
             Positioned(left: 10, top: 10, child: _CameraBadge(live: active)),
+            if (active && zoom != null && zoom! > 1.1)
+              Positioned(
+                left: 10,
+                top: 44,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                  decoration: BoxDecoration(
+                    color: VrColors.background.withValues(alpha: 0.82),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: VrColors.border(0.25)),
+                  ),
+                  child: Text(
+                    'ZOOM ×${zoom!.toStringAsFixed(1).replaceAll('.', ',')}',
+                    style: VrText.caption.copyWith(fontSize: 11, color: VrColors.cyan, fontWeight: FontWeight.w700),
+                  ),
+                ),
+              ),
             if (diagnostic != null)
               Positioned(
                 right: 10,

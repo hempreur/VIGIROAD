@@ -132,6 +132,21 @@ jobs:
           after=$(curl -fsSk -H "Authorization: Bearer $TOKEN" https://localhost/admin/dashboard | jq .usersTotal)
           echo "comptes après restauration de la sauvegarde : $after" | tee -a ci-out/restore.log
           [ "$after" = 3 ]
+      - name: Signalements Chicken (HTTPS, fusion, persistance au redémarrage)
+        if: success()
+        working-directory: server/deploy
+        run: |
+          set -o pipefail
+          K='x-api-key: cle-de-test-ci-1234567890'
+          curl -fsSk -H "$K" -H 'content-type: application/json' -d '{"position":[2.3522,48.8566],"heading":90,"side":"mine"}' https://localhost/v1/reports | tee ../../ci-out/reports.log; echo
+          code=$(curl -sk -o /dev/null -w '%{http_code}' -H "$K" -H 'content-type: application/json' -d '{"position":[2.36,48.86],"side":"opposite"}' https://localhost/v1/reports)
+          echo "second signalement immédiat : $code (429 attendu)" | tee -a ../../ci-out/reports.log
+          [ "$code" = 429 ]
+          docker compose --env-file .env --env-file .domain restart traffic | tee -a ../../ci-out/reports.log
+          for _ in $(seq 1 30); do curl -fsSk https://localhost/health > /dev/null 2>&1 && break; sleep 2; done
+          n=$(curl -fsSk -H "$K" 'https://localhost/v1/reports?bbox=2.2,48.8,2.5,48.9' | jq '.reports | length')
+          echo "signalements après redémarrage : $n" | tee -a ../../ci-out/reports.log
+          [ "$n" = 1 ]
       - name: Journaux des conteneurs
         if: always()
         working-directory: server/deploy

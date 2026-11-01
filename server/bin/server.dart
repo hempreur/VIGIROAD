@@ -14,21 +14,26 @@ Future<void> main() async {
   }
   final aggregator = TrafficAggregator(chains: config.chains(), client: http.Client())..start();
   final overpass = config.overpassUrl;
+  final reportsFile = config.reportsFile;
+  final reports = ReportStore(file: reportsFile == null ? null : File(reportsFile));
+  await reports.load();
   final api = TrafficApi(
     aggregator,
     apiKeys: keys,
+    reports: reports,
     speedLimits: overpass == null ? null : SpeedLimitService(client: http.Client(), overpassUrl: overpass),
   );
 
   final handler = const Pipeline().addMiddleware(logRequests()).addHandler(api.measuredHandler);
   final server = await io.serve(handler, InternetAddress.anyIPv4, config.port);
   stdout.writeln('VigiRoadTrafficAggregator : port ${server.port}, sources : '
-      '${aggregator.statuses.map((s) => s.connector.info.id).join(', ')}');
+      '${aggregator.statuses.map((s) => s.connector.info.id).join(', ')} ; signalements actifs : ${reports.activeCount}');
 
   for (final signal in [ProcessSignal.sigint, if (!Platform.isWindows) ProcessSignal.sigterm]) {
     signal.watch().listen((_) async {
       aggregator.stop();
       await server.close();
+      await reports.flush();
       exit(0);
     });
   }

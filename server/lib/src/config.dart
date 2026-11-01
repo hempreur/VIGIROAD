@@ -28,6 +28,10 @@ class ServerConfig {
     return Uri.parse(_key('VR_OVERPASS_URL') ?? 'https://overpass-api.de/api/interpreter');
   }
 
+  /// Fichier des signalements « Chicken » en cours (`VR_REPORTS_FILE`) ;
+  /// absent : signalements gardés en mémoire seulement.
+  String? get reportsFile => _key('VR_REPORTS_FILE');
+
   Set<String> get disabled => {for (final s in (env['VR_DISABLE_SOURCES'] ?? '').split(',')) if (s.trim().isNotEmpty) s.trim()};
 
   String? _key(String name) {

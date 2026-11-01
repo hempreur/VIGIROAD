@@ -1,0 +1,8 @@
+
+Building Linux application...                                   
+✓ Built build/linux/x64/debug/bundle/vigiroad_server_control
+::group::✅ Passing tests
+✅ SERVER CONTROL : TOTP, métriques réelles, Docker réel, services, sauvegarde
+::endgroup::
+
+🎉 1 test passed.

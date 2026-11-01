@@ -1,0 +1,24 @@
+{
+  "version": "1.4.0",
+  "build": 9,
+  "minBuild": 9,
+  "notes": [
+    "Compte VIGIROAD facultatif (Réglages → Compte VIGIROAD) : créer un compte, se connecter, retrouver ses appareils et ses sessions",
+    "Enregistrement volontaire de l'appareil avec un identifiant aléatoire, renouvelable à tout moment (aucun identifiant matériel)",
+    "Région et position approximatives désactivées par défaut, uniquement avec votre accord ; le retrait efface les données",
+    "Export de vos données et suppression définitive du compte depuis l'application",
+    "Aucune image de caméra, plaque lue ni voix envoyée au serveur ; GPS, lecture des plaques, trafic et SENTRIX inchangés"
+  ],
+  "apks": {
+    "arm64-v8a": {
+      "url": "https://github.com/hempreur/VIGIROAD/releases/download/v1.4.0/vigiroad-1.4.0-arm64.apk",
+      "sha256": "90e77ef401a44eed09ca33db804c9d2e3300aa348fbe8a535ff69c83d0c4bc61",
+      "size": 84555190
+    },
+    "armeabi-v7a": {
+      "url": "https://github.com/hempreur/VIGIROAD/releases/download/v1.4.0/vigiroad-1.4.0-arm32.apk",
+      "sha256": "231329ecd8fc18cfbcd3250e6475331a573619c0c8c762c704d23251d1903dae",
+      "size": 65073200
+    }
+  }
+}

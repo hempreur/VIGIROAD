@@ -1,0 +1,57 @@
+name: Surveillance du serveur de trafic
+
+# Vérifie depuis Internet, comme l'application, que le serveur VIGIROAD répond :
+# HTTPS, certificat, authentification, données fraîches. Toutes les 6 h ;
+# GitHub prévient par e-mail en cas d'échec.
+on:
+  schedule:
+    - cron: '17 */6 * * *'
+  push:
+    paths: ['.github/workflows/vps-health.yml']
+  workflow_dispatch:
+
+jobs:
+  check:
+    name: Serveur de trafic joignable
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      URL: ${{ secrets.VR_TRAFFIC_API_URL }}
+      KEY: ${{ secrets.VR_TRAFFIC_API_KEY }}
+    steps:
+      - name: Vérifications
+        run: |
+          set -u
+          [ -n "$URL" ] || { echo "::error::Secret VR_TRAFFIC_API_URL absent"; exit 1; }
+          HOST=$(echo "$URL" | sed -E 's#^https?://##; s#/.*##')
+          fail=0
+          check() { if eval "$2"; then echo "✅ $1"; else echo "::error::❌ $1"; fail=1; fi; }
+
+          # 1. HTTPS et santé
+          health=$(curl -fsS --max-time 20 "$URL/health" || true)
+          echo "santé : $health"
+          check "HTTPS répond (/health)" '[ -n "$health" ]'
+          check "données fraîches (couverture non vide)" 'echo "$health" | grep -q "\"coverage\":\[\""'
+
+          # 2. Authentification
+          code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 20 "$URL/v1/sources")
+          check "accès refusé sans clé (HTTP $code)" '[ "$code" = 401 ]'
+          code=$(curl -s -o /tmp/ev.json -w '%{http_code}' --max-time 30 -H "X-Api-Key: $KEY" "$URL/v1/events?bbox=2.2,48.8,2.5,48.95")
+          check "accès avec la clé de l'application (HTTP $code)" '[ "$code" = 200 ]'
+          check "état de zone renvoyé (Paris)" 'grep -q "\"known\":true" /tmp/ev.json'
+
+          # 3. Certificat (renouvellement automatique par Caddy)
+          end=$(echo | openssl s_client -servername "$HOST" -connect "$HOST:443" 2>/dev/null | openssl x509 -noout -enddate | cut -d= -f2)
+          days=$(( ( $(date -d "$end" +%s) - $(date +%s) ) / 86400 ))
+          echo "certificat valable jusqu'au $end ($days jours)"
+          check "certificat valable plus de 7 jours" '[ "$days" -gt 7 ]'
+
+          # 4. Port 80 (facultatif : redirection HTTPS et renouvellement HTTP-01 ;
+          #    Caddy peut aussi renouveler par le port 443)
+          code80=$(curl -s -o /dev/null -w '%{http_code}' --max-time 15 "http://$HOST/health" || echo 000)
+          if [ "$code80" = 308 ] || [ "$code80" = 301 ] || [ "$code80" = 200 ]; then
+            echo "✅ port 80 ouvert (HTTP $code80)"
+          else
+            echo "::warning::port 80 fermé ou filtré (HTTP $code80) — le certificat se renouvelle par le port 443, mais il est conseillé de laisser 80 ouvert"
+          fi
+          exit $fail

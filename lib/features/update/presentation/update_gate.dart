@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui' show ImageFilter;
 
 import 'package:flutter/material.dart';
@@ -8,6 +9,9 @@ import '../../../core/theme/vr_colors.dart';
 import '../../../core/theme/vr_typography.dart';
 import '../../../core/widgets/glow_panel.dart';
 import '../../../core/widgets/vr_button.dart';
+import '../../../app/version.dart';
+import '../../navigation/application/navigation_session.dart';
+import '../application/app_policy_controller.dart';
 import '../application/update_controller.dart';
 
 /// Enveloppe toute l'application : quand une nouvelle version est publiée,
@@ -22,11 +26,141 @@ class UpdateGate extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final visible = ref.watch(updatePromptVisibleProvider);
+    final locked = ref.watch(policyLockVisibleProvider);
+    // Version refusée par le serveur VIGIROAD : on cherche aussitôt le
+    // fichier de mise à jour (Android) pour proposer l'installation directe.
+    ref.listen(appPolicyProvider.select((p) => p.status), (_, next) {
+      if (next == PolicyStatus.outdated) unawaited(ref.read(updateProvider.notifier).check());
+    });
+    final blocked = ref.watch(appPolicyProvider.select((p) => p.status == PolicyStatus.blocked));
     return Stack(
       children: [
         child,
-        if (visible) const Positioned.fill(child: _UpdateOverlay()),
+        // Blocage à distance : rien d'autre n'est accessible.
+        if (locked && (blocked || !visible))
+          const Positioned.fill(child: _Overlay(child: _PolicyCard()))
+        else if (visible)
+          const Positioned.fill(child: _UpdateOverlay()),
       ],
+    );
+  }
+}
+
+/// Version refusée ou application bloquée : écran bloquant, sauf pendant un
+/// guidage en cours (affiché à l'arrivée ou à l'arrêt, par sécurité).
+final policyLockVisibleProvider = Provider<bool>((ref) {
+  final locked = ref.watch(appPolicyProvider.select((p) => p.locked));
+  final guiding = ref.exists(navigationSessionProvider) &&
+      ref.watch(navigationSessionProvider.select((s) => s.hasRoute));
+  return locked && !guiding;
+});
+
+/// Fond assombri, aucun toucher ne passe.
+class _Overlay extends StatelessWidget {
+  const _Overlay({required this.child});
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) => Stack(
+    children: [
+      Positioned.fill(
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
+          child: ColoredBox(color: Colors.black.withValues(alpha: 0.72)),
+        ),
+      ),
+      const Positioned.fill(child: ModalBarrier(dismissible: false)),
+      Center(
+        child: SafeArea(
+          child: Padding(padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24), child: child),
+        ),
+      ),
+    ],
+  );
+}
+
+class _PolicyCard extends ConsumerWidget {
+  const _PolicyCard();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final p = ref.watch(appPolicyProvider);
+    final c = ref.read(appPolicyProvider.notifier);
+    final u = ref.watch(updateProvider);
+    final blocked = p.status == PolicyStatus.blocked;
+    return Material(
+      type: MaterialType.transparency,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 420),
+        child: GlowPanel(
+          tone: blocked ? PanelTone.alert : PanelTone.normal,
+          padding: const EdgeInsets.fromLTRB(20, 22, 20, 18),
+          radius: 22,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Icon(
+                  blocked ? Icons.block_rounded : Icons.system_update_rounded,
+                  color: blocked ? VrColors.alert : VrColors.cyan,
+                  size: 48,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  blocked ? 'Application suspendue' : 'Version obsolète',
+                  textAlign: TextAlign.center,
+                  style: VrText.sectionTitle.copyWith(fontSize: 20),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  p.message ??
+                      (blocked
+                          ? 'VIGIROAD est temporairement suspendu.'
+                          : 'Cette version de VIGIROAD n\'est plus utilisable : installez la dernière version.'),
+                  textAlign: TextAlign.center,
+                  style: VrText.caption.copyWith(color: VrColors.textPrimary, fontSize: 13),
+                ),
+                if (!blocked) ...[
+                  const SizedBox(height: 16),
+                  _VersionRow('Version installée', appVersionLabel, VrColors.textSecondary),
+                  if (p.latestVersion != null) ...[
+                    const SizedBox(height: 6),
+                    _VersionRow('Dernière version', p.latestVersion!, VrColors.cyan),
+                  ],
+                  const SizedBox(height: 16),
+                  VrButton(
+                    label: u.status == UpdateStatus.downloading ? 'Téléchargement…' : 'Mettre à jour',
+                    icon: Icons.system_update_rounded,
+                    style: VrButtonStyle.primary,
+                    expanded: true,
+                    onPressed: () async {
+                      // Android : installation directe si le fichier est publié,
+                      // sinon (iPhone) page de téléchargement.
+                      await ref.read(updateProvider.notifier).check();
+                      if (!ref.read(updateProvider).pending) await c.openDownloadPage();
+                    },
+                  ),
+                ],
+                const SizedBox(height: 8),
+                VrButton(
+                  label: 'Réessayer',
+                  icon: Icons.refresh_rounded,
+                  expanded: true,
+                  onPressed: c.check,
+                ),
+                const SizedBox(height: 8),
+                VrButton(
+                  label: 'Quitter l\'application',
+                  icon: Icons.power_settings_new_rounded,
+                  expanded: true,
+                  onPressed: () => SystemNavigator.pop(),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -250,3 +384,6 @@ class _VersionRow extends StatelessWidget {
     ),
   );
 }
+
+/// Version affichée sur l'écran de version obsolète.
+const appVersionLabel = '$appVersion ($appBuild)';

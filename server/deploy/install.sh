@@ -71,6 +71,8 @@ ensure VR_DB_PASSWORD "$(openssl rand -hex 24)"
 ensure VR_ADMIN_SECRET "$(openssl rand -hex 32)"
 ensure VR_AGENT_TOKEN "$(openssl rand -hex 24)"
 ensure VR_ADMIN_SETUP_TOKEN "$(openssl rand -hex 12)"
+# Dépôt des applications de bureau par la CI (secret GitHub VR_RELEASE_TOKEN).
+ensure VR_RELEASE_TOKEN "$(openssl rand -hex 24)"
 chmod 600 "$ENV"
 
 IP=$(curl -fsS4 https://api.ipify.org || hostname -I | awk '{print $1}')
@@ -78,8 +80,10 @@ DOMAIN=${DOMAIN_ARG:-$(grep -s '^VR_DOMAIN=' "$DEPLOY/.domain" | cut -d= -f2 || 
 [ -n "${DOMAIN:-}" ] || DOMAIN="$(echo "$IP" | tr . -).sslip.io"
 echo "VR_DOMAIN=$DOMAIN" > "$DEPLOY/.domain"
 
-mkdir -p "$RUN" "$DIR/backups" "$DIR/geoip"
+mkdir -p "$RUN" "$DIR/backups" "$DIR/geoip" "$DIR/desktop"
 chmod 700 "$RUN" "$DIR/backups"
+# Écrit par l'API d'administration (utilisateur 65534), lisible par root seulement sinon.
+chown 65534:65534 "$DIR/desktop" && chmod 700 "$DIR/desktop"
 
 say "Géolocalisation par pays (DB-IP Lite, CC BY 4.0)"
 cat > /etc/cron.monthly/vigiroad-geoip <<'GEO'
@@ -164,6 +168,8 @@ cat <<FIN
  Secrets GitHub (Settings → Secrets and variables → Actions) :
    VR_TRAFFIC_API_URL = https://$DOMAIN
    VR_TRAFFIC_API_KEY = $KEY
+   VR_RELEASE_TOKEN   = $(grep '^VR_RELEASE_TOKEN=' "$ENV" | cut -d= -f2)
+   (VR_RELEASE_TOKEN : dépôt privé des applications ADMIN MANAGER / SERVER CONTROL sur ce serveur)
 FIN
 if [ "$ADMINS" = "0" ]; then
   cat <<FIN

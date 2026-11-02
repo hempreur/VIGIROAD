@@ -9,7 +9,16 @@
 		}
 	}
 
-	@admin path /admin/* /v1/account/*
+	# Dépôt des applications de bureau par la CI (fichiers volumineux).
+	@release path /admin/releases/*
+	handle @release {
+		request_body {
+			max_size 400MB
+		}
+		reverse_proxy admin-api:8081
+	}
+
+	@admin path /admin/* /v1/account/* /v1/app/*
 	handle @admin {
 		encode gzip
 		request_body {

@@ -6,12 +6,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../app/providers.dart';
+import '../../../app/version.dart';
 import '../../navigation/application/navigation_providers.dart';
 import '../data/account_api.dart';
 import '../data/account_store.dart';
 
 /// Version affichée au serveur (statistiques des versions).
-const accountAppVersion = '1.6.0';
+const accountAppVersion = appVersion;
 
 enum AccountStatus { unavailable, loading, signedOut, signedIn }
 

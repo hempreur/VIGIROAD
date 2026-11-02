@@ -32,6 +32,9 @@ class ServerConfig {
   /// absent : signalements gardés en mémoire seulement.
   String? get reportsFile => _key('VR_REPORTS_FILE');
 
+  /// API d'administration (règle de version de l'application), réseau interne.
+  Uri? get adminUrl => _key('VR_ADMIN_URL') == null ? null : Uri.parse(_key('VR_ADMIN_URL')!);
+
   Set<String> get disabled => {for (final s in (env['VR_DISABLE_SOURCES'] ?? '').split(',')) if (s.trim().isNotEmpty) s.trim()};
 
   String? _key(String name) {

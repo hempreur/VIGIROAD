@@ -573,6 +573,7 @@ class AdminUsersService {
     'retention.audit_days': (90, 3650),
     'sessions.idle_expiry_days': (1, 365),
     'backups.keep': (3, 90),
+    'retention.version_events_days': (7, 3650),
   };
 
   Future<Response> _settings(Request req) async {

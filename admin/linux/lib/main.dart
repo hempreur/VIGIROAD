@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:vigiroad_admin_core/vigiroad_admin_core.dart';
 
 const appName = 'VIGIROAD SERVER CONTROL';
-const appVersion = '1.0.0';
+/// Version injectée à la compilation (`--dart-define=VR_APP_VERSION=1.7.0`),
+/// identique à celle de l'application GPS publiée en même temps.
+const appVersion = String.fromEnvironment('VR_APP_VERSION', defaultValue: '0.0.0-dev');
 
 /// Supervision et administration du VPS : ressources, processus, Docker,
 /// services VIGIROAD, maintenance, sauvegardes et mises à jour.
@@ -33,7 +35,7 @@ Widget buildApp({AdminSession? session, DesktopUpdater? updater}) {
   return AdminApp(
     appName: appName,
     subtitle: 'Administration et surveillance du serveur VIGIROAD',
-    session: session ?? AdminSession(clientName: 'linux'),
+    session: session ?? AdminSession(clientName: 'linux', appTag: u.appTag),
     updater: u,
     pages: serverControlPages(u),
   );

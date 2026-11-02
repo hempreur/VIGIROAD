@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../api/session.dart';
 import '../format.dart';
@@ -348,9 +347,9 @@ class SettingsPage extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 6),
-                    TextButton(
-                      onPressed: () => unawaited(launchUrl(Uri.parse('https://github.com/hempreur/VIGIROAD/releases'))),
-                      child: const Text('Toutes les versions'),
+                    Text(
+                      'Mises à jour automatiques : vérifiées toutes les 15 minutes sur votre serveur et installées sans intervention.',
+                      style: VrText.caption,
                     ),
                   ],
                 ),

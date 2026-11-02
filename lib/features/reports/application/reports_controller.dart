@@ -9,6 +9,7 @@ import '../../navigation/application/navigation_session.dart';
 import '../../navigation/domain/geo_fix.dart';
 import '../../sentrix/application/sentrix_controller.dart';
 import '../../settings/application/settings_controller.dart';
+import '../../update/application/app_policy_controller.dart';
 import '../data/reports_client.dart';
 
 class ReportsState {
@@ -25,7 +26,14 @@ class ReportsState {
 final reportsClientProvider = Provider<ReportsClient?>((ref) {
   final c = ref.watch(appConfigProvider);
   if (!c.trafficEnabled) return null;
-  return HttpReportsClient(baseUrl: c.trafficApiUrl, apiKey: c.trafficApiKey, userAgent: c.userAgent);
+  return HttpReportsClient(
+    baseUrl: c.trafficApiUrl,
+    apiKey: c.trafficApiKey,
+    userAgent: c.userAgent,
+    extraHeaders: appVersionHeaders(),
+    onRejected: ({required bool blocked, String? message}) =>
+        unawaited(ref.read(appPolicyProvider.notifier).rejected(blocked: blocked, message: message)),
+  );
 });
 
 final reportsProvider = NotifierProvider<ReportsController, ReportsState>(ReportsController.new);

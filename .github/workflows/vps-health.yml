@@ -36,7 +36,7 @@ jobs:
           # 2. Authentification
           code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 20 "$URL/v1/sources")
           check "accès refusé sans clé (HTTP $code)" '[ "$code" = 401 ]'
-          code=$(curl -s -o /tmp/ev.json -w '%{http_code}' --max-time 30 -H "X-Api-Key: $KEY" "$URL/v1/events?bbox=2.2,48.8,2.5,48.95")
+          code=$(curl -s -o /tmp/ev.json -w '%{http_code}' --max-time 30 -H "X-Api-Key: $KEY" -H "X-App-Build: 999999" "$URL/v1/events?bbox=2.2,48.8,2.5,48.95")
           check "accès avec la clé de l'application (HTTP $code)" '[ "$code" = 200 ]'
           check "état de zone renvoyé (Paris)" 'grep -q "\"known\":true" /tmp/ev.json'
 

@@ -33,6 +33,8 @@ class HttpTrafficClient implements TrafficClient {
     required this.userAgent,
     http.Client? client,
     DateTime Function()? clock,
+    this.extraHeaders = const {},
+    this.onRejected,
   }) : _client = client ?? http.Client(),
        _clock = clock ?? DateTime.now;
 
@@ -42,6 +44,12 @@ class HttpTrafficClient implements TrafficClient {
   final http.Client _client;
   final DateTime Function() _clock;
 
+  /// Version de l'application (refus des versions obsolètes par le serveur).
+  final Map<String, String> extraHeaders;
+
+  /// Version refusée (426) : obsolète ou bloquée à distance.
+  final void Function({required bool blocked, String? message})? onRejected;
+
   /// Points envoyés au plus pour un itinéraire (limite le volume transféré).
   static const maxRoutePoints = 1500;
 
@@ -49,6 +57,7 @@ class HttpTrafficClient implements TrafficClient {
     'X-Api-Key': apiKey,
     'User-Agent': userAgent,
     'Accept': 'application/json',
+    ...extraHeaders,
   };
 
   Uri _uri(String path, [Map<String, String>? query]) {
@@ -112,6 +121,10 @@ class HttpTrafficClient implements TrafficClient {
         throw const TrafficException('Clé du serveur de trafic refusée');
       case 429:
         throw const TrafficException('Serveur de trafic saturé');
+      case 426:
+        final j = _tryJson(res);
+        onRejected?.call(blocked: j?['code'] == 'app_blocked', message: j?['error'] as String?);
+        throw const TrafficException('Version de VIGIROAD obsolète : mettez à jour l\'application');
       case 503:
         throw const TrafficException('Service désactivé sur le serveur de trafic');
       default:
@@ -122,6 +135,14 @@ class HttpTrafficClient implements TrafficClient {
     } on Object {
       throw const TrafficException('Réponse du serveur de trafic illisible');
     }
+  }
+}
+
+Map<String, dynamic>? _tryJson(http.Response r) {
+  try {
+    return jsonDecode(utf8.decode(r.bodyBytes)) as Map<String, dynamic>;
+  } on Object {
+    return null;
   }
 }
 

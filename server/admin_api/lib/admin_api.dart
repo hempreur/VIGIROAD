@@ -12,4 +12,5 @@ export 'src/geoip.dart';
 export 'src/http_kit.dart';
 export 'src/maintenance.dart';
 export 'src/monitoring.dart';
+export 'src/releases.dart';
 export 'src/security.dart';

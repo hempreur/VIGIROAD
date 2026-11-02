@@ -62,3 +62,13 @@ Name: "{autodesktop}\VIGIROAD Admin Manager"; Filename: "{app}\vigiroad_admin_ma
 
 [Run]
 Filename: "{app}\vigiroad_admin_manager.exe"; Description: "{cm:LaunchProgram,VIGIROAD Admin Manager}"; Flags: nowait postinstall skipifsilent
+; Mise à jour automatique (installation silencieuse) : l'application redémarre.
+Filename: "{app}\vigiroad_admin_manager.exe"; Flags: nowait; Check: ShouldRelaunch
+
+[Code]
+// Relance après une mise à jour automatique (/RELAUNCH=1), jamais lors
+// d'une installation silencieuse ordinaire (déploiement, tests).
+function ShouldRelaunch: Boolean;
+begin
+  Result := WizardSilent and (ExpandConstant('{param:RELAUNCH|0}') = '1');
+end;

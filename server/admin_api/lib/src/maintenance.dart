@@ -98,6 +98,12 @@ class MaintenanceService {
       days('retention.audit_days', 730),
     );
     await run(
+      'versionEvents',
+      'DELETE FROM app_version_events WHERE at < now() - make_interval(days => CAST(@d AS int))',
+      days('retention.version_events_days', 90),
+    );
+    await run('versionDaily', 'DELETE FROM app_version_daily WHERE day < current_date - CAST(@d AS int)', 90);
+    await run(
       'passwordResets',
       'DELETE FROM password_resets WHERE expires_at < now() - make_interval(days => CAST(@d AS int))',
       7,

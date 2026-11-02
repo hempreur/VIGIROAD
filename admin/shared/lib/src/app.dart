@@ -31,10 +31,46 @@ class AdminApp extends StatefulWidget {
 }
 
 class _AdminAppState extends State<AdminApp> {
+  Object? _attached;
+
   @override
   void initState() {
     super.initState();
+    widget.session.addListener(_sync);
+    widget.session.requiredUpdate.addListener(_required);
     unawaited(widget.session.init());
+  }
+
+  @override
+  void dispose() {
+    widget.session.removeListener(_sync);
+    widget.session.requiredUpdate.removeListener(_required);
+    widget.updater.detach();
+    super.dispose();
+  }
+
+  /// Mises à jour vérifiées auprès du serveur dès la connexion.
+  void _sync() {
+    final c = widget.session.client;
+    final ready = widget.session.stage == SessionStage.ready;
+    final key = ready ? c : null;
+    if (identical(key, _attached)) return;
+    _attached = key;
+    if (c != null && ready) {
+      widget.updater.attach(c);
+    } else {
+      widget.updater.detach();
+    }
+  }
+
+  /// Version refusée par le serveur (426) : installation immédiate, même
+  /// depuis l'écran de connexion.
+  void _required() {
+    final u = widget.session.requiredUpdate.value;
+    final c = widget.session.client;
+    if (u == null || c == null) return;
+    widget.updater.prepare(c);
+    unawaited(widget.updater.installRequired(u));
   }
 
   @override

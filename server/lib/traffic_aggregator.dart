@@ -3,6 +3,7 @@ library;
 
 export 'src/aggregator.dart';
 export 'src/api.dart';
+export 'src/app_policy.dart';
 export 'src/config.dart';
 export 'src/connectors/datex2.dart';
 export 'src/connectors/tfl.dart';

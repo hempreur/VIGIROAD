@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:vigiroad_admin_core/vigiroad_admin_core.dart';
 
 const appName = 'VIGIROAD ADMIN MANAGER';
-const appVersion = '1.0.0';
+/// Version injectée à la compilation (`--dart-define=VR_APP_VERSION=1.7.0`),
+/// identique à celle de l'application GPS publiée en même temps.
+const appVersion = String.fromEnvironment('VR_APP_VERSION', defaultValue: '0.0.0-dev');
 
 /// Administration à distance : tableau de bord, utilisateurs, appareils,
 /// sessions, géographie, état du serveur, journal et administrateurs.
@@ -13,6 +15,7 @@ List<AdminPage> adminManagerPages(DesktopUpdater updater) => [
   AdminPage(id: 'sessions', label: 'Connexions et sessions', icon: Icons.timelapse_rounded, builder: (_) => const SessionsPage()),
   AdminPage(id: 'geo', label: 'Géographie', icon: Icons.public_rounded, builder: (_) => const GeoPage()),
   AdminPage(id: 'server', label: 'Serveur', icon: Icons.dns_rounded, builder: (_) => const ServerSummaryPage()),
+  AdminPage(id: 'versions', label: 'Versions', icon: Icons.system_security_update_good_rounded, builder: (_) => const VersionsPage()),
   AdminPage(id: 'audit', label: 'Journal', icon: Icons.receipt_long_rounded, builder: (_) => const AuditPage()),
   AdminPage(
     id: 'admins',
@@ -34,7 +37,7 @@ Widget buildApp({AdminSession? session, DesktopUpdater? updater}) {
   return AdminApp(
     appName: appName,
     subtitle: 'Gestion des comptes, appareils et sessions VIGIROAD',
-    session: session ?? AdminSession(clientName: 'windows'),
+    session: session ?? AdminSession(clientName: 'windows', appTag: u.appTag),
     updater: u,
     pages: adminManagerPages(u),
   );

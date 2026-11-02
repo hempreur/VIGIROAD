@@ -34,6 +34,16 @@ class MainActivity : FlutterActivity() {
                     mapOf("brand" to Build.MANUFACTURER, "model" to Build.MODEL, "osVersion" to Build.VERSION.RELEASE),
                 )
                 "canInstall" -> result.success(canInstall())
+                // Page de téléchargement (version obsolète sans fichier de mise à jour).
+                "openUrl" -> {
+                    val url = call.argument<String>("url")
+                    try {
+                        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+                        result.success(true)
+                    } catch (e: Exception) {
+                        result.success(false)
+                    }
+                }
                 "openInstallSettings" -> {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                         startActivity(

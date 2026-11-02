@@ -17,6 +17,8 @@ services:
     environment:
       PORT: "8080"
       VR_REPORTS_FILE: /data/reports.json
+      # Règle de version de l'application (versions obsolètes refusées).
+      VR_ADMIN_URL: http://admin-api:8081
     volumes:
       - reports_data:/data
     restart: unless-stopped
@@ -58,8 +60,11 @@ services:
       VR_TRAFFIC_URL: http://traffic:8080
       VR_DOMAIN: ${VR_DOMAIN}
       VR_GEOIP_FILE: /geoip/dbip-country-lite.csv.gz
+      VR_DESKTOP_DIR: /desktop
     volumes:
       - ${VR_GEOIP_DIR:-/opt/vigiroad/geoip}:/geoip:ro
+      # Applications de bureau déposées par la CI (jamais publiées sur GitHub).
+      - ${VR_DESKTOP_DIR:-/opt/vigiroad/desktop}:/desktop
     depends_on:
       postgres: { condition: service_healthy }
     expose:

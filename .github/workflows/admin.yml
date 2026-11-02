@@ -250,7 +250,8 @@ jobs:
       # Même version que l'application GPS publiée (pubspec.yaml racine).
       - name: Version
         shell: bash
-        run: echo "VERSION=$(sed -n 's/^version: *\([^+]*\).*/\1/p' pubspec.yaml)" >> "$GITHUB_ENV"
+        run: |
+          echo "VERSION=$(sed -n 's/^version: *\([^+]*\).*/\1/p' pubspec.yaml)" >> "$GITHUB_ENV"
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
@@ -336,7 +337,8 @@ jobs:
       # Même version que l'application GPS publiée (pubspec.yaml racine).
       - name: Version
         shell: bash
-        run: echo "VERSION=$(sed -n 's/^version: *\([^+]*\).*/\1/p' pubspec.yaml)" >> "$GITHUB_ENV"
+        run: |
+          echo "VERSION=$(sed -n 's/^version: *\([^+]*\).*/\1/p' pubspec.yaml)" >> "$GITHUB_ENV"
       - uses: subosito/flutter-action@v2
         with:
           channel: stable

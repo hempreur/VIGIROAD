@@ -1,0 +1,8 @@
+Building Linux application...                                   
+✓ Built build/linux/x64/release/bundle/vigiroad_server_control
+total 40
+drwxr-xr-x 4 runner runner  4096 Nov  2 01:48 .
+drwxr-xr-x 8 runner runner  4096 Nov  2 01:48 ..
+drwxr-xr-x 3 runner runner  4096 Nov  2 01:48 data
+drwxr-xr-x 2 runner runner  4096 Nov  2 01:48 lib
+-rwxr-xr-x 1 runner runner 24504 Nov  2 01:48 vigiroad_server_control

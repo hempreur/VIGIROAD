@@ -1,0 +1,31 @@
+dpkg-deb: building package 'vigiroad-server-control' in 'dist/vigiroad-server-control_1.7.0_amd64.deb'.
+dist/vigiroad-server-control_1.7.0_amd64.deb
+
+Please consider submitting your AppImage to appimage.github.io, the crowd-sourced
+central directory of available AppImages, by opening a pull request
+at https://github.com/AppImage/appimage.github.io
+dist/VIGIROAD_Server_Control-1.7.0-x86_64.AppImage
+ new Debian package, version 2.0.
+ size 9280068 bytes: control archive=643 bytes.
+     580 bytes,    13 lines      control
+     232 bytes,     4 lines   *  postinst             #!/bin/sh
+ Package: vigiroad-server-control
+ Version: 1.7.0
+ Section: admin
+ Priority: optional
+ Architecture: amd64
+ Installed-Size: 27140
+ Depends: libgtk-3-0 | libgtk-3-0t64, libblkid1, liblzma5, libstdc++6
+ Maintainer: VIGIROAD INC (CODEX HEMPREUR) <support@vigiroad.fr>
+ Homepage: https://github.com/hempreur/VIGIROAD
+ Description: VIGIROAD SERVER CONTROL - administration du serveur VIGIROAD
+  Application graphique native de supervision du VPS VIGIROAD : processeur,
+  mémoire, disque, réseau, processus, conteneurs Docker, flux routiers,
+  requêtes, diagnostic, sauvegardes et mises à jour.
+No user sessions are running outdated binaries.
+
+No VM guests are running outdated hypervisor (qemu) binaries on this host.
+lrwxrwxrwx  1 root root  52 Nov  2 01:48 /usr/bin/vigiroad-server-control -> /opt/vigiroad-server-control/vigiroad_server_control
+-rw-r--r--+ 1 root root 402 Nov  2 01:48 /usr/share/applications/fr.vigiroad.ServerControl.desktop
+c03c7c55a1d7245cd2c9b8c972e9082713b8848f4efc0b40dca4e42dc90a8f84  dist/VIGIROAD_Server_Control-1.7.0-x86_64.AppImage
+7c35a8741f580734f32caee61a3c964961030e80674ac318679bb88b78c60533  dist/vigiroad-server-control_1.7.0_amd64.deb

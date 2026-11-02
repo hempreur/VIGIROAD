@@ -1,0 +1,11 @@
+Analyzing VIGIROAD...                                           
+
+   info • Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation • lib/features/reports/presentation/report_sheets.dart:44:41 • prefer_const_constructors
+   info • Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation • lib/features/reports/presentation/report_sheets.dart:45:12 • prefer_const_constructors
+   info • Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation • lib/features/reports/presentation/report_sheets.dart:47:14 • prefer_const_constructors
+   info • Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation • lib/features/reports/presentation/report_sheets.dart:49:16 • prefer_const_constructors
+   info • Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation • lib/features/reports/presentation/report_sheets.dart:61:13 • prefer_const_constructors
+   info • Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation • lib/features/update/presentation/update_gate.dart:126:19 • prefer_const_constructors
+   info • Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation • lib/features/update/presentation/update_gate.dart:257:19 • prefer_const_constructors
+
+7 issues found. (ran in 16.6s)

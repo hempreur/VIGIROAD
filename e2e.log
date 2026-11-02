@@ -1,0 +1,53 @@
+✅ API d'administration en HTTPS derrière Caddy — {status: ok, service: vigiroad-admin-api, version: 1.7.0}
+✅ serveur de trafic toujours servi — {status: ok, sources: 2, coverage: [FR]}
+✅ création du propriétaire — 201
+✅ double authentification TOTP — 200
+✅ inscription ci_user_0 — 201
+✅ inscription ci_user_1 — 201
+✅ inscription ci_user_2 — 201
+✅ battements de cœur — {ok: true, countedSeconds: 0, nextInSeconds: 60, locationStored: false}
+✅ tableau de bord : 3 comptes connectés — 3
+✅ agent de supervision joignable
+✅ RAM de l'hôte — {total: 16759443456, available: 14934306816, used: 1825136640, cached: 5549010944, swapTotal: 3221221376, swapUsed: 0}
+✅ disque de l'hôte — [{mount: /, device: /dev/root, total: 154993672192, used: 65450029056, available: 89526865920}]
+✅ système — Ubuntu 26.04.1 LTS
+✅ processeur en temps réel — 0.2503128911138924
+✅ conteneurs VIGIROAD détectés — [caddy, backup, admin-api, postgres, traffic, agent]
+✅ tous en fonctionnement
+✅ CPU/RAM par conteneur — {cpuPercent: 0.0, memUsage: 72482816, memLimit: 16759443456, netRx: 132476, netTx: 7328, pids: 3}
+✅ PostgreSQL : arrêt interdit
+✅ journaux du conteneur trafic — 7
+✅ arrêt de PostgreSQL refusé par l'agent — 403
+✅ redémarrage contrôlé du serveur de trafic — {ok: true, action: restart, service: traffic}
+✅ serveur de trafic de nouveau disponible
+✅ /admin/docker/volumes
+✅ /admin/docker/networks
+✅ /admin/docker/images
+✅ /admin/server/processes
+✅ état VIGIROAD — true
+✅ sauvegarde demandée — {id: 1, status: pending}
+✅ sauvegarde réalisée — vigiroad-20261102-014755.dump 50613 octets
+✅ test de restauration — restauration réussie : schéma v2, 19 tables, 3 comptes
+   diagnostic ✓ Base PostgreSQL : schéma v2, réponse en 0 ms
+   diagnostic ✓ Agent de supervision : joignable
+   diagnostic ✓ Conteneurs VIGIROAD : 6 en fonctionnement
+   diagnostic ✓ Serveur de trafic : répond en 0 ms
+   diagnostic · Flux routiers : en échec : fr-pan-transport-data-gouv
+   diagnostic ✓ Mémoire : 10 % utilisée
+   diagnostic ✓ Disque / : 42 % utilisé
+   diagnostic ✓ Sauvegarde : dernière : 2026-11-02T01:47:55.686520Z
+   diagnostic ✓ Restauration testée : dernier test : 2026-11-02T01:47:58.181712Z
+   diagnostic ✓ Double authentification des administrateurs : tous les comptes actifs sont protégés
+   diagnostic ✓ Base de géolocalisation IP : 1 plages (DB-IP Lite)
+✅ diagnostic
+✅ diagnostic : sauvegarde et restauration récentes
+✅ mise à jour à distance : demande transmise à l'hôte — {ok: true, state: pending}
+✅ flux SSE temps réel via HTTPS
+
+Bout en bout : tout est conforme.
+total 64
+drwx------ 2 runner runner  4096 Nov  2 01:47 .
+drwxr-xr-x 8 runner runner  4096 Nov  2 01:47 ..
+-rw------- 1 root   root   50613 Nov  2 01:47 vigiroad-20261102-014755.dump
+-rw-r--r-- 1 root   root      96 Nov  2 01:47 vigiroad-20261102-014755.dump.sha256
+{"requestedAt":"2026-11-02T01:47:59.609717Z","by":"proprietaire@vigiroad.test"}

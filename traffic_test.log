@@ -1,0 +1,16 @@
+00:00 +0: loading test/traffic_test.dart
+00:00 +0: test/traffic_test.dart: normalisation routes
+00:00 +1: test/traffic_test.dart: normalisation JSON aller-retour
+00:00 +2: test/traffic_test.dart: normalisation valeurs inconnues
+00:00 +3: test/traffic_test.dart: fusion des doublons deux sources, même accident à 150 m : un seul événement
+00:00 +4: test/traffic_test.dart: fusion des doublons routes différentes, sens opposés, familles différentes : distincts
+00:00 +5: test/traffic_test.dart: fusion des doublons trop éloignés : distincts
+00:00 +6: test/traffic_test.dart: fusion des doublons accident et obstacle = même famille
+00:00 +7: test/traffic_test.dart: fusion des doublons grande liste : fusion locale correcte
+00:00 +8: test/traffic_test.dart: fraîcheur incident récent / ancien
+00:00 +9: test/traffic_test.dart: fraîcheur fin passée
+00:00 +10: test/traffic_test.dart: fraîcheur travaux planifiés encore en cours
+00:00 +11: test/traffic_test.dart: fraîcheur collecte trop ancienne (source injoignable)
+00:00 +12: test/traffic_test.dart: géométrie distance à une polyligne et position le long
+00:00 +13: test/traffic_test.dart: géométrie bbox
+00:00 +14: All tests passed!

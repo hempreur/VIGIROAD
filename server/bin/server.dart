@@ -17,10 +17,13 @@ Future<void> main() async {
   final reportsFile = config.reportsFile;
   final reports = ReportStore(file: reportsFile == null ? null : File(reportsFile));
   await reports.load();
+  final adminUrl = config.adminUrl;
+  final policy = adminUrl == null ? null : (AppPolicyClient(adminUrl: adminUrl, apiKey: keys.first)..start());
   final api = TrafficApi(
     aggregator,
     apiKeys: keys,
     reports: reports,
+    appPolicy: policy,
     speedLimits: overpass == null ? null : SpeedLimitService(client: http.Client(), overpassUrl: overpass),
   );
 
@@ -32,6 +35,7 @@ Future<void> main() async {
   for (final signal in [ProcessSignal.sigint, if (!Platform.isWindows) ProcessSignal.sigterm]) {
     signal.watch().listen((_) async {
       aggregator.stop();
+      policy?.stop();
       await server.close();
       await reports.flush();
       exit(0);

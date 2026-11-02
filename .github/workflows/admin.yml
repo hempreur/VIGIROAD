@@ -138,15 +138,37 @@ jobs:
         run: |
           set -o pipefail
           K='x-api-key: cle-de-test-ci-1234567890'
-          curl -fsSk -H "$K" -H 'content-type: application/json' -d '{"position":[2.3522,48.8566],"heading":90,"side":"mine"}' https://localhost/v1/reports | tee ../../ci-out/reports.log; echo
-          code=$(curl -sk -o /dev/null -w '%{http_code}' -H "$K" -H 'content-type: application/json' -d '{"position":[2.36,48.86],"side":"opposite"}' https://localhost/v1/reports)
+          # Application à jour (numéro de compilation très élevé).
+          B='x-app-build: 999999'
+          curl -fsSk -H "$K" -H "$B" -H 'content-type: application/json' -d '{"position":[2.3522,48.8566],"heading":90,"side":"mine"}' https://localhost/v1/reports | tee ../../ci-out/reports.log; echo
+          code=$(curl -sk -o /dev/null -w '%{http_code}' -H "$K" -H "$B" -H 'content-type: application/json' -d '{"position":[2.36,48.86],"side":"opposite"}' https://localhost/v1/reports)
           echo "second signalement immédiat : $code (429 attendu)" | tee -a ../../ci-out/reports.log
           [ "$code" = 429 ]
           docker compose --env-file .env --env-file .domain restart traffic | tee -a ../../ci-out/reports.log
           for _ in $(seq 1 30); do curl -fsSk https://localhost/health > /dev/null 2>&1 && break; sleep 2; done
-          n=$(curl -fsSk -H "$K" 'https://localhost/v1/reports?bbox=2.2,48.8,2.5,48.9' | jq '.reports | length')
+          n=$(curl -fsSk -H "$K" -H "$B" 'https://localhost/v1/reports?bbox=2.2,48.8,2.5,48.9' | jq '.reports | length')
           echo "signalements après redémarrage : $n" | tee -a ../../ci-out/reports.log
           [ "$n" = 1 ]
+      - name: Versions obsolètes refusées (application 1.6 sans numéro, journal)
+        if: success()
+        working-directory: server/deploy
+        run: |
+          set -o pipefail
+          K='x-api-key: cle-de-test-ci-1234567890'
+          code=000
+          # La règle est relue chaque minute par le serveur de trafic.
+          for _ in $(seq 1 30); do
+            code=$(curl -sk -o /dev/null -w '%{http_code}' -H "$K" 'https://localhost/v1/reports?bbox=2.2,48.8,2.5,48.9')
+            [ "$code" = 426 ] && break
+            sleep 5
+          done
+          echo "application sans numéro de version : $code (426 attendu)" | tee ../../ci-out/versions.log
+          [ "$code" = 426 ]
+          curl -fsSk -H "$K" -H 'content-type: application/json' \
+            -d '{"platform":"android","version":"1.0.0","build":1,"model":"CI"}' https://localhost/v1/app/status | tee -a ../../ci-out/versions.log; echo
+          n=$(docker compose --env-file .env --env-file .domain exec -T postgres sh -c 'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -tAc "SELECT count(*) FROM app_version_events"')
+          echo "tentatives journalisées : $n" | tee -a ../../ci-out/versions.log
+          [ "$n" -ge 2 ]
       - name: Journaux des conteneurs
         if: always()
         working-directory: server/deploy

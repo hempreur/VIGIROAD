@@ -6,6 +6,7 @@ import 'package:shelf/shelf.dart';
 import 'package:vigiroad_traffic/vigiroad_traffic.dart';
 
 import 'aggregator.dart';
+import 'app_policy.dart';
 import 'reports.dart';
 import 'request_stats.dart';
 import 'speed/speed_limit_service.dart';
@@ -66,12 +67,19 @@ class TrafficApi {
     this.speedLimits,
     RequestStats? stats,
     ReportStore? reports,
+    this.appPolicy,
   }) : limiter = limiter ?? RateLimiter(),
        stats = stats ?? RequestStats(),
        reports = reports ?? ReportStore();
 
   /// Signalements « Chicken » des conducteurs.
   final ReportStore reports;
+
+  /// Règle de version de l'application (null = aucune vérification).
+  final AppPolicyClient? appPolicy;
+
+  /// Routes réservées à l'application (refusées aux versions obsolètes).
+  static const appRoutes = {'/v1/events', '/v1/events/route', '/v1/speedlimits', '/v1/reports'};
 
   /// Requêtes et latence par minute (lues par l'API d'administration).
   final RequestStats stats;
@@ -114,6 +122,10 @@ class TrafficApi {
     // la même clé, chacun a donc sa propre limite.
     final client = clientOf(req);
     if (!limiter.allow('$key|$client')) return _error(429, 'Trop de requêtes');
+    if (appRoutes.contains(path)) {
+      final refused = appPolicy?.check(req, client);
+      if (refused != null) return refused;
+    }
 
     try {
       switch ((req.method, path)) {

@@ -138,6 +138,8 @@ class AdminAuthService {
       await _event(id, false, 'disabled', ip);
       throw const ApiError(403, 'Compte administrateur désactivé', code: 'disabled');
     }
+    // Application de bureau obsolète : refus avec la mise à jour à installer.
+    await desktopGuard?.call(req, adminId: id, adminEmail: email);
     final client = b.str('client', max: 32);
     if (a['totp_confirmed'] != true) {
       // Première connexion : enrôlement de l'application d'authentification.
@@ -233,7 +235,10 @@ class AdminAuthService {
   }
 
   /// Vérifie le jeton administrateur et, si demandé, le droit [perm].
-  Future<AdminPrincipal> authenticate(Request req, [Perm perm = Perm.read]) async {
+  /// Contrôle de version des applications de bureau (branché par l'API).
+  Future<void> Function(Request req, {String? adminId, String? adminEmail})? desktopGuard;
+
+  Future<AdminPrincipal> authenticate(Request req, [Perm perm = Perm.read, bool versionCheck = true]) async {
     final h = req.headers['authorization'] ?? '';
     // Flux d'événements : jeton accepté en paramètre (pas d'en-tête possible
     // pour certains clients SSE).
@@ -266,6 +271,7 @@ class AdminAuthService {
       sessionId: s['id'] as String,
       ipPrefix: ipPrefix(clientIp(req)) ?? s['ip_prefix'] as String?,
     );
+    if (versionCheck) await desktopGuard?.call(req, adminId: p.id, adminEmail: p.email);
     if (!p.can(perm)) {
       await ctx.audit(p, 'denied', details: {'perm': perm.name, 'path': req.url.path}, success: false);
       throw ApiError.forbidden;

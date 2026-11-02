@@ -8,6 +8,7 @@ import '../../navigation/application/navigation_providers.dart';
 import '../../navigation/application/navigation_session.dart';
 import '../../navigation/domain/geo_fix.dart';
 import '../../navigation/domain/route.dart';
+import '../../update/application/app_policy_controller.dart';
 import '../data/traffic_client.dart';
 import '../domain/traffic_snapshot.dart';
 
@@ -67,7 +68,14 @@ class TrafficState {
 final trafficClientProvider = Provider<TrafficClient?>((ref) {
   final c = ref.watch(appConfigProvider);
   if (!c.trafficEnabled) return null;
-  return HttpTrafficClient(baseUrl: c.trafficApiUrl, apiKey: c.trafficApiKey, userAgent: c.userAgent);
+  return HttpTrafficClient(
+    baseUrl: c.trafficApiUrl,
+    apiKey: c.trafficApiKey,
+    userAgent: c.userAgent,
+    extraHeaders: appVersionHeaders(),
+    onRejected: ({required bool blocked, String? message}) =>
+        unawaited(ref.read(appPolicyProvider.notifier).rejected(blocked: blocked, message: message)),
+  );
 });
 
 final trafficProvider = NotifierProvider<TrafficController, TrafficState>(TrafficController.new);

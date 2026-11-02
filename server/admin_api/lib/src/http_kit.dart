@@ -6,10 +6,13 @@ import 'package:shelf/shelf.dart';
 
 /// Erreur renvoyée telle quelle au client (message en français).
 class ApiError implements Exception {
-  const ApiError(this.status, this.message, {this.code});
+  const ApiError(this.status, this.message, {this.code, this.extra});
 
   final int status;
   final String message;
+
+  /// Données complémentaires (ex. mise à jour à installer pour un 426).
+  final Map<String, Object?>? extra;
 
   /// Code stable exploitable par les applications (`revoked`, `mfa_required`…).
   final String? code;
@@ -29,7 +32,7 @@ const jsonHeaders = {'content-type': 'application/json; charset=utf-8', 'cache-c
 Response jsonOk(Object? body, {int status = 200}) => Response(status, body: jsonEncode(body), headers: jsonHeaders);
 
 Response jsonError(ApiError e) =>
-    Response(e.status, body: jsonEncode({'error': e.message, 'code': e.code}), headers: jsonHeaders);
+    Response(e.status, body: jsonEncode({'error': e.message, 'code': e.code, ...?e.extra}), headers: jsonHeaders);
 
 /// Corps JSON d'une requête (objet attendu).
 Future<Map<String, dynamic>> readJson(Request req) async {

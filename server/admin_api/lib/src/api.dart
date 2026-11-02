@@ -10,6 +10,7 @@ import 'context.dart';
 import 'http_kit.dart';
 import 'maintenance.dart';
 import 'monitoring.dart';
+import 'releases.dart';
 
 /// API centrale : `/v1/account/*` (application mobile) et `/admin/*`
 /// (applications d'administration Windows et Linux). Servie derrière Caddy
@@ -26,18 +27,21 @@ class AdminApi {
       traffic ?? TrafficProbe(ctx.config.trafficUrl, ctx.config.appKeys.firstOrNull),
     );
     maintenance = MaintenanceService(ctx, auth, monitoring);
+    releases = ReleaseService(ctx, auth, accounts);
+    auth.desktopGuard = releases.checkDesktop;
     accounts.register(router);
     auth.register(router);
     users.register(router);
     monitoring.register(router);
     maintenance.register(router);
+    releases.register(router);
     router.get('/admin/health', (req, _) async {
       await ctx.db.scalar<int>('SELECT 1');
       return jsonOk({'status': 'ok', 'service': 'vigiroad-admin-api', 'version': version});
     });
   }
 
-  static const version = '1.0.0';
+  static const version = '1.7.0';
 
   final AppContext ctx;
   final router = Router();
@@ -46,15 +50,18 @@ class AdminApi {
   late final AdminUsersService users;
   late final MonitoringService monitoring;
   late final MaintenanceService maintenance;
+  late final ReleaseService releases;
 
   void startJobs() {
     monitoring.start();
     maintenance.start();
+    releases.start();
   }
 
   void stopJobs() {
     monitoring.stop();
     maintenance.stop();
+    releases.stop();
   }
 
   String _routeOf(Request req) {

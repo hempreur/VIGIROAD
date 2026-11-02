@@ -20,8 +20,20 @@ abstract interface class ReportsClient {
 }
 
 class HttpReportsClient implements ReportsClient {
-  HttpReportsClient({required this.baseUrl, required this.apiKey, required this.userAgent, http.Client? client})
-    : _client = client ?? http.Client();
+  HttpReportsClient({
+    required this.baseUrl,
+    required this.apiKey,
+    required this.userAgent,
+    http.Client? client,
+    this.extraHeaders = const {},
+    this.onRejected,
+  }) : _client = client ?? http.Client();
+
+  /// Version de l'application (refus des versions obsolètes par le serveur).
+  final Map<String, String> extraHeaders;
+
+  /// Version refusée (426) : obsolète ou bloquée à distance.
+  final void Function({required bool blocked, String? message})? onRejected;
 
   final String baseUrl;
   final String apiKey;
@@ -33,7 +45,12 @@ class HttpReportsClient implements ReportsClient {
     return Uri.parse('$base$path').replace(queryParameters: q);
   }
 
-  Map<String, String> get _headers => {'X-Api-Key': apiKey, 'User-Agent': userAgent, 'Accept': 'application/json'};
+  Map<String, String> get _headers => {
+    'X-Api-Key': apiKey,
+    'User-Agent': userAgent,
+    'Accept': 'application/json',
+    ...extraHeaders,
+  };
 
   @override
   Future<List<ChickenReport>> inBox(BBox box) async {
@@ -74,8 +91,12 @@ class HttpReportsClient implements ReportsClient {
       return body;
     }
     final msg = body?['error'];
+    if (res.statusCode == 426) {
+      onRejected?.call(blocked: body?['code'] == 'app_blocked', message: msg is String ? msg : null);
+    }
     throw ReportsException(switch (res.statusCode) {
       401 => 'Clé du serveur refusée',
+      426 => 'Version de VIGIROAD obsolète : mettez à jour l\'application',
       429 => msg is String ? msg : 'Trop de signalements, réessayez dans une minute',
       _ => msg is String ? msg : 'Erreur du serveur (${res.statusCode})',
     });

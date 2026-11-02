@@ -66,6 +66,19 @@ class AdminConfig {
   /// Dépôt GitHub (vérification des mises à jour).
   String get githubRepo => _v('VR_GITHUB_REPO') ?? 'hempreur/VIGIROAD';
 
+  /// Dossier des applications de bureau publiées (jamais sur GitHub).
+  String get desktopDir => _v('VR_DESKTOP_DIR') ?? '/desktop';
+
+  /// Jeton de la CI pour déposer les applications de bureau sur le VPS.
+  String? get releaseToken {
+    final t = _v('VR_RELEASE_TOKEN');
+    return t != null && t.length >= 24 ? t : null;
+  }
+
+  /// Manifeste de l'application GPS publié avec chaque release (dernière version).
+  String get mobileManifestUrl =>
+      _v('VR_MOBILE_MANIFEST_URL') ?? 'https://github.com/$githubRepo/releases/latest/download/vigiroad-update.json';
+
   /// Désactive les collecteurs périodiques (tests).
   bool get backgroundJobs => _v('VR_BACKGROUND_JOBS') != 'off';
 

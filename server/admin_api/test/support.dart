@@ -12,6 +12,7 @@ import 'package:vigiroad_admin_api/admin_api.dart';
 const appKey = 'cle-application-test-1234567890';
 const setupToken = 'jeton-installation-test-abcdef';
 const ownerPassword = 'MotDePasseAdmin2026';
+const releaseToken = 'jeton-depot-ci-0123456789abcdef';
 
 /// Base de test (CI : service PostgreSQL ; en local : variables VR_TEST_DB_*).
 Map<String, String> testDbEnv() {
@@ -120,6 +121,8 @@ class TestApp {
       'VR_ARGON_MEMORY_KB': '1024',
       'VR_ARGON_ITERATIONS': '1',
       'VR_BACKGROUND_JOBS': 'off',
+      'VR_DESKTOP_DIR': Directory.systemTemp.createTempSync('vr_desktop').path,
+      'VR_RELEASE_TOKEN': releaseToken,
     };
     final config = AdminConfig(env);
     final admin = await Connection.open(
@@ -161,17 +164,20 @@ class TestApp {
     String? token,
     bool appKeyHeader = false,
     String ip = '203.0.113.7',
+    Map<String, String> headers = const {},
+    List<int>? bytes,
   }) async {
     final res = await api.handler(
       Request(
         method,
         Uri.parse('http://localhost$path'),
-        body: body == null ? null : jsonEncode(body),
+        body: bytes ?? (body == null ? null : jsonEncode(body)),
         headers: {
-          'content-type': 'application/json',
+          'content-type': bytes != null ? 'application/octet-stream' : 'application/json',
           'x-forwarded-for': ip,
           if (token != null) 'authorization': 'Bearer $token',
           if (appKeyHeader) 'x-api-key': appKey,
+          ...headers,
         },
       ),
     );

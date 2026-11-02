@@ -331,7 +331,6 @@ jobs:
     name: ADMIN MANAGER — Windows natif (.exe, installateur, test réel)
     runs-on: windows-latest
     timeout-minutes: 60
-    env:
     steps:
       - uses: actions/checkout@v5
       # Même version que l'application GPS publiée (pubspec.yaml racine).

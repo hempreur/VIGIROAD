@@ -1,0 +1,14 @@
+comptes avant restauration (avec test de charge) : 63
+vigiroad-20261102-014758.dump: OK
+▶ Sauvegarde de sécurité de la base actuelle
+▶ Arrêt de l'API d'administration
+ Container deploy-admin-api-1 Stopping 
+ Container deploy-admin-api-1 Stopped 
+▶ Restauration de vigiroad-20261102-014758.dump
+▶ Redémarrage
+ Container deploy-postgres-1 Waiting 
+ Container deploy-postgres-1 Healthy 
+ Container deploy-admin-api-1 Starting 
+ Container deploy-admin-api-1 Started 
+✅ Base restaurée depuis vigiroad-20261102-014758.dump
+comptes après restauration de la sauvegarde : 3

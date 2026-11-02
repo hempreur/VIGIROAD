@@ -1,0 +1,12 @@
+00:00 +0: loading test/agent_test.dart
+00:00 +0: test/agent_test.dart: lecture de /proc CPU : pourcentage entre deux mesures, par cœur
+00:00 +1: test/agent_test.dart: lecture de /proc mémoire, charge, disponibilité, températures, système
+00:00 +2: test/agent_test.dart: lecture de /proc réseau : interfaces physiques seulement
+00:00 +3: test/agent_test.dart: lecture de /proc processus (nom avec espace) et services reconnus
+00:01 +4: test/agent_test.dart: journaux Docker démultiplexés (stdout/stderr)
+00:01 +5: test/agent_test.dart: politique des conteneurs trafic : démarrer, arrêter, redémarrer
+00:01 +6: test/agent_test.dart: politique des conteneurs services d'accès : redémarrage seulement (jamais d'arrêt)
+00:01 +7: test/agent_test.dart: politique des conteneurs conteneurs d'un autre projet : aucune action
+00:01 +8: test/agent_test.dart: statistiques Docker : CPU et mémoire hors cache
+00:01 +9: test/agent_test.dart: demande de déploiement : fichier pour l'hôte, pas de double demande
+00:01 +10: All tests passed!

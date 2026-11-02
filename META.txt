@@ -1,0 +1,5 @@
+job=android
+sha=4f5815b9e2e2ab204cafcfae694b15d8ea8e8aff
+ref=refs/heads/feature/versions-control
+run=https://github.com/hempreur/VIGIROAD/actions/runs/41372255077
+status=success

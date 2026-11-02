@@ -109,46 +109,68 @@ Future<Map<String, String>?> editFields(
   Map<String, String> initial = const {},
   Set<String> obscure = const {},
   String action = 'Enregistrer',
-}) async {
-  final ctrls = {for (final k in fields.keys) k: TextEditingController(text: initial[k] ?? '')};
-  final r = await showDialog<Map<String, String>>(
-    context: context,
-    builder: (d) => AlertDialog(
-      title: Text(title),
-      content: SizedBox(
-        width: 460,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            for (final e in fields.entries)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: TextField(
-                  key: Key('field-${e.key}'),
-                  controller: ctrls[e.key],
-                  obscureText: obscure.contains(e.key),
-                  decoration: InputDecoration(labelText: e.value),
-                ),
-              ),
-          ],
-        ),
-      ),
-      actions: [
-        TextButton(onPressed: () => Navigator.pop(d), child: const Text('Annuler')),
-        VrButton(
-          label: action,
-          onPressed: () => Navigator.pop(d, {for (final e in ctrls.entries) e.key: e.value.text.trim()}),
-        ),
-      ],
-    ),
-  );
-  for (final c in ctrls.values) {
-    c.dispose();
-  }
-  return r;
+}) => showDialog<Map<String, String>>(
+  context: context,
+  builder: (d) => _FieldsDialog(title: title, fields: fields, initial: initial, obscure: obscure, action: action),
+);
+
+/// Les contrôleurs vivent avec la fenêtre : libérés seulement quand elle a
+/// fini de se fermer (sinon l'animation de fermeture les utiliserait encore).
+class _FieldsDialog extends StatefulWidget {
+  const _FieldsDialog({required this.title, required this.fields, required this.initial, required this.obscure, required this.action});
+
+  final String title;
+  final Map<String, String> fields;
+  final Map<String, String> initial;
+  final Set<String> obscure;
+  final String action;
+
+  @override
+  State<_FieldsDialog> createState() => _FieldsDialogState();
 }
 
-/// Affiche une valeur sensible à transmettre (code à usage unique…).
+class _FieldsDialogState extends State<_FieldsDialog> {
+  late final _ctrls = {for (final k in widget.fields.keys) k: TextEditingController(text: widget.initial[k] ?? '')};
+
+  @override
+  void dispose() {
+    for (final c in _ctrls.values) {
+      c.dispose();
+    }
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => AlertDialog(
+    title: Text(widget.title),
+    content: SizedBox(
+      width: 460,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          for (final e in widget.fields.entries)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: TextField(
+                key: Key('field-${e.key}'),
+                controller: _ctrls[e.key],
+                obscureText: widget.obscure.contains(e.key),
+                decoration: InputDecoration(labelText: e.value),
+              ),
+            ),
+        ],
+      ),
+    ),
+    actions: [
+      TextButton(onPressed: () => Navigator.pop(context), child: const Text('Annuler')),
+      VrButton(
+        label: widget.action,
+        onPressed: () => Navigator.pop(context, {for (final e in _ctrls.entries) e.key: e.value.text.trim()}),
+      ),
+    ],
+  );
+}
+
 Future<void> showSecret(BuildContext context, {required String title, required String value, required String help}) =>
     showDialog<void>(
       context: context,

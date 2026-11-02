@@ -1,0 +1,3 @@
+Migrations appliquées : 1, 2
+API d'administration VIGIROAD 1.7.0 : port 8081
+Création du premier administrateur possible (jeton d'installation).

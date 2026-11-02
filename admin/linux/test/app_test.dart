@@ -3,8 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:http/http.dart' as http;
-import 'package:http/testing.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vigiroad_admin_core/testing.dart';
 import 'package:vigiroad_admin_core/vigiroad_admin_core.dart';
@@ -68,7 +66,7 @@ Future<Harness> start(
   final updater = DesktopUpdater(
     appId: 'server-control',
     currentVersion: appVersion,
-    client: MockClient((_) async => http.Response('introuvable', 404)),
+    autoInstall: false,
   );
   await tester.pumpWidget(buildApp(session: session, updater: updater));
   await frames(tester);

@@ -245,9 +245,12 @@ jobs:
       PGHOST: localhost
       PGUSER: postgres
       PGPASSWORD: postgres
-      VERSION: 1.0.0
     steps:
       - uses: actions/checkout@v5
+      # Même version que l'application GPS publiée (pubspec.yaml racine).
+      - name: Version
+        shell: bash
+        run: echo "VERSION=$(sed -n 's/^version: *\([^+]*\).*/\1/p' pubspec.yaml)" >> "$GITHUB_ENV"
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
@@ -263,7 +266,7 @@ jobs:
         run: |
           set -o pipefail
           flutter pub get > /dev/null
-          flutter build linux --release 2>&1 | tail -20 | tee ../../ci-out/build_linux.log
+          flutter build linux --release --dart-define=VR_APP_VERSION=$VERSION 2>&1 | tail -20 | tee ../../ci-out/build_linux.log
           ls -la build/linux/x64/release/bundle | tee -a ../../ci-out/build_linux.log
       - name: Paquets .deb et AppImage
         run: |
@@ -328,9 +331,12 @@ jobs:
     runs-on: windows-latest
     timeout-minutes: 60
     env:
-      VERSION: 1.0.0
     steps:
       - uses: actions/checkout@v5
+      # Même version que l'application GPS publiée (pubspec.yaml racine).
+      - name: Version
+        shell: bash
+        run: echo "VERSION=$(sed -n 's/^version: *\([^+]*\).*/\1/p' pubspec.yaml)" >> "$GITHUB_ENV"
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
@@ -343,7 +349,7 @@ jobs:
           mkdir -p ../../ci-out ../../dist
           set -o pipefail
           flutter pub get > /dev/null
-          flutter build windows --release 2>&1 | tail -20 | tee ../../ci-out/build_windows.log
+          flutter build windows --release --dart-define=VR_APP_VERSION=$VERSION 2>&1 | tail -20 | tee ../../ci-out/build_windows.log
           ls -la build/windows/x64/runner/Release | tee -a ../../ci-out/build_windows.log
       - name: Installateur (Inno Setup) et version portable
         shell: pwsh
@@ -452,39 +458,48 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           path: artifacts
-      - name: Fichiers de la release et manifeste de mise à jour
+      - name: Dépôt privé sur le serveur VIGIROAD (jamais sur GitHub)
+        env:
+          VR_SERVER: ${{ secrets.VR_TRAFFIC_API_URL }}
+          VR_RELEASE_TOKEN: ${{ secrets.VR_RELEASE_TOKEN }}
         run: |
           set -euo pipefail
-          TAG="${GITHUB_REF_NAME#release/}"
           VER="$(sed -n 's/^version: *\([^+]*\).*/\1/p' pubspec.yaml)"
           mkdir -p out
           cp artifacts/vigiroad-server-control-linux/*.deb "out/vigiroad-$VER-server-control-amd64.deb"
           cp artifacts/vigiroad-server-control-linux/*.AppImage "out/vigiroad-$VER-server-control-x86_64.AppImage"
           cp artifacts/vigiroad-admin-manager-windows/*-Setup.exe "out/vigiroad-$VER-admin-manager-setup.exe"
           cp artifacts/vigiroad-admin-manager-windows/*-portable.zip "out/vigiroad-$VER-admin-manager-portable.zip"
-          python3 - "$TAG" "$GITHUB_REPOSITORY" "$VER" <<'PY'
-          import hashlib, json, re, sys
-          tag, repo, ver = sys.argv[1:4]
-          def version(p):
-              return re.search(r'^version:\s*([^+\s]+)', open(p).read(), re.M).group(1)
+          python3 - "$VER" <<'PY'
+          import hashlib, json, os, sys
+          ver = sys.argv[1]
           def f(name):
-              return {"url": f"https://github.com/{repo}/releases/download/{tag}/{name}",
-                      "sha256": hashlib.sha256(open(f"out/{name}", "rb").read()).hexdigest()}
-          notes = ["Comptes, appareils et sessions VIGIROAD", "Supervision temps réel du serveur", "Sauvegardes testées et journal d'audit"]
+              p = f"out/{name}"
+              return {"name": name, "sha256": hashlib.sha256(open(p, "rb").read()).hexdigest(), "size": os.path.getsize(p)}
+          notes = ["Mises à jour automatiques depuis votre serveur", "Page Versions : anciennes versions et blocage à distance"]
           manifest = {
-              "admin-manager": {"version": version("admin/windows/pubspec.yaml"), "notes": notes,
+              "admin-manager": {"version": ver, "notes": notes,
                                 "files": {"windows-installer": f(f"vigiroad-{ver}-admin-manager-setup.exe")}},
-              "server-control": {"version": version("admin/linux/pubspec.yaml"), "notes": notes,
+              "server-control": {"version": ver, "notes": notes,
                                  "files": {"deb": f(f"vigiroad-{ver}-server-control-amd64.deb"),
                                            "appimage": f(f"vigiroad-{ver}-server-control-x86_64.AppImage")}},
           }
-          json.dump(manifest, open("out/vigiroad-admin-update.json", "w"), ensure_ascii=False, indent=2)
+          json.dump(manifest, open("out/manifest.json", "w"), ensure_ascii=False, indent=2)
           print(json.dumps(manifest, ensure_ascii=False, indent=2))
           PY
           ls -la out
-          # La release est créée par le job Android (CI) : on l'attend.
-          for _ in $(seq 1 100); do
-            gh release view "$TAG" > /dev/null 2>&1 && break
-            sleep 30
+          if [ -z "${VR_SERVER:-}" ] || [ -z "${VR_RELEASE_TOKEN:-}" ]; then
+            echo "::warning::Secrets VR_TRAFFIC_API_URL / VR_RELEASE_TOKEN absents : applications de bureau gardées dans les artefacts de ce workflow, non déposées sur le serveur."
+            exit 0
+          fi
+          base="${VR_SERVER%/}"
+          # Fichiers d'abord, manifeste en dernier (le serveur vérifie les empreintes).
+          for f in out/vigiroad-*; do
+            curl -fsS --retry 3 --max-time 900 -X PUT -H "x-release-token: $VR_RELEASE_TOKEN" \
+              -H 'content-type: application/octet-stream' --data-binary "@$f" "$base/admin/releases/desktop/$(basename "$f")"
+            echo
           done
-          gh release upload "$TAG" out/* --clobber
+          curl -fsS --retry 3 -X PUT -H "x-release-token: $VR_RELEASE_TOKEN" -H 'content-type: application/json' \
+            --data-binary @out/manifest.json "$base/admin/releases/desktop/manifest.json"
+          echo
+          curl -fsS "$base/admin/desktop/manifest" | python3 -m json.tool

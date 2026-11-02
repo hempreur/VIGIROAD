@@ -11,6 +11,7 @@ export 'src/pages/admin_pages.dart';
 export 'src/pages/common.dart';
 export 'src/pages/server_pages.dart';
 export 'src/pages/user_pages.dart';
+export 'src/pages/versions_page.dart';
 export 'src/shell/shell.dart';
 export 'src/theme.dart';
 export 'src/update/updater.dart';

@@ -331,6 +331,28 @@ class FakeAdminBackend {
         };
       case ('GET', '/admin/errors'):
         return {'internal': [], 'sources': [{'source': 'gb-tfl', 'error': 'clé absente', 'lastAttempt': _ago(const Duration(minutes: 2))}], 'backups': [], 'failedLogins': [], 'requestErrors': []};
+      case ('GET', '/admin/app/versions'):
+        return {
+          'policy': {
+            'blocked': false,
+            'message': 'VIGIROAD est temporairement suspendu.',
+            'manualMinBuild': 0,
+            'forceLatest': true,
+            'minBuild': 13,
+            'latest': {'version': '1.7.0', 'build': 13, 'minBuild': 13, 'checkedAt': _ago(const Duration(minutes: 4))},
+          },
+          'desktop': {'admin-manager': '1.7.0', 'server-control': '1.7.0'},
+          'counts': {'last24h': 3, 'last7d': 11},
+          'events': [
+            {'id': 3, 'at': _ago(const Duration(minutes: 6)), 'app': 'gps', 'platform': 'android', 'version': '1.6.0', 'build': 12, 'status': 'outdated', 'required': '1.7.0', 'source': 'app', 'model': 'Xiaomi Redmi Note 13', 'os': 'android 14', 'ipPrefix': '86.242.18.0/24', 'country': 'FR', 'pseudonym': 'Camille_75'},
+            {'id': 2, 'at': _ago(const Duration(minutes: 31)), 'app': 'gps', 'platform': 'inconnu', 'version': '1.6 ou antérieure', 'build': null, 'status': 'outdated', 'required': '1.7.0', 'source': 'traffic', 'ipPrefix': '78.193.4.0/24', 'country': 'BE'},
+            {'id': 1, 'at': _ago(const Duration(hours: 3)), 'app': 'admin-manager', 'platform': 'windows', 'version': '1.6.0', 'build': null, 'status': 'outdated', 'required': '1.7.0', 'source': 'admin', 'ipPrefix': '90.12.4.0/24', 'country': 'FR', 'adminEmail': 'support@vigiroad.fr'},
+          ],
+          'inUse': [
+            {'app': 'gps', 'platform': 'android', 'version': '1.7.0', 'build': 13, 'checks': 214, 'lastDay': _ago(Duration.zero)},
+            {'app': 'gps', 'platform': 'ios', 'version': '1.7.0', 'build': 13, 'checks': 38, 'lastDay': _ago(Duration.zero)},
+          ],
+        };
       case ('GET', '/admin/audit'):
         return {
           'total': 2,

@@ -37,24 +37,38 @@ Opérateur serveur, Lecture seule) ; chacun active sa double authentification à
 
 ## 3. VIGIROAD ADMIN MANAGER (Windows)
 
-Télécharger depuis la dernière [release](https://github.com/hempreur/VIGIROAD/releases/latest) :
+Les applications d'administration **ne sont pas publiées sur GitHub** (1.7) : la CI les dépose
+sur votre serveur, qui ne les remet qu'à un administrateur connecté.
 
-- `vigiroad-<version>-admin-manager-setup.exe` — installateur (raccourcis Bureau et menu Démarrer,
-  sans droits administrateur par défaut) ;
-- ou `vigiroad-<version>-admin-manager-portable.zip` — sans installation.
+**Une seule fois** : copier la valeur `VR_RELEASE_TOKEN` affichée par `install.sh` (ou
+`sudo grep VR_RELEASE_TOKEN /opt/vigiroad/server/deploy/.env`) dans le secret GitHub du même nom
+(Settings → Secrets and variables → Actions). Chaque release dépose alors les fichiers dans
+`/opt/vigiroad/desktop` sur le VPS.
+
+Première installation sur un PC Windows (PowerShell, avec votre accès SSH) :
+
+```powershell
+scp ubuntu@<ip-du-vps>:/opt/vigiroad/desktop/vigiroad-*-admin-manager-setup.exe .
+```
+
+(le dossier n'est lisible que par root : `sudo cp /opt/vigiroad/desktop/vigiroad-*-setup.exe ~ && sudo chown ubuntu ~/vigiroad-*-setup.exe`
+sur le VPS avant le `scp`). L'installateur crée les raccourcis Bureau et menu Démarrer, sans droits
+administrateur.
 
 Windows SmartScreen peut avertir au premier lancement (« Informations complémentaires » →
 « Exécuter quand même ») tant que l'installateur n'est pas signé par un certificat de signature de code.
 
-Les mises à jour sont proposées dans l'application (bandeau « Mettre à jour maintenant ») :
-le fichier est vérifié (SHA-256) puis installé silencieusement.
+**Mises à jour automatiques** : vérifiées à la connexion puis toutes les 15 minutes ; une version
+plus récente est téléchargée depuis votre serveur, vérifiée (SHA-256), installée sans clic, puis
+l'application redémarre. Une version antérieure à la dernière déposée est refusée par le serveur
+(et la mise à jour s'installe aussitôt).
 
 ## 4. VIGIROAD SERVER CONTROL (Linux)
 
 Sur un poste Ubuntu/Debian :
 
 ```bash
-sudo apt install ./vigiroad-<version>-server-control-amd64.deb
+sudo apt install ./vigiroad-<version>-server-control-amd64.deb   # copié depuis /opt/vigiroad/desktop du VPS
 ```
 
 ou rendre exécutable l'AppImage (`chmod +x`, puis double-clic). L'application apparaît dans le menu

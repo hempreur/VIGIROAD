@@ -423,16 +423,22 @@ class _UpdateBanner extends StatelessWidget {
         const Icon(Icons.rocket_launch_rounded, color: VrColors.cyan),
         const SizedBox(width: 12),
         Expanded(
-          child: Text(
-            'Nouvelle version ${update.version} disponible (installée : ${updater.currentVersion}). ${update.notes.take(2).join(' · ')}',
-            style: VrText.body,
+          child: ValueListenableBuilder(
+            valueListenable: updater.error,
+            builder: (context, err, _) => Text(
+              err == null
+                  ? 'Version ${update.version} en cours d\'installation automatique (installée : ${updater.currentVersion}). '
+                        'L\'application redémarrera toute seule.'
+                  : 'Mise à jour ${update.version} : $err',
+              style: VrText.body.copyWith(color: err == null ? null : VrColors.critical),
+            ),
           ),
         ),
         ValueListenableBuilder(
           valueListenable: updater.progress,
           builder: (context, p, _) => p == null
               ? VrButton(
-                  label: 'Mettre à jour maintenant',
+                  label: 'Réessayer',
                   icon: Icons.system_update_alt_rounded,
                   onPressed: () => unawaited(updater.install(update).catchError((Object e) {
                     if (context.mounted) notify(context, '$e', health: Health.critical);

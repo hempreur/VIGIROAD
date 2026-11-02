@@ -16,6 +16,7 @@ enum LiveState { off, connecting, live, offline }
 class AdminSession extends ChangeNotifier {
   AdminSession({
     required this.clientName,
+    this.appTag,
     http.Client Function()? httpFactory,
     this.inactivity = const Duration(minutes: 30),
     DateTime Function()? clock,
@@ -24,6 +25,13 @@ class AdminSession extends ChangeNotifier {
 
   /// « windows » / « linux » (journal des connexions).
   final String clientName;
+
+  /// « admin-manager/1.7.0 » : version envoyée au serveur.
+  final String? appTag;
+
+  /// Version refusée par le serveur : mise à jour à installer (écoutée par
+  /// le système de mise à jour automatique).
+  final requiredUpdate = ValueNotifier<Map<String, dynamic>?>(null);
   final http.Client Function()? _httpFactory;
   final Duration inactivity;
   final DateTime Function() _now;
@@ -98,7 +106,8 @@ class AdminSession extends ChangeNotifier {
     await _run(() async {
       final url = AdminClient.parseServer(input);
       if (url == null) throw const ApiException(0, 'Adresse du serveur invalide');
-      final c = AdminClient(url, client: _httpFactory?.call());
+      final c = AdminClient(url, client: _httpFactory?.call(), appTag: appTag)
+        ..onUpdateRequired = (u) => requiredUpdate.value = u;
       final health = await c.get('/admin/health');
       if (health['status'] != 'ok') throw const ApiException(0, 'Ce serveur n\'est pas une API VIGIROAD');
       final setup = await c.get('/admin/setup');

@@ -6,11 +6,16 @@ import 'package:http/http.dart' as http;
 
 /// Erreur renvoyée par l'API (ou réseau : [status] = 0).
 class ApiException implements Exception {
-  const ApiException(this.status, this.message, {this.code});
+  const ApiException(this.status, this.message, {this.code, this.details});
 
   final int status;
   final String message;
   final String? code;
+
+  /// Corps complet de la réponse (ex. mise à jour à installer pour un 426).
+  final Map<String, dynamic>? details;
+
+  bool get updateRequired => status == 426;
 
   bool get isNetwork => status == 0;
   bool get isAuth => status == 401;
@@ -22,7 +27,7 @@ class ApiException implements Exception {
 /// Client HTTPS de l'API d'administration. Le HTTP en clair n'est accepté
 /// que pour l'ordinateur local (tunnel SSH, tests).
 class AdminClient {
-  AdminClient(this.baseUrl, {http.Client? client, this.timeout = const Duration(seconds: 30)})
+  AdminClient(this.baseUrl, {http.Client? client, this.timeout = const Duration(seconds: 30), this.appTag})
     : _http = client ?? http.Client() {
     if (!isAllowedUrl(baseUrl)) {
       throw const ApiException(0, 'Adresse refusée : HTTPS obligatoire (sauf ordinateur local)', code: 'insecure');
@@ -36,6 +41,19 @@ class AdminClient {
 
   /// Appelé quand la session n'est plus valide (expiration, révocation).
   void Function(ApiException e)? onUnauthorized;
+
+  /// Application et version (« admin-manager/1.7.0 ») : le serveur refuse
+  /// (426) une version antérieure à la dernière déposée.
+  final String? appTag;
+
+  /// Version refusée : mise à jour à installer (fichiers, empreintes, liens).
+  void Function(Map<String, dynamic> update)? onUpdateRequired;
+
+  /// Adresse absolue d'un chemin de l'API (téléchargements).
+  Uri resolve(String pathAndQuery) => baseUrl.resolve(pathAndQuery);
+
+  /// Client HTTP sous-jacent (téléchargements en flux).
+  http.Client get httpClient => _http;
 
   static bool isAllowedUrl(Uri u) =>
       u.scheme == 'https' || (u.scheme == 'http' && (u.host == 'localhost' || u.host == '127.0.0.1' || u.host == '::1'));
@@ -62,6 +80,7 @@ class AdminClient {
     'content-type': 'application/json',
     'accept': 'application/json',
     if (token != null) 'authorization': 'Bearer $token',
+    'x-vigiroad-app': ?appTag,
   };
 
   Future<dynamic> _send(String method, String path, {Object? body, Map<String, String>? query, bool raw = false}) async {
@@ -83,13 +102,18 @@ class AdminClient {
     if (res.statusCode >= 400) {
       var message = 'Erreur ${res.statusCode}';
       String? code;
+      Map<String, dynamic>? details;
       try {
         final j = jsonDecode(text) as Map<String, dynamic>;
         message = j['error'] as String? ?? message;
         code = j['code'] as String?;
+        details = j;
       } catch (_) {}
-      final e = ApiException(res.statusCode, message, code: code);
+      final e = ApiException(res.statusCode, message, code: code, details: details);
       if (res.statusCode == 401 && token != null && !path.startsWith('/admin/auth/')) onUnauthorized?.call(e);
+      if (res.statusCode == 426 && details?['update'] is Map<String, dynamic>) {
+        onUpdateRequired?.call(details!['update'] as Map<String, dynamic>);
+      }
       throw e;
     }
     if (raw) return text;

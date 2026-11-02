@@ -13,7 +13,6 @@ set -euo pipefail
 [ "$(id -u)" = 0 ] || { echo "Lancez ce script en root (sudo bash install-desktop.sh)."; exit 1; }
 say() { printf '\n\033[1;36m▶ %s\033[0m\n' "$*"; }
 USER_NAME=${VR_DESKTOP_USER:-vigiroad}
-REPO=hempreur/VIGIROAD
 
 say "Vérification des ressources"
 mem_mb=$(awk '/MemTotal/ {print int($2/1024)}' /proc/meminfo)
@@ -72,10 +71,11 @@ echo "xfce4-session" > "$HOME_DIR/.xsession"
 chown "$USER_NAME:$USER_NAME" "$HOME_DIR/.xsession"
 
 say "Application VIGIROAD SERVER CONTROL"
-URL=$(curl -fsSL "https://api.github.com/repos/$REPO/releases/latest" \
-  | grep -o '"browser_download_url": *"[^"]*-server-control-amd64\.deb"' | head -1 | cut -d'"' -f4 || true)
-if [ -n "$URL" ]; then
-  curl -fsSL "$URL" -o /tmp/vigiroad-server-control.deb
+# Applications d'administration : déposées par la CI sur ce serveur
+# (/opt/vigiroad/desktop), jamais publiées sur GitHub.
+DEB=$(ls -1t /opt/vigiroad/desktop/vigiroad-*-server-control-amd64.deb 2> /dev/null | head -1 || true)
+if [ -n "$DEB" ]; then
+  cp "$DEB" /tmp/vigiroad-server-control.deb
   apt-get install -y -qq /tmp/vigiroad-server-control.deb > /dev/null
   rm -f /tmp/vigiroad-server-control.deb
   mkdir -p "$HOME_DIR/Desktop" "$HOME_DIR/Bureau"
@@ -86,7 +86,7 @@ if [ -n "$URL" ]; then
   chown -R "$USER_NAME:$USER_NAME" "$HOME_DIR/Desktop" "$HOME_DIR/Bureau"
   echo "Installée : $(dpkg-query -W -f='${Version}' vigiroad-server-control)"
 else
-  echo "Aucun paquet publié pour le moment : relancez ce script après la prochaine version."
+  echo "Aucune application déposée sur ce serveur pour le moment (secret GitHub VR_RELEASE_TOKEN à configurer) : relancez ce script après la prochaine version."
 fi
 
 DOMAIN=$(grep -s '^VR_DOMAIN=' /opt/vigiroad/server/deploy/.domain | cut -d= -f2 || true)

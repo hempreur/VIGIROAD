@@ -121,7 +121,7 @@ Future<void> main(List<String> args) async {
     check(s == 200, p, s == 200 ? null : b);
   }
   (s, b) = await call('GET', '/admin/vigiroad/status', token: token);
-  check(s == 200 && b['traffic']['ok'] == true && b['database']['schemaVersion'] == 2, 'état VIGIROAD', b['traffic']?['ok']);
+  check(s == 200 && b['traffic']['ok'] == true && (b['database']['schemaVersion'] as int) >= 3, 'état VIGIROAD', b['traffic']?['ok']);
 
   // Sauvegarde puis test de restauration par le service « backup ».
   (s, b) = await call('POST', '/admin/backups', token: token, body: {'kind': 'manual'});

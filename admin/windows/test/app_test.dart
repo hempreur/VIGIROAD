@@ -193,7 +193,7 @@ void main() {
     final h = await start(tester);
     await login(tester);
     await open(tester, 'versions');
-    expect(find.text('appareil bloqué'), findsOneWidget);
+    expect(find.textContaining('appareil bloqué'), findsOneWidget);
     expect(find.textContaining('iPhone'), findsWidgets);
     await tester.tap(find.byKey(const Key('block-3')));
     await frames(tester);

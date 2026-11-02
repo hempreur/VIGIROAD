@@ -1,0 +1,5 @@
+job=quality
+sha=6f7ce6018ab8e7c6a03754973abe854d5adae36a
+ref=refs/heads/fix/versions-devices
+run=https://github.com/hempreur/VIGIROAD/actions/runs/41386616904
+status=success

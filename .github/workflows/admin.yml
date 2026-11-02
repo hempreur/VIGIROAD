@@ -63,7 +63,7 @@ jobs:
           set -o pipefail
           createdb vigiroad_sql
           psql -q -v ON_ERROR_STOP=1 -d vigiroad_sql -c 'CREATE TABLE schema_migrations (version integer PRIMARY KEY, name text NOT NULL, applied_at timestamptz NOT NULL DEFAULT now())' \
-            -f server/database/migrations/001_init.sql
+            $(for f in server/database/migrations/*.sql; do printf -- '-f %s ' "$f"; done)
           python3 server/database/tools/check_sql.py "dbname=vigiroad_sql" server/admin_api/lib/src/*.dart 2>&1 | tee ci-out/sql_check.log
 
       # Pile complète comme sur le VPS (certificat local au lieu de Let's Encrypt).

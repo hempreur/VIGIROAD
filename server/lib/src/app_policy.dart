@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:crypto/crypto.dart' as c;
 import 'package:http/http.dart' as http;
 import 'package:shelf/shelf.dart';
 
@@ -20,7 +21,7 @@ class AppPolicyClient {
     required this.adminUrl,
     required this.apiKey,
     http.Client? client,
-    this.refreshEvery = const Duration(seconds: 60),
+    this.refreshEvery = const Duration(seconds: 15),
     this.staleAfter = const Duration(minutes: 15),
     DateTime Function()? clock,
   }) : _http = client ?? http.Client(),
@@ -36,6 +37,9 @@ class AppPolicyClient {
 
   int minBuild = 0;
   bool blocked = false;
+
+  /// Empreintes des installations bloquées depuis ADMIN MANAGER.
+  Set<String> blockedInstalls = {};
   String? message;
   DateTime? loadedAt;
   final _reported = <String, DateTime>{};
@@ -56,25 +60,38 @@ class AppPolicyClient {
           .timeout(const Duration(seconds: 10));
       if (r.statusCode != 200) return;
       final j = jsonDecode(r.body) as Map<String, dynamic>;
-      apply(minBuild: (j['minBuild'] as num?)?.toInt() ?? 0, blocked: j['blocked'] == true, message: j['message'] as String?);
+      apply(
+        minBuild: (j['minBuild'] as num?)?.toInt() ?? 0,
+        blocked: j['blocked'] == true,
+        message: j['message'] as String?,
+        blockedInstalls: {...((j['blockedInstalls'] as List<dynamic>?) ?? const []).cast<String>()},
+      );
     } on Object catch (e) {
       stderr.writeln('Règle de version indisponible : $e');
     }
   }
 
-  void apply({required int minBuild, required bool blocked, String? message}) {
+  void apply({required int minBuild, required bool blocked, String? message, Set<String> blockedInstalls = const {}}) {
     this.minBuild = minBuild;
     this.blocked = blocked;
+    this.blockedInstalls = blockedInstalls;
     this.message = message;
     loadedAt = _clock();
   }
+
+  /// Même empreinte que l'API d'administration.
+  static String installHash(String id) => c.sha256.convert(utf8.encode('vigiroad-install:$id')).toString();
 
   /// `null` si la requête est acceptée, sinon la réponse 426 à renvoyer.
   Response? check(Request req, String client) {
     if (!active) return null;
     final build = int.tryParse(req.headers['x-app-build'] ?? '');
+    final install = req.headers['x-app-install'];
+    final deviceBlocked = install != null &&
+        RegExp(r'^[0-9a-f]{16,64}$').hasMatch(install) &&
+        blockedInstalls.contains(installHash(install));
     final String status;
-    if (blocked) {
+    if (blocked || deviceBlocked) {
       status = 'blocked';
     } else if (build == null || build < minBuild) {
       status = 'outdated';
@@ -85,7 +102,9 @@ class AppPolicyClient {
     return Response(
       426,
       body: jsonEncode({
-        'error': status == 'blocked'
+        'error': deviceBlocked
+            ? 'Cet appareil a été bloqué par l\'administrateur VIGIROAD.'
+            : status == 'blocked'
             ? (message ?? 'VIGIROAD est temporairement suspendu.')
             : 'Version de VIGIROAD obsolète : installez la dernière version.',
         'code': status == 'blocked' ? 'app_blocked' : 'update_required',
@@ -111,6 +130,7 @@ class AppPolicyClient {
               'version': req.headers['x-app-version'] ?? '1.6 ou antérieure',
               'build': build,
               'status': status,
+              'install': ?req.headers['x-app-install'],
             }),
           )
           .timeout(const Duration(seconds: 10))

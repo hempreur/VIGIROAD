@@ -104,6 +104,8 @@ class ReleaseService {
     r.post('/v1/app/rejected', (req, _) => _rejected(req));
     r.get('/admin/app/versions', (req, _) => _versions(req));
     r.put('/admin/app/policy', (req, _) => _putPolicy(req));
+    r.post('/admin/app/devices/:hash/block', (req, p) => _blockDevice(req, p['hash']!));
+    r.delete('/admin/app/devices/:hash', (req, p) => _unblockDevice(req, p['hash']!));
     r.put('/admin/releases/desktop/:name', (req, p) => _upload(req, p['name']!));
     r.get('/admin/desktop/manifest', (req, _) => _desktopManifest(req));
     r.get('/admin/desktop/files/:name', (req, p) => _download(req, p['name']!));
@@ -165,8 +167,12 @@ class ReleaseService {
     final platform = (b.str('platform', max: 16) ?? 'inconnu').toLowerCase();
     final version = b.str('version', max: 32) ?? 'inconnue';
     final build = b.number('build')?.toInt();
+    final install = installHash(b.str('install', max: 64));
     final p = await policy();
-    final status = p.statusFor(build);
+    final deviceBlock = install == null
+        ? null
+        : await db.one('SELECT reason FROM blocked_installs WHERE install_hash = @h', {'h': install});
+    final status = deviceBlock != null ? 'blocked' : p.statusFor(build);
     final ip = clientIp(req);
     if (status == 'ok') {
       await db.exec(
@@ -192,6 +198,7 @@ class ReleaseService {
         model: b.str('model', max: 80),
         os: b.str('os', max: 80),
         ip: ip,
+        installHash: install,
       );
     }
     return jsonOk({
@@ -200,7 +207,10 @@ class ReleaseService {
         'outdated' => 'update_required',
         _ => 'ok',
       },
+      'scope': deviceBlock != null ? 'device' : (status == 'blocked' ? 'all' : null),
       'message': switch (status) {
+        'blocked' when deviceBlock != null =>
+          'Cet appareil a été bloqué par l\'administrateur VIGIROAD.${deviceBlock['reason'] == null ? '' : ' ${deviceBlock['reason']}'}',
         'blocked' => p.message,
         'outdated' => 'Cette version de VIGIROAD n\'est plus utilisable : installez la dernière version.',
         _ => null,
@@ -224,12 +234,14 @@ class ReleaseService {
     String? model,
     String? os,
     String? ip,
+    String? installHash,
   }) async {
     try {
       await db.exec(
-        'INSERT INTO app_version_events (app, platform, version, build, status, required, source, user_id, admin_id, model, os, ip_prefix, country) '
-        'VALUES (@app, @p, @v, @b, @s, @r, @src, CAST(@u AS uuid), CAST(@a AS uuid), @m, @os, @ip, @c)',
+        'INSERT INTO app_version_events (app, platform, version, build, status, required, source, user_id, admin_id, model, os, ip_prefix, country, install_hash) '
+        'VALUES (@app, @p, @v, @b, @s, @r, @src, CAST(@u AS uuid), CAST(@a AS uuid), @m, @os, @ip, @c, @ih)',
         {
+          'ih': installHash,
           'app': app,
           'p': platform,
           'v': version,
@@ -254,7 +266,14 @@ class ReleaseService {
   Future<Response> _policyForTraffic(Request req) async {
     _requireAppKey(req);
     final p = await policy();
-    return jsonOk({'blocked': p.blocked, 'message': p.message, 'minBuild': p.minBuild, 'latest': p.latestVersion});
+    final devices = await db.query('SELECT install_hash FROM blocked_installs');
+    return jsonOk({
+      'blocked': p.blocked,
+      'message': p.message,
+      'minBuild': p.minBuild,
+      'latest': p.latestVersion,
+      'blockedInstalls': [for (final d in devices) d['install_hash']],
+    });
   }
 
   /// Requête d'une ancienne application refusée par le serveur de trafic.
@@ -270,6 +289,7 @@ class ReleaseService {
       required: (await policy()).latestVersion,
       source: 'traffic',
       ip: clientIp(req),
+      installHash: installHash(b.str('install', max: 64)),
     );
     return jsonOk({'ok': true});
   }
@@ -279,8 +299,9 @@ class ReleaseService {
     final limit = (int.tryParse(req.url.queryParameters['limit'] ?? '') ?? 200).clamp(1, 1000);
     final events = await db.query(
       'SELECT e.id, e.at, e.app, e.platform, e.version, e.build, e.status, e.required, e.source, e.model, e.os, '
-      'e.ip_prefix, e.country, u.pseudonym, a.email AS admin_email '
+      'e.ip_prefix, e.country, e.install_hash, (bi.install_hash IS NOT NULL) AS device_blocked, u.pseudonym, a.email AS admin_email '
       'FROM app_version_events e LEFT JOIN users u ON u.id = e.user_id LEFT JOIN admin_accounts a ON a.id = e.admin_id '
+      'LEFT JOIN blocked_installs bi ON bi.install_hash = e.install_hash '
       'ORDER BY e.at DESC LIMIT @l',
       {'l': limit},
     );
@@ -293,8 +314,13 @@ class ReleaseService {
       SELECT (SELECT count(*) FROM app_version_events WHERE at > now() - interval '24 hours') AS last24h,
              (SELECT count(*) FROM app_version_events WHERE at > now() - interval '7 days') AS last7d
     ''');
+    final blockedDevices = await db.query(
+      'SELECT b.install_hash, b.reason, b.platform, b.model, b.version, b.blocked_at, a.email AS blocked_by '
+      'FROM blocked_installs b LEFT JOIN admin_accounts a ON a.id = b.blocked_by ORDER BY b.blocked_at DESC',
+    );
     return jsonOk({
       'policy': (await policy()).toJson(),
+      'blockedDevices': blockedDevices.map(jsonRow).toList(),
       'desktop': _desktopLatest(),
       'events': events.map(jsonRow).toList(),
       'inUse': summary.map(jsonRow).toList(),
@@ -321,6 +347,43 @@ class ReleaseService {
     }
     await ctx.audit(a, changed['app.blocked'] == true ? 'app.block' : 'app.policy', details: changed);
     return jsonOk({'policy': (await policy()).toJson()});
+  }
+
+  /// Empreinte d'un identifiant d'installation (aléatoire, envoyé par
+  /// l'application) ; null si absent ou mal formé.
+  static String? installHash(String? id) {
+    if (id == null || !RegExp(r'^[0-9a-f]{16,64}$').hasMatch(id)) return null;
+    return sha256Hex('vigiroad-install:$id');
+  }
+
+  static final _hash = RegExp(r'^[0-9a-f]{64}$');
+
+  /// Blocage d'un appareil vu dans le journal (empreinte de son installation).
+  Future<Response> _blockDevice(Request req, String hash) async {
+    final a = await auth.authenticate(req, Perm.settings);
+    if (!_hash.hasMatch(hash)) throw ApiError.badRequest('Appareil inconnu');
+    final b = await readJson(req);
+    final last = await db.one(
+      'SELECT platform, model, version FROM app_version_events WHERE install_hash = @h ORDER BY at DESC LIMIT 1',
+      {'h': hash},
+    );
+    if (last == null) throw ApiError.notFound;
+    await db.exec(
+      'INSERT INTO blocked_installs (install_hash, reason, platform, model, version, blocked_by) '
+      'VALUES (@h, @r, @p, @m, @v, CAST(@a AS uuid)) ON CONFLICT (install_hash) DO UPDATE SET reason = EXCLUDED.reason',
+      {'h': hash, 'r': b.str('reason', max: 300), 'p': last['platform'], 'm': last['model'], 'v': last['version'], 'a': a.id},
+    );
+    await ctx.audit(a, 'app.device_block', targetType: 'install', targetId: hash.substring(0, 12), details: {'model': last['model']});
+    return jsonOk({'blocked': true});
+  }
+
+  Future<Response> _unblockDevice(Request req, String hash) async {
+    final a = await auth.authenticate(req, Perm.settings);
+    if (!_hash.hasMatch(hash)) throw ApiError.badRequest('Appareil inconnu');
+    final n = await db.exec('DELETE FROM blocked_installs WHERE install_hash = @h', {'h': hash});
+    if (n == 0) throw ApiError.notFound;
+    await ctx.audit(a, 'app.device_unblock', targetType: 'install', targetId: hash.substring(0, 12));
+    return jsonOk({'blocked': false});
   }
 
   Future<void> _setSetting(String key, Object? value, String? adminId) => db.exec(

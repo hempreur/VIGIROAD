@@ -30,6 +30,37 @@ class _VersionsPageState extends State<VersionsPage> {
     _ => '$a',
   };
 
+  static String _platform(Object? p) => switch (p) {
+    'android' => 'Android',
+    'ios' => 'iPhone',
+    'windows' => 'Windows',
+    'linux' => 'Linux',
+    _ => 'Android ou iPhone (≤ 1.6)',
+  };
+
+  Future<void> _blockDevice(BuildContext context, Map<String, dynamic> e) async {
+    final values = await editFields(
+      context,
+      title: 'Bloquer cet appareil (${e['model'] ?? _platform(e['platform'])})',
+      fields: const {'reason': 'Motif affiché sur l\'appareil (facultatif)'},
+      action: 'Bloquer l\'appareil',
+    );
+    if (values == null || !context.mounted) return;
+    final s = SessionScope.read(context);
+    final r = await runAction(
+      context,
+      () => s.api.post('/admin/app/devices/${e['installHash']}/block', {if (values['reason']!.isNotEmpty) 'reason': values['reason']}),
+      success: 'Appareil bloqué : il ne peut plus utiliser VIGIROAD',
+    );
+    if (r != null && mounted) setState(() => _gen++);
+  }
+
+  Future<void> _unblockDevice(BuildContext context, String hash) async {
+    final s = SessionScope.read(context);
+    final r = await runAction(context, () => s.api.delete('/admin/app/devices/$hash'), success: 'Appareil débloqué');
+    if (r != null && mounted) setState(() => _gen++);
+  }
+
   static String _source(Object? s) => switch (s) {
     'traffic' => 'données refusées',
     'admin' => 'connexion refusée',
@@ -203,6 +234,7 @@ class _VersionsPageState extends State<VersionsPage> {
                       VrColumn('Utilisateur', flex: 2),
                       VrColumn('Origine', flex: 2),
                       VrColumn('Lieu', flex: 2),
+                      VrColumn('Action', flex: 2),
                     ],
                     rows: [
                       for (final e in listOf(d['events']))
@@ -211,10 +243,61 @@ class _VersionsPageState extends State<VersionsPage> {
                           CellText(_app(e['app'])),
                           CellText('${e['version']}${e['build'] == null ? '' : ' (${e['build']})'} → ${e['required'] ?? '?'}', mono: true),
                           StatusPill(e['status'] == 'blocked' ? 'bloquée' : 'obsolète', e['status'] == 'blocked' ? Health.critical : Health.warning),
-                          CellText([e['platform'], e['model'], e['os']].where((v) => v != null && '$v'.isNotEmpty).join(' · ')),
+                          CellText(
+                            [_platform(e['platform']), e['model'], e['os']].where((v) => v != null && '$v'.isNotEmpty).join(' · '),
+                          ),
                           CellText('${e['pseudonym'] ?? e['adminEmail'] ?? 'anonyme'}', muted: e['pseudonym'] == null && e['adminEmail'] == null),
                           CellText(_source(e['source']), muted: true),
                           CellText('${e['country'] ?? '?'} · ${e['ipPrefix'] ?? ''}', muted: true, mono: true),
+                          if (e['deviceBlocked'] == true)
+                            const Align(alignment: Alignment.centerLeft, child: StatusPill('appareil bloqué', Health.critical))
+                          else if (e['installHash'] != null && e['app'] == 'gps')
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: TextButton.icon(
+                                key: Key('block-${e['id']}'),
+                                onPressed: canEdit ? () => unawaited(_blockDevice(context, e)) : null,
+                                icon: const Icon(Icons.phonelink_lock_rounded, size: 16),
+                                label: const Text('Bloquer'),
+                                style: TextButton.styleFrom(foregroundColor: VrColors.critical),
+                              ),
+                            )
+                          else
+                            const CellText('non identifiable', muted: true),
+                        ],
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Panel(
+                  title: 'Appareils bloqués',
+                  padding: const EdgeInsets.all(8),
+                  child: VrTable(
+                    empty: 'Aucun appareil bloqué',
+                    columns: const [
+                      VrColumn('Appareil', flex: 3),
+                      VrColumn('Version', flex: 2),
+                      VrColumn('Motif', flex: 3),
+                      VrColumn('Bloqué le', flex: 2),
+                      VrColumn('Par', flex: 2),
+                      VrColumn('Action', flex: 2),
+                    ],
+                    rows: [
+                      for (final b in listOf(d['blockedDevices']))
+                        [
+                          CellText([_platform(b['platform']), b['model']].where((v) => v != null).join(' · ')),
+                          CellText('${b['version'] ?? '?'}', mono: true),
+                          CellText('${b['reason'] ?? '—'}', muted: b['reason'] == null),
+                          CellText(Fmt.dateTime(b['blockedAt'])),
+                          CellText('${b['blockedBy'] ?? '—'}', muted: true),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: TextButton.icon(
+                              onPressed: canEdit ? () => unawaited(_unblockDevice(context, b['installHash'] as String)) : null,
+                              icon: const Icon(Icons.lock_open_rounded, size: 16),
+                              label: const Text('Débloquer'),
+                            ),
+                          ),
                         ],
                     ],
                   ),
@@ -235,7 +318,7 @@ class _VersionsPageState extends State<VersionsPage> {
                       for (final v in listOf(d['inUse']))
                         [
                           CellText('${v['version']} (${v['build']})', mono: true),
-                          CellText('${v['platform']}'),
+                          CellText(_platform(v['platform'])),
                           CellText(Fmt.number(v['checks'] as num?)),
                           CellText(Fmt.date(v['lastDay'])),
                         ],

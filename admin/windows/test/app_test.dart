@@ -189,6 +189,21 @@ void main() {
     await h.close(tester);
   });
 
+  testWidgets('versions : bloquer un appareil vu dans les tentatives', (tester) async {
+    final h = await start(tester);
+    await login(tester);
+    await open(tester, 'versions');
+    expect(find.textContaining('appareil bloqué'), findsOneWidget);
+    expect(find.textContaining('iPhone'), findsWidgets);
+    await tester.tap(find.byKey(const Key('block-3')));
+    await frames(tester);
+    await tester.enterText(find.byKey(const Key('field-reason')), 'Abus');
+    await tester.tap(find.text('Bloquer l\'appareil'));
+    await frames(tester, 6);
+    expect(h.backend.requests.where((r) => r.endsWith('/admin/app/devices/${'ab' * 32}/block')), hasLength(1));
+    await h.close(tester);
+  });
+
   testWidgets('alertes critiques notifiées en temps réel', (tester) async {
     final h = await start(tester);
     await login(tester);

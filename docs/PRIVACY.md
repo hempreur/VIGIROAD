@@ -67,3 +67,9 @@ téléchargement, GitHub voit l'adresse IP du téléphone.
 - Les signalements des autres conducteurs sont demandés pour une zone d'environ 30 km autour de la position, qui n'est pas conservée par le serveur.
 - Option désactivable : Réglages → Signalements Chicken.
 - Cadre légal (France) : l'exploitant d'un service d'aide à la conduite doit suspendre, à la demande des autorités, la diffusion des signalements dans les zones et pour les durées fixées par arrêté (décret n° 2021-468 du 19 avril 2021, contrôles routiers). VIGIROAD n'intègre pas encore ce flux de demandes : à prévoir avant une diffusion publique.
+
+## Contrôle des versions (1.7)
+
+- Au démarrage, l'application envoie au serveur VIGIROAD sa version, la plateforme, la marque et le modèle du téléphone et un identifiant d'installation **aléatoire** (aucun identifiant matériel), créé au premier lancement et effacé avec les données de l'application.
+- Le serveur ne conserve que l'empreinte SHA-256 de cet identifiant, et seulement pour les tentatives d'utilisation d'une version obsolète ou bloquée (journal de 90 jours par défaut) et pour les appareils bloqués par l'administrateur.
+- Les ouvertures d'une version à jour ne sont comptées que par jour et par version, sans identifiant.

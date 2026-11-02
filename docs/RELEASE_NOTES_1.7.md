@@ -1,5 +1,11 @@
 # VIGIROAD 1.7 — versions obsolètes bloquées, mises à jour automatiques de l'administration
 
+## 1.7.1
+
+- Blocage d'un appareil précis depuis ADMIN MANAGER (page Versions, bouton « Bloquer » sur chaque tentative), et déblocage en un clic
+- Plus de message de blocage qui réapparaît après un déblocage : seule la réponse du serveur VIGIROAD décide
+- Les iPhone apparaissent comme tels dans la page Versions (et les anciennes applications sans numéro de version comme « Android ou iPhone (≤ 1.6) »)
+
 ## 1.7.0
 
 - Une ancienne version de VIGIROAD devient inutilisable dès qu'une nouvelle version est publiée : seul l'écran de mise à jour reste accessible

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/services.dart' show MethodChannel;
 import 'package:flutter/widgets.dart' show AppLifecycleListener;
@@ -90,12 +91,42 @@ final policyCacheProvider = Provider<PolicyCache>((ref) => PrefsPolicyCache());
 /// Client HTTP du contrôle de version (remplacé dans les tests).
 final policyHttpProvider = Provider<http.Client>((ref) => http.Client());
 
-/// En-têtes envoyés au serveur VIGIROAD à chaque requête.
-Map<String, String> appVersionHeaders() => {
+String get _platform => Platform.isAndroid ? 'android' : (Platform.isIOS ? 'ios' : Platform.operatingSystem);
+
+final _versionHeaders = <String, String>{
   'X-App-Build': '$appBuild',
   'X-App-Version': appVersion,
-  'X-App-Platform': Platform.isAndroid ? 'android' : (Platform.isIOS ? 'ios' : Platform.operatingSystem),
+  'X-App-Platform': _platform,
 };
+
+/// En-têtes envoyés au serveur VIGIROAD à chaque requête (même objet,
+/// complété par l'identifiant d'installation dès qu'il est chargé).
+Map<String, String> appVersionHeaders() => _versionHeaders;
+
+/// Identifiant d'installation : aléatoire (aucun identifiant matériel),
+/// créé au premier lancement, conservé lors des mises à jour. Il permet à
+/// l'administrateur de bloquer un appareil précis ; effacé avec les données
+/// de l'application.
+abstract interface class InstallIdStore {
+  Future<String> load();
+}
+
+class PrefsInstallIdStore implements InstallIdStore {
+  static const _key = 'vr.install_id';
+
+  @override
+  Future<String> load() async {
+    final p = await SharedPreferences.getInstance();
+    final existing = p.getString(_key);
+    if (existing != null && RegExp(r'^[0-9a-f]{32}$').hasMatch(existing)) return existing;
+    final r = Random.secure();
+    final id = List.generate(16, (_) => r.nextInt(256).toRadixString(16).padLeft(2, '0')).join();
+    await p.setString(_key, id);
+    return id;
+  }
+}
+
+final installIdStoreProvider = Provider<InstallIdStore>((ref) => PrefsInstallIdStore());
 
 final appPolicyProvider = NotifierProvider<AppPolicyController, AppPolicyState>(AppPolicyController.new);
 
@@ -108,6 +139,8 @@ class AppPolicyController extends Notifier<AppPolicyState> {
 
   Timer? _timer;
   bool _checking = false;
+  String? _install;
+  DateTime? _lastCheck;
 
   @override
   AppPolicyState build() {
@@ -120,9 +153,12 @@ class AppPolicyController extends Notifier<AppPolicyState> {
       lifecycle.dispose();
     });
     unawaited(Future.microtask(() async {
-      final cached = await ref.read(policyCacheProvider).read();
-      final c = cached == null ? null : AppPolicyState.fromCache(cached);
-      if (c != null && ref.mounted && state.status == PolicyStatus.ok) state = c;
+      try {
+        _install = await ref.read(installIdStoreProvider).load();
+        _versionHeaders['X-App-Install'] = _install!;
+      } on Object {
+        // Sans stockage : pas de blocage par appareil possible.
+      }
       await check();
     }));
     return const AppPolicyState();
@@ -133,6 +169,8 @@ class AppPolicyController extends Notifier<AppPolicyState> {
     final config = ref.read(appConfigProvider);
     if (!config.trafficEnabled) return;
     _checking = true;
+    _lastCheck = DateTime.now();
+    var answered = false;
     try {
       final info = await ref.read(deviceInfoProvider).info().catchError((Object _) => <String, String?>{});
       final base = config.trafficApiUrl.endsWith('/')
@@ -149,7 +187,8 @@ class AppPolicyController extends Notifier<AppPolicyState> {
               ...appVersionHeaders(),
             },
             body: jsonEncode({
-              'platform': appVersionHeaders()['X-App-Platform'],
+              'install': ?_install,
+              'platform': _platform,
               'version': appVersion,
               'build': appBuild,
               'model': [info['brand'], info['model']].whereType<String>().join(' ').trim(),
@@ -157,8 +196,10 @@ class AppPolicyController extends Notifier<AppPolicyState> {
             }),
           )
           .timeout(const Duration(seconds: 15));
-      if (res.statusCode != 200 || !ref.mounted) return;
+      if (res.statusCode != 200) throw HttpException('statut ${res.statusCode}');
+      if (!ref.mounted) return;
       final j = jsonDecode(utf8.decode(res.bodyBytes)) as Map<String, dynamic>;
+      answered = true;
       final next = AppPolicyState(
         status: switch (j['status']) {
           'blocked' => PolicyStatus.blocked,
@@ -171,22 +212,26 @@ class AppPolicyController extends Notifier<AppPolicyState> {
       );
       await _apply(next);
     } on Object {
-      // Serveur injoignable : la dernière décision connue reste en vigueur.
+      // Réponse illisible : traitée comme une absence de réponse.
     } finally {
       _checking = false;
     }
+    // Serveur injoignable : la dernière décision connue reste en vigueur
+    // (jamais affichée avant la réponse du serveur : pas de clignotement).
+    if (!answered && ref.mounted && state.status == PolicyStatus.ok) {
+      final cached = await ref.read(policyCacheProvider).read().catchError((Object _) => null);
+      final c = cached == null ? null : AppPolicyState.fromCache(cached);
+      if (c != null && ref.mounted) state = c;
+    }
   }
 
-  /// Refus 426 reçu d'un autre service (trafic, signalements).
+  /// Refus 426 reçu d'un autre service (trafic, signalements) : on
+  /// demande la décision au serveur, seule source de vérité (le serveur de
+  /// trafic peut garder quelques secondes une règle déjà levée).
   Future<void> rejected({required bool blocked, String? message}) async {
-    if (!ref.mounted) return;
-    await _apply(AppPolicyState(
-      status: blocked ? PolicyStatus.blocked : PolicyStatus.outdated,
-      message: message,
-      latestVersion: state.latestVersion,
-      downloadUrl: state.downloadUrl,
-    ));
-    unawaited(check());
+    final last = _lastCheck;
+    if (last != null && DateTime.now().difference(last) < const Duration(seconds: 20)) return;
+    await check();
   }
 
   Future<void> _apply(AppPolicyState next) async {

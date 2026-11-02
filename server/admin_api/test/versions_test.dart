@@ -38,11 +38,18 @@ void main() {
   });
   tearDownAll(() => app.close());
 
-  Future<(int, dynamic)> status(int build, {String platform = 'android'}) => app.call(
+  Future<(int, dynamic)> status(int build, {String platform = 'android', String? install}) => app.call(
     'POST',
     '/v1/app/status',
     appKeyHeader: true,
-    body: {'platform': platform, 'version': '1.$build.0', 'build': build, 'model': 'Xiaomi 23021RAA2Y', 'os': 'Android 14'},
+    body: {
+      'platform': platform,
+      'version': '1.$build.0',
+      'build': build,
+      'model': 'Xiaomi 23021RAA2Y',
+      'os': 'Android 14',
+      'install': ?install,
+    },
   );
 
   group('application GPS', () {
@@ -115,6 +122,35 @@ void main() {
       (_, b) = await status(9);
       expect(m(b)['status'], 'update_required', reason: 'minimum manuel 10');
       await app.call('PUT', '/admin/app/policy', token: token, body: {'forceLatest': true, 'minBuild': 0});
+    });
+
+    test('blocage d\'un appareil précis depuis le journal, puis déblocage', () async {
+      const id = '00112233445566778899aabbccddeeff';
+      var (_, b) = await status(12, install: id);
+      expect(m(b)['status'], 'update_required');
+      final (_, v) = await app.call('GET', '/admin/app/versions', token: token);
+      final event = (m(v)['events'] as List).cast<Map<String, dynamic>>().firstWhere((e) => e['installHash'] != null);
+      final hash = event['installHash'] as String;
+      expect(hash, hasLength(64));
+      expect(hash, isNot(contains(id)), reason: 'seule l\'empreinte est conservée');
+
+      var (s, r) = await app.call('POST', '/admin/app/devices/$hash/block', token: token, body: {'reason': 'Abus'});
+      expect(s, 200, reason: '$r');
+      (_, b) = await status(13, install: id);
+      expect(m(b)['status'], 'blocked');
+      expect(m(b)['scope'], 'device');
+      expect(m(b)['message'], contains('Abus'));
+      (_, b) = await status(13, install: 'ffeeddccbbaa99887766554433221100');
+      expect(m(b)['status'], 'ok', reason: 'les autres appareils ne sont pas touchés');
+      (_, b) = await app.call('GET', '/v1/app/policy', appKeyHeader: true);
+      expect(m(b)['blockedInstalls'], [hash]);
+      final (_, v2) = await app.call('GET', '/admin/app/versions', token: token);
+      expect((m(v2)['blockedDevices'] as List).single['model'], 'Xiaomi 23021RAA2Y');
+
+      (s, r) = await app.call('DELETE', '/admin/app/devices/$hash', token: token);
+      expect(s, 200);
+      (_, b) = await status(13, install: id);
+      expect(m(b)['status'], 'ok');
     });
 
     test('requête refusée par le serveur de trafic journalisée', () async {

@@ -24,6 +24,11 @@ class MemoryPolicyCache implements PolicyCache {
   Future<void> write(Map<String, Object?> v) async => value = jsonDecode(jsonEncode(v)) as Map<String, dynamic>;
 }
 
+class FixedInstallId implements InstallIdStore {
+  @override
+  Future<String> load() async => '0123456789abcdef0123456789abcdef';
+}
+
 class FixedDeviceInfo implements DeviceInfoSource {
   @override
   Future<Map<String, String?>> info() async => {'os': 'android', 'brand': 'Xiaomi', 'model': 'Redmi Note 13', 'osVersion': '14'};
@@ -61,6 +66,7 @@ void main() {
           appConfigProvider.overrideWithValue(_config),
           policyCacheProvider.overrideWithValue(cache),
           deviceInfoProvider.overrideWithValue(FixedDeviceInfo()),
+          installIdStoreProvider.overrideWithValue(FixedInstallId()),
           policyHttpProvider.overrideWithValue(MockClient((r) async {
             requests.add(r);
             if (offline) throw const SocketException('hors connexion');
@@ -98,6 +104,42 @@ void main() {
       expect(body['build'], appBuild);
       expect(body['version'], appVersion);
       expect(body['model'], 'Xiaomi Redmi Note 13');
+      expect(body['install'], '0123456789abcdef0123456789abcdef');
+      expect(appVersionHeaders()['X-App-Install'], '0123456789abcdef0123456789abcdef');
+    });
+
+    test('déblocage : un ancien refus (426) ne fait pas réapparaître le blocage', () async {
+      reply = {'status': 'blocked', 'message': 'Maintenance'};
+      final c = container();
+      await settle();
+      expect(c.read(appPolicyProvider).status, PolicyStatus.blocked);
+      // Débloqué dans ADMIN MANAGER.
+      reply = {'status': 'ok'};
+      await c.read(appPolicyProvider.notifier).check();
+      expect(c.read(appPolicyProvider).status, PolicyStatus.ok);
+      // Le serveur de trafic refuse encore quelques secondes : aucun effet sans
+      // confirmation du serveur.
+      await c.read(appPolicyProvider.notifier).rejected(blocked: true, message: 'Maintenance');
+      await settle();
+      expect(c.read(appPolicyProvider).status, PolicyStatus.ok);
+    });
+
+    test('au démarrage, la décision mémorisée n\'est jamais affichée avant la réponse du serveur', () async {
+      cache.value = {'status': 'blocked', 'build': appBuild, 'message': 'ancien blocage'};
+      reply = {'status': 'ok'};
+      final c = container();
+      final seen = <PolicyStatus>[];
+      c.listen(appPolicyProvider, (_, n) => seen.add(n.status), fireImmediately: true);
+      await settle();
+      expect(seen, everyElement(PolicyStatus.ok));
+    });
+
+    test('appareil bloqué par l\'administrateur', () async {
+      reply = {'status': 'blocked', 'scope': 'device', 'message': 'Cet appareil a été bloqué par l\'administrateur VIGIROAD.'};
+      final c = container();
+      await settle();
+      expect(c.read(appPolicyProvider).status, PolicyStatus.blocked);
+      expect(c.read(appPolicyProvider).message, contains('Cet appareil'));
     });
 
     test('nouvelle version publiée : inutilisable, décision mémorisée', () async {
@@ -142,6 +184,8 @@ void main() {
             appConfigProvider.overrideWithValue(_config),
             policyCacheProvider.overrideWithValue(cache),
             deviceInfoProvider.overrideWithValue(FixedDeviceInfo()),
+            installIdStoreProvider.overrideWithValue(FixedInstallId()),
+          installIdStoreProvider.overrideWithValue(FixedInstallId()),
             policyHttpProvider.overrideWithValue(MockClient((r) async => http.Response(jsonEncode(reply), 200))),
           ],
           child: const MaterialApp(home: UpdateGate(child: Scaffold(body: Text('Carte')))),
@@ -162,6 +206,8 @@ void main() {
             appConfigProvider.overrideWithValue(_config),
             policyCacheProvider.overrideWithValue(cache),
             deviceInfoProvider.overrideWithValue(FixedDeviceInfo()),
+            installIdStoreProvider.overrideWithValue(FixedInstallId()),
+          installIdStoreProvider.overrideWithValue(FixedInstallId()),
             policyHttpProvider.overrideWithValue(MockClient((r) async => http.Response(jsonEncode(reply), 200))),
           ],
           child: const MaterialApp(home: UpdateGate(child: Scaffold(body: Text('Carte')))),

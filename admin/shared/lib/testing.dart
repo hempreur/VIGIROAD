@@ -342,9 +342,13 @@ class FakeAdminBackend {
             'latest': {'version': '1.7.0', 'build': 13, 'minBuild': 13, 'checkedAt': _ago(const Duration(minutes: 4))},
           },
           'desktop': {'admin-manager': '1.7.0', 'server-control': '1.7.0'},
+          'blockedDevices': [
+            {'installHash': 'cd' * 32, 'reason': 'Usage abusif', 'platform': 'ios', 'model': 'Apple iPhone', 'version': '1.7.0', 'blockedAt': _ago(const Duration(hours: 1)), 'blockedBy': 'proprietaire@vigiroad.fr'},
+          ],
           'counts': {'last24h': 3, 'last7d': 11},
           'events': [
-            {'id': 3, 'at': _ago(const Duration(minutes: 6)), 'app': 'gps', 'platform': 'android', 'version': '1.6.0', 'build': 12, 'status': 'outdated', 'required': '1.7.0', 'source': 'app', 'model': 'Xiaomi Redmi Note 13', 'os': 'android 14', 'ipPrefix': '86.242.18.0/24', 'country': 'FR', 'pseudonym': 'Camille_75'},
+            {'id': 3, 'at': _ago(const Duration(minutes: 6)), 'app': 'gps', 'platform': 'android', 'version': '1.6.0', 'build': 12, 'status': 'outdated', 'required': '1.7.0', 'source': 'app', 'model': 'Xiaomi Redmi Note 13', 'os': 'android 14', 'ipPrefix': '86.242.18.0/24', 'country': 'FR', 'pseudonym': 'Camille_75', 'installHash': '${'ab' * 32}', 'deviceBlocked': false},
+            {'id': 4, 'at': _ago(const Duration(minutes: 12)), 'app': 'gps', 'platform': 'ios', 'version': '1.7.0', 'build': 13, 'status': 'blocked', 'required': '1.7.0', 'source': 'app', 'model': 'Apple iPhone', 'os': 'ios 18.1', 'ipPrefix': '82.64.1.0/24', 'country': 'FR', 'installHash': '${'cd' * 32}', 'deviceBlocked': true},
             {'id': 2, 'at': _ago(const Duration(minutes: 31)), 'app': 'gps', 'platform': 'inconnu', 'version': '1.6 ou antérieure', 'build': null, 'status': 'outdated', 'required': '1.7.0', 'source': 'traffic', 'ipPrefix': '78.193.4.0/24', 'country': 'BE'},
             {'id': 1, 'at': _ago(const Duration(hours: 3)), 'app': 'admin-manager', 'platform': 'windows', 'version': '1.6.0', 'build': null, 'status': 'outdated', 'required': '1.7.0', 'source': 'admin', 'ipPrefix': '90.12.4.0/24', 'country': 'FR', 'adminEmail': 'support@vigiroad.fr'},
           ],

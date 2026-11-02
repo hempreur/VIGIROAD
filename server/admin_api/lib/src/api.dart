@@ -41,7 +41,7 @@ class AdminApi {
     });
   }
 
-  static const version = '1.7.0';
+  static const version = '1.7.1';
 
   final AppContext ctx;
   final router = Router();

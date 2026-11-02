@@ -64,6 +64,16 @@ void main() {
     expect(j['error'], 'Maintenance');
   });
 
+  test('appareil bloqué : refusé, les autres passent', () async {
+    const id = '0123456789abcdef0123456789abcdef';
+    policy.apply(minBuild: 13, blocked: false, blockedInstalls: {AppPolicyClient.installHash(id)});
+    var r = await get('/v1/reports?bbox=2.2,48.8,2.5,48.9', headers: {'x-app-build': '13', 'x-app-install': id});
+    expect(r.statusCode, 426);
+    expect(jsonDecode(await r.readAsString())['code'], 'app_blocked');
+    r = await get('/v1/reports?bbox=2.2,48.8,2.5,48.9', headers: {'x-app-build': '13', 'x-app-install': 'fedcba9876543210fedcba9876543210'});
+    expect(r.statusCode, 200);
+  });
+
   test('règle périmée (plus de réponse depuis 15 min) : plus de refus', () async {
     await policy.refresh();
     now = now.add(const Duration(minutes: 16));

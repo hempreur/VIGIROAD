@@ -1,0 +1,24 @@
+Analyzing shared...                                             
+
+   info • Use an initializing formal to assign a parameter to a field. Try using an initialing formal ('this._httpFactory') to initialize the field • lib/src/api/session.dart:23:8 • prefer_initializing_formals
+   info • Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation • lib/src/auth/connect_screen.dart:86:19 • prefer_const_constructors
+   info • Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation • lib/src/auth/connect_screen.dart:234:13 • prefer_const_constructors
+   info • Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation • lib/src/pages/admin_pages.dart:140:15 • prefer_const_constructors
+   info • Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation • lib/src/pages/admin_pages.dart:141:15 • prefer_const_constructors
+   info • Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation • lib/src/pages/admin_pages.dart:142:15 • prefer_const_constructors
+   info • Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation • lib/src/pages/admin_pages.dart:143:15 • prefer_const_constructors
+   info • Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation • lib/src/pages/admin_pages.dart:304:21 • prefer_const_constructors
+   info • Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation • lib/src/pages/admin_pages.dart:350:21 • prefer_const_constructors
+   info • Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation • lib/src/pages/server_pages.dart:95:13 • prefer_const_constructors
+   info • Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation • lib/src/pages/server_pages.dart:717:9 • prefer_const_constructors
+   info • Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation • lib/src/pages/user_pages.dart:136:19 • prefer_const_constructors
+   info • Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation • lib/src/pages/user_pages.dart:868:7 • prefer_const_constructors
+   info • Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation • lib/src/pages/user_pages.dart:934:19 • prefer_const_constructors
+   info • Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation • lib/src/pages/user_pages.dart:972:11 • prefer_const_constructors
+   info • Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation • lib/src/pages/versions_page.dart:124:23 • prefer_const_constructors
+   info • Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation • lib/src/pages/versions_page.dart:181:25 • prefer_const_constructors
+   info • Use an initializing formal to assign a parameter to a field. Try using an initialing formal ('this._installer') to initialize the field • lib/src/update/updater.dart:41:8 • prefer_initializing_formals
+   info • Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation • lib/src/widgets/charts.dart:52:53 • prefer_const_constructors
+   info • Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation • lib/src/widgets/charts.dart:52:67 • prefer_const_constructors
+
+20 issues found. (ran in 9.0s)
